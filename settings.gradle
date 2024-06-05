@@ -1,0 +1,6 @@
+rootProject.name = 'app-server'
+include 'user-server'
+include 'stock-server'
+include 'estate-server'
+include 'energy-server'
+include 'utils'
