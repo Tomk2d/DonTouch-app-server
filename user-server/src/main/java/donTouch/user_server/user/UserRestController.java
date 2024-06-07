@@ -18,5 +18,4 @@ public class UserRestController {
             System.out.println(e.getMessage());
         }
     }
-
 }
