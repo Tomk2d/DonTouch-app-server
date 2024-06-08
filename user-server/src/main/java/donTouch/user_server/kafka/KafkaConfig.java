@@ -1,5 +1,6 @@
-package donTouch.stock_server;
+package donTouch.user_server.kafka;
 
+import donTouch.user_server.kafka.dto.UsersDto;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 
 @Slf4j
 @EnableKafka
@@ -27,7 +29,6 @@ public class KafkaConfig {
     }
 
     public Map<String,Object> producerConfig() {
-        log.info("Creating producer config");
         Map<String, Object> props = new HashMap<>();
         // server host 지정
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -48,15 +49,17 @@ public class KafkaConfig {
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG
             , StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG
-            , StringSerializer.class);
+            , JsonSerializer.class);
+        props.put(JsonSerializer.TYPE_MAPPINGS,
+            "UsersDto:donTouch.user_server.kafka.dto.UsersDto");
         return props;
     }
-
-    public ProducerFactory<String, String> producerFactory() {
+    @Bean
+    public ProducerFactory<String, Object> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfig());
     }
     @Bean
-    public KafkaTemplate<String, String> kafkaTemplate() {
+    public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }
