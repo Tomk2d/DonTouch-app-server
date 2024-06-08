@@ -1,25 +1,26 @@
-package donTouch.user_server;
+package donTouch.estate_server.kafka;
 
+import donTouch.estate_server.kafka.dto.UsersDto;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 
+@Slf4j
 @EnableKafka
 @Configuration
 public class KafkaConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(KafkaConfig.class);
     private Environment env;
 
     @Autowired
@@ -28,7 +29,6 @@ public class KafkaConfig {
     }
 
     public Map<String,Object> producerConfig() {
-        log.info("Creating producer config");
         Map<String, Object> props = new HashMap<>();
         // server host 지정
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
@@ -49,17 +49,18 @@ public class KafkaConfig {
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG
             , StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG
-            , StringSerializer.class);
+            , JsonSerializer.class);
+        props.put(JsonSerializer.TYPE_MAPPINGS,
+            "UsersDto:donTouch.estate_server.kafka.dto.UsersDto");
         return props;
     }
-
-    public ProducerFactory<String, String> producerFactory() {
-        log.info("producerFactory()");
+    @Bean
+    public ProducerFactory<String, Object> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfig());
     }
     @Bean
-    public KafkaTemplate<String, String> kafkaTemplate() {
-        log.info("kafkaTemplate()");
+    public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }
+
