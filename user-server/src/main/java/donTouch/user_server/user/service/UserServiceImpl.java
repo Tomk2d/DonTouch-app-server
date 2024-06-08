@@ -1,18 +1,20 @@
 package donTouch.user_server.user.service;
 
-import donTouch.user_server.user.domain.JpaUserRepositoryTest;
-import donTouch.user_server.user.dto.Users;
+import donTouch.user_server.user.domain.JpaUserRepository;
+import donTouch.user_server.user.domain.Users;
+import donTouch.user_server.user.dto.UsersDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
 @Service
 @AllArgsConstructor
-public class UserServiceImpl {
-    private final JpaUserRepositoryTest jpaUserRepositoryTest;
+public class UserServiceImpl implements UserService {
+    private final JpaUserRepository jpaUserRepository;
 
-    public void findUserByEmail() {
-        Users users = jpaUserRepositoryTest.findByEmail("email")
-            .orElseThrow(()-> new RuntimeException("Email not found"));
+    public UsersDto findUserByEmail(String email) {
+        Users user = jpaUserRepository.findByEmail(email)
+            .orElseThrow(()-> new NullPointerException("User not found"));
+        return UsersDto.toDto(user);
     }
 }
