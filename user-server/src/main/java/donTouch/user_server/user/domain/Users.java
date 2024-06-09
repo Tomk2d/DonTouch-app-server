@@ -1,4 +1,4 @@
-package donTouch.user_server.user.dto;
+package donTouch.user_server.user.domain;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -11,7 +11,6 @@ import jakarta.persistence.Id;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
