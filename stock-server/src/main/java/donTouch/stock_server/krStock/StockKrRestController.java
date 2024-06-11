@@ -8,5 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class StockKrRestController {
     private final KafkaService kafkaService;
+
+
 }
 
