@@ -22,9 +22,4 @@ public class KafkaService {
     public void getResponse(UsersDto data){
         log.info("이게 가져온 데이터 : " + data.toString());
     }
-
-    @KafkaListener(topics = "request_kr_stocks",groupId = "stock_group")
-    public void sendKrStocks() {
-        System.out.println("get kafka message");
-    }
 }

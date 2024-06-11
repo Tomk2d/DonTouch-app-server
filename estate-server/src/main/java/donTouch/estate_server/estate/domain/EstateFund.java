@@ -27,6 +27,7 @@ import lombok.ToString;
 @Builder
 public class EstateFund {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String title;
