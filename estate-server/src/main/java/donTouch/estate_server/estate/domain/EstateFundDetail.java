@@ -1,10 +1,12 @@
 package donTouch.estate_server.estate.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import donTouch.estate_server.estate.utils.StringToDoubleDeserializer;
 import donTouch.estate_server.estate.utils.StringToIntDeserializer;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,131 +28,187 @@ import lombok.ToString;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Builder
 public class EstateFundDetail {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
-    private int estateId;
-
-    @JsonDeserialize(using = StringToDoubleDeserializer.class)
-    private double latitude;
+    @JsonProperty("estateId")
+    private Integer estateId;
 
     @JsonDeserialize(using = StringToDoubleDeserializer.class)
-    private double longitude;
-
-    @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int appraisedValue;
-
-    @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int priorityAmount;
-
-    @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int etcAmount;
-
-    @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int leftMoney;
-
-    @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int bidWinningRate;
-
-    @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int mortgageSetupRate;
-
-    private String mortgageDescription;
-
-    @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int expectedRecoverAmount;
-
-    @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int priorityMaximumPledgeAmount;
+    @JsonProperty("latitude")
+    private Double latitude;
 
     @JsonDeserialize(using = StringToDoubleDeserializer.class)
-    private float maxBondAmountBaseLtv;
+    @JsonProperty("longitude")
+    private Double longitude;
+
+    @JsonDeserialize(using = StringToIntDeserializer.class)
+    @JsonProperty("appraisedValue")
+    private Integer appraisedValue;
+
+    @JsonDeserialize(using = StringToIntDeserializer.class)
+    @JsonProperty("priorityAmount")
+    private Integer priorityAmount;
+
+    @JsonDeserialize(using = StringToIntDeserializer.class)
+    @JsonProperty("etcAmount")
+    private Integer etcAmount;
+
+    @JsonDeserialize(using = StringToIntDeserializer.class)
+    @JsonProperty("leftMoney")
+    private Integer leftMoney;
 
     @JsonDeserialize(using = StringToDoubleDeserializer.class)
-    private float shareRatio;
+    @JsonProperty("bidWinningRate")
+    private Double bidWinningRate;
 
+    @JsonDeserialize(using = StringToIntDeserializer.class)
+    @JsonProperty("mortgageSetupRate")
+    private Integer mortgageSetupRate;
+
+    @JsonDeserialize(using = StringToIntDeserializer.class)
+    @JsonProperty("expectedRecoverAmount")
+    private Integer expectedRecoverAmount;
+
+    @JsonDeserialize(using = StringToIntDeserializer.class)
+    @JsonProperty("priorityMaximumPledgeAmount")
+    private Integer priorityMaximumPledgeAmount;
+
+    @JsonDeserialize(using = StringToDoubleDeserializer.class)
+    @JsonProperty("maxBondAmountBaseLtv")
+    private Double maxBondAmountBaseLtv;
+
+    @JsonDeserialize(using = StringToDoubleDeserializer.class)
+    @JsonProperty("shareRatio")
+    private Double shareRatio;
+
+    @JsonProperty("loanType")
     private String loanType;
 
     @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int finalAmountWon;
+    @JsonProperty("finalAmountWon")
+    private Integer finalAmountWon;
 
     @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int finalLength;
+    @JsonProperty("finalLength")
+    private Integer finalLength;
 
     @JsonDeserialize(using = StringToDoubleDeserializer.class)
-    private float workPeriodYears;
+    @JsonProperty("workPeriodYears")
+    private Double workPeriodYears;
 
+    @JsonProperty("judgeCompanySize")
     private String judgeCompanySize;
 
     @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int userSex;
+    @JsonProperty("userSex")
+    private Integer userSex;
 
+    @JsonProperty("method")
     private String method;
 
-    private boolean isAffirmedToPurchase;
+    @JsonProperty("isAffirmedToPurchase")
+    private Boolean isAffirmedToPurchase;
 
     @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int principalReturnAmountWon;
+    @JsonProperty("principalReturnAmountWon")
+    private Integer principalReturnAmountWon;
 
     @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int interestReturnAmountWon;
+    @JsonProperty("interestReturnAmountWon")
+    private Integer interestReturnAmountWon;
 
+    @JsonProperty("workStartDate")
     private Date workStartDate;
 
     @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int repaymentDay;
+    @JsonProperty("repaymentDay")
+    private Integer repaymentDay;
 
-    private boolean isRenewalLoan;
+    @JsonProperty("isRenewalLoan")
+    private Boolean isRenewalLoan;
 
-    private boolean isRepaymentDayFollowingExecutionDay;
+    @JsonProperty("isRepaymentDayFollowingExecutionDay")
+    private Boolean isRepaymentDayFollowingExecutionDay;
 
+    @JsonProperty("comment")
     private String comment;
 
+    @JsonProperty("startDatetime")
     private Date startDatetime;
 
+    @JsonProperty("state")
     private String state;
 
     @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int amount;
+    @JsonProperty("amount")
+    private Integer amount;
 
     @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int investmentCount;
+    @JsonProperty("investmentCount")
+    private Integer investmentCount;
 
+    @JsonProperty("photos")
     private String photos;
 
+    @JsonProperty("reason")
     private String reason;
 
     @JsonDeserialize(using = StringToIntDeserializer.class)
-    private int progress;
+    @JsonProperty("progress")
+    private Integer progress;
 
+    @JsonProperty("structure")
     private String structure;
 
+    @JsonProperty("eightCreditGrade")
     private String eightCreditGrade;
 
-    private String sellingPointsIconImage;
 
+    @Column(length = 2000)
+    @JsonProperty("sellingPointsIconImage")
+    private String sellingPointsIconImage;  // selling_points_icon_image
+
+    @Column(length = 2000)
+    @JsonProperty("sellingPointsTitle")
     private String sellingPointsTitle;
 
+    @Column(length = 2000)
+    @JsonProperty("sellingPointsDescription")
     private String sellingPointsDescription;
 
+    @Column(length = 2000)
+    @JsonProperty("sellingPointsIconImage2")
     private String sellingPointsIconImage2;
 
+    @Column(length = 2000)
+    @JsonProperty("sellingPointsTitle2")
     private String sellingPointsTitle2;
 
+    @Column(length = 2000)
+    @JsonProperty("sellingPointsDescription2")
     private String sellingPointsDescription2;
 
+    @JsonProperty("expertName")
     private String expertName;
 
+    @JsonProperty("expertRole")
     private String expertRole;
 
+    @JsonProperty("expertContent")
     private String expertContent;
 
-    private boolean hasOverdueLast1Year;
+    @JsonProperty("hasOverdueLast1Year")
+    private Boolean hasOverdueLast1Year;
 
+    @JsonProperty("complianceNumber")
     private String complianceNumber;
 
+    @JsonProperty("dealType")
     private String dealType;
 
+    @JsonProperty("category")
     private String category;
 }

@@ -11,12 +11,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Service
-public class DbService {
+public class DataAccessService {
 
+    private static final Logger log = LoggerFactory.getLogger(DataAccessService.class);
     private final EstateFundJpaRepository estateFundJpaRepository;
     private final EstateFundDetailJpaRepository estateFundDetailJpaRepository;
 
@@ -24,7 +27,6 @@ public class DbService {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
 
         try {
             List<EstateFund> estateFunds = objectMapper.readValue(
