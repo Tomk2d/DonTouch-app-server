@@ -1,5 +1,6 @@
-package donTouch.backend_server.utils;
+package donTouch.utils.utils;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,9 @@ public class ApiUtils<T> {
 
     public static <M> ApiResult<M> error(M errorMessages, HttpStatus status) {
         return new ApiResult<>(false, null, new ApiError(errorMessages, status));
+    }
+    public static <M>ApiResult<M> error(String errorMessage, HttpStatus status) {
+        return (ApiResult<M>) new ApiResult<>(false, errorMessage, new ApiError(errorMessage, status));
     }
 
     @Getter
