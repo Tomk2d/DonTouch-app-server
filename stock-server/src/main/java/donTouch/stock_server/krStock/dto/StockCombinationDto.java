@@ -21,8 +21,8 @@ public class StockCombinationDto {
         @Max(value = 3, message = "categoryId는 0-3 사이 숫자입니다")
         private int categoryId;
 
-        public Product convertToEntity() {
-            return new Product(name,price,description,categoryId);
-        }
+//        public Product convertToEntity() {
+//            return new Product(name,price,description,categoryId);
+//        }
 
 }

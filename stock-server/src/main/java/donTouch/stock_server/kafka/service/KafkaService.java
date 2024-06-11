@@ -22,5 +22,4 @@ public class KafkaService {
     public void getResponse(UsersDto data){
         log.info("이게 가져온 데이터 : " + data.toString());
     }
-
 }

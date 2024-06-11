@@ -22,4 +22,10 @@ public class KafkaService {
     public void sendResponse() {
         kafkaTemplate.send("user_response_test", new UsersDto(1L, "123@naver.com", 1,new Date(), "Tomkid", 1, 1, 1,1));
     }
+
+    public void sendMessage(String topic, String groupId, Object data) {
+        kafkaTemplate.send(topic, groupId, null);
+    }
+
+
 }

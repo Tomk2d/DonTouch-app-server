@@ -13,8 +13,10 @@ public class KrStock {
     @Id
     @Column(name = "id")
     int id;
+
     @Column(unique = true)
     String symbol;
+
     String name;
     double safeScore;
     double growthScore;
