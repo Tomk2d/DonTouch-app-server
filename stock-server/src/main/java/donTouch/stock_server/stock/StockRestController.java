@@ -1,4 +1,4 @@
-package donTouch.stock_server.krStock;
+package donTouch.stock_server.stock;
 
 import donTouch.stock_server.kafka.service.KafkaService;
 import jakarta.validation.Valid;
@@ -13,16 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/stocks")
-public class StockKrRestController {
+public class StockRestController {
     private final KafkaService kafkaService;
 
-    @PostMapping("/combination")
-    public ResponseEntity<ApiUtils.ApiResult> signUp(@Valid @RequestBody StockCombinationDto stockCombinationDto) {
-        // ID 중복 체크
-        isDuplicateId(signUpDto);
-        String savedMember = memberService.signUp(signUpDto);
-        return new ResponseEntity(success(savedMember), HttpStatus.CREATED);
-    }
+//    @PostMapping("/combination")
+//    public ResponseEntity<ApiUtils.ApiResult> signUp(@Valid @RequestBody StockCombinationDto stockCombinationDto) {
+//        // ID 중복 체크
+//        isDuplicateId(signUpDto);
+//        String savedMember = memberService.signUp(signUpDto);
+//        return new ResponseEntity(success(savedMember), HttpStatus.CREATED);
+//    }
 
 
 }
