@@ -1,4 +1,4 @@
-package donTouch.stock_server.stock.domain;
+package donTouch.stock_server.stock.dto;
 
 import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;

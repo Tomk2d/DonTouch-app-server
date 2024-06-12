@@ -3,8 +3,8 @@ package donTouch.stock_server.stock.service;
 import donTouch.stock_server.krStock.domain.KrStock;
 import donTouch.stock_server.krStock.domain.KrStockJpaRepository;
 import donTouch.stock_server.stock.domain.Stock;
-import donTouch.stock_server.stock.domain.StockDTO;
 import donTouch.stock_server.stock.dto.FindStockForm;
+import donTouch.stock_server.stock.dto.StockDTO;
 import donTouch.stock_server.usStock.domain.UsStock;
 import donTouch.stock_server.usStock.domain.UsStockJpaRepository;
 import lombok.AllArgsConstructor;
@@ -32,7 +32,7 @@ public class StockServiceImpl implements StockService {
             usStockList = usStockJpaRepository.findByDividendMonth(findStockForm.getDividendMonth());
             krStockList = krStockJpaRepository.findByDividendMonth(findStockForm.getDividendMonth());
         }
-        
+
         List<Stock> combinedStockList = new ArrayList<>();
         combinedStockList.addAll(usStockList);
         combinedStockList.addAll(krStockList);

@@ -1,8 +1,8 @@
 package donTouch.stock_server.stock;
 
 import donTouch.stock_server.kafka.service.KafkaService;
-import donTouch.stock_server.stock.domain.StockDTO;
 import donTouch.stock_server.stock.dto.FindStockForm;
+import donTouch.stock_server.stock.dto.StockDTO;
 import donTouch.stock_server.stock.service.StockService;
 import donTouch.utils.utils.ApiUtils;
 import jakarta.validation.Valid;
