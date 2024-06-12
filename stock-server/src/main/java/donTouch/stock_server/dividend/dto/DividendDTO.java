@@ -8,6 +8,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 public class DividendDTO {
+    private Integer id;
+
     private LocalDate dividendDate;
     private Boolean isFixed;
 
