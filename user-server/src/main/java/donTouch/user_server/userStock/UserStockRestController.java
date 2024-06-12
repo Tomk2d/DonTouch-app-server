@@ -1,7 +1,7 @@
 package donTouch.user_server.userStock;
 
 import donTouch.user_server.kafka.service.KafkaService;
-import donTouch.utils.Exceptions.ApiUtils;
+import donTouch.utils.utils.ApiUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
