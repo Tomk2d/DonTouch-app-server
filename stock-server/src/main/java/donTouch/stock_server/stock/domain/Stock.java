@@ -8,12 +8,20 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public class Stock extends StockDTO {
-    double safeScore;
-    double growthScore;
-    double dividendScore;
+public class Stock {
+    private String symbol;
+    private String name;
+    private String type;
+    private String exchange;
+
+    Integer dividendMonth;
+    Double dividendYieldTtm;
+
+    Double safeScore;
+    Double growthScore;
+    Double dividendScore;
 
     public StockDTO convertToStockDTO() {
-        return new StockDTO(this.getSymbol(), this.getName(), this.getType(), this.getExchange(), this.getDividendMonth(), this.getDividendYieldTtm());
+        return new StockDTO(symbol, name, type, exchange, dividendMonth, dividendYieldTtm);
     }
 }
