@@ -1,7 +1,7 @@
 package donTouch.stock_server.stock;
 
 import donTouch.stock_server.kafka.service.KafkaService;
-import donTouch.stock_server.stock.dto.FindStockForm;
+import donTouch.stock_server.stock.dto.FindStocksForm;
 import donTouch.stock_server.stock.dto.StockDTO;
 import donTouch.stock_server.stock.service.StockService;
 import donTouch.utils.utils.ApiUtils;
@@ -28,8 +28,8 @@ public class StockRestController {
 //    }
 
     @PostMapping("")
-    public ApiUtils.ApiResult<List<StockDTO>> findStock(@RequestBody @Valid FindStockForm findStockForm) {
-        List<StockDTO> result = stockService.findStock(findStockForm);
+    public ApiUtils.ApiResult<List<StockDTO>> findStocks(@RequestBody @Valid FindStocksForm findStocksForm) {
+        List<StockDTO> result = stockService.findStocks(findStocksForm);
 
         if (result.isEmpty()) {
             return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -39,9 +39,11 @@ public class StockRestController {
     }
 
     @GetMapping("/{symbol}")
-    public ApiUtils.ApiResult<String> findStockWithSymbol(@PathVariable String symbol) {
+    public ApiUtils.ApiResult<String> findStockDetail(@PathVariable String symbol) {
         return ApiUtils.success(symbol);
     }
+
+//    @PostMapping("/price")
 
 }
 

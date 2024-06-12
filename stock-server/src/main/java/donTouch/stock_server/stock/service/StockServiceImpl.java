@@ -2,7 +2,7 @@ package donTouch.stock_server.stock.service;
 
 import donTouch.stock_server.krStock.domain.KrStockJpaRepository;
 import donTouch.stock_server.stock.domain.Stock;
-import donTouch.stock_server.stock.dto.FindStockForm;
+import donTouch.stock_server.stock.dto.FindStocksForm;
 import donTouch.stock_server.stock.dto.StockDTO;
 import donTouch.stock_server.usStock.domain.UsStockJpaRepository;
 import lombok.AllArgsConstructor;
@@ -19,20 +19,21 @@ public class StockServiceImpl implements StockService {
     private final KrStockJpaRepository krStockJpaRepository;
 
     @Override
-    public List<StockDTO> findStock(FindStockForm findStockForm) {
+    public List<StockDTO> findStocks(FindStocksForm findStocksForm) {
         List<Stock> combinedStockList;
-        if (findStockForm.getDividendMonth() == null) {
+        if (findStocksForm.getDividendMonth() == null) {
             combinedStockList = getCombinedStockList();
         } else {
-            combinedStockList = getCombinedStockListFilteredByMonth(findStockForm.getDividendMonth());
+            combinedStockList = getCombinedStockListFilteredByMonth(findStocksForm.getDividendMonth());
         }
 
         combinedStockList.sort(Comparator.comparing(Stock::getDividendYieldTtm).reversed());
 
-        List<Stock> pagedStockList = getPagedStockList(combinedStockList, findStockForm.getPage(), findStockForm.getSize());
+        List<Stock> pagedStockList = getPagedStockList(combinedStockList, findStocksForm.getPage(), findStocksForm.getSize());
 
         return getStockDTOList(pagedStockList);
     }
+
 
     List<Stock> getCombinedStockList() {
         List<Stock> combinedStockList = new ArrayList<>();
