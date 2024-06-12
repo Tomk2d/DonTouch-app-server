@@ -12,10 +12,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StockDTO {
-    String symbol;
-    String name;
-    String type;
-    String exchange;
+    private String symbol;
+    private String name;
+    private String type;
+    private String exchange;
 
     int dividendMonth;
     double dividendYieldTtm = 0.0;
