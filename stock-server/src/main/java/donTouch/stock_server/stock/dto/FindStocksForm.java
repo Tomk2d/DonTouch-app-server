@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
-public class FindStockForm {
+public class FindStocksForm {
     @NotNull(message = "input userInvestmentType")
     @Min(value = 0, message = "userInvestmentType must be between 0 and 4")
     @Max(value = 4, message = "userInvestmentType must be between 0 and 4")

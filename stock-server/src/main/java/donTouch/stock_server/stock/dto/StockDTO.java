@@ -2,10 +2,8 @@ package donTouch.stock_server.stock.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 @AllArgsConstructor
 public class StockDTO {
     private Integer id;

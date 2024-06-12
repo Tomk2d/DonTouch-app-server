@@ -6,11 +6,9 @@ import donTouch.stock_server.stock.domain.Stock;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "us_stocks")
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UsStock extends Stock {
