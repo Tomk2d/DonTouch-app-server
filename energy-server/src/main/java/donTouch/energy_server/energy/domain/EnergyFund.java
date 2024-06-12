@@ -26,4 +26,7 @@ public class EnergyFund {
     private Double fundingAmount;
 
     private Integer sumOfInvestmentAndReservation;
+
+    @OneToOne(mappedBy = "energyFund", cascade = CascadeType.ALL)
+    private EnergyFundDetail energyFundDetail;
 }
