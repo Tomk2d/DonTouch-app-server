@@ -1,6 +1,7 @@
 package donTouch.stock_server.stock;
 
 import donTouch.stock_server.kafka.service.KafkaService;
+import donTouch.stock_server.stock.dto.FindStockDetailForm;
 import donTouch.stock_server.stock.dto.FindStocksForm;
 import donTouch.stock_server.stock.dto.StockDTO;
 import donTouch.stock_server.stock.service.StockService;
@@ -8,7 +9,10 @@ import donTouch.utils.utils.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -38,9 +42,9 @@ public class StockRestController {
         return ApiUtils.success(result);
     }
 
-    @GetMapping("/{symbol}")
-    public ApiUtils.ApiResult<String> findStockDetail(@PathVariable String symbol) {
-        return ApiUtils.success(symbol);
+    @PostMapping("/detail")
+    public ApiUtils.ApiResult<String> findStockDetail(@RequestBody @Valid FindStockDetailForm findStockDetailForm) {
+
     }
 
 //    @PostMapping("/price")

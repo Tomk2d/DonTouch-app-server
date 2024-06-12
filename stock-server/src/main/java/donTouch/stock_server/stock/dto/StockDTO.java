@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class FindStockDTO {
+public class StockDTO {
     private Integer id;
     private String symbol;
     private String name;
