@@ -1,5 +1,6 @@
 rootProject.name = 'app-server'
 include 'user-server'
+include 'order-server'
 include 'stock-server'
 include 'estate-server'
 include 'energy-server'

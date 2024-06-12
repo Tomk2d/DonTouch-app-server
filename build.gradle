@@ -45,6 +45,11 @@ project(':user-server'){
 		implementation project(':utils')
 	}
 }
+project(':order-server'){
+	dependencies {
+		implementation project(':utils')
+	}
+}
 project(':stock-server'){
 	dependencies {
 		implementation project(':utils')
