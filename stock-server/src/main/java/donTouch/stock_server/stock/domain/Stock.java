@@ -29,8 +29,8 @@ public class Stock {
     Double dividendScore;
 
     LocalDateTime updatedDate;
-    
-    public StockDTO convertToStockDTO() {
+
+    public StockDTO convertToDTO() {
         return new StockDTO(id, symbol, name, type, exchange, dividendMonth, dividendYieldTtm);
     }
 }

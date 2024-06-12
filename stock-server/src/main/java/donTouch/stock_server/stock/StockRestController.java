@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.management.InstanceNotFoundException;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @RestController
@@ -33,18 +35,28 @@ public class StockRestController {
 
     @PostMapping("")
     public ApiUtils.ApiResult<List<StockDTO>> findStocks(@RequestBody @Valid FindStocksForm findStocksForm) {
-        List<StockDTO> result = stockService.findStocks(findStocksForm);
+        List<StockDTO> stockDTOList = stockService.findStocks(findStocksForm);
 
-        if (result.isEmpty()) {
+        if (stockDTOList == null) {
             return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return ApiUtils.success(result);
+        return ApiUtils.success(stockDTOList);
     }
 
     @PostMapping("/detail")
-    public ApiUtils.ApiResult<String> findStockDetail(@RequestBody @Valid FindStockDetailForm findStockDetailForm) {
+    public ApiUtils.ApiResult<Map<String, Object>> findStockDetail(@RequestBody @Valid FindStockDetailForm findStockDetailForm) {
+        try {
+            Map<String, Object> stockDetail = stockService.findStockDetail(findStockDetailForm);
 
+            if (stockDetail == null) {
+                return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            return ApiUtils.success(stockDetail);
+
+        } catch (InstanceNotFoundException e) {
+            return ApiUtils.error("check id", HttpStatus.NOT_FOUND);
+        }
     }
 
 //    @PostMapping("/price")
