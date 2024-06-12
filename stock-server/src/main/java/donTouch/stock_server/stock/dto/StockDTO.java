@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class StockDTO {
+    private Integer id;
     private String symbol;
     private String name;
     private String type;

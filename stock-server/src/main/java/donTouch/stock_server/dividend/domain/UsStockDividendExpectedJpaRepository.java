@@ -2,5 +2,10 @@ package donTouch.stock_server.dividend.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UsStockDividendExpectedJpaRepository extends JpaRepository<KrStockDividendExpected, Long> {
+import java.time.LocalDate;
+import java.util.List;
+
+public interface UsStockDividendExpectedJpaRepository extends JpaRepository<UsStockDividendExpected, Long> {
+    List<UsStockDividendExpected> findAllByDividendDateBetween(LocalDate startDate, LocalDate endDate);
+
 }

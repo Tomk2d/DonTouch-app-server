@@ -11,15 +11,14 @@ import java.time.LocalDate;
 @Setter
 @MappedSuperclass
 public class Dividend {
-    private String symbol;
-
-    private Double dividend;
-
     private LocalDate dividendDate;
+
+    private String symbol;
+    private Double dividend;
 
     private LocalDate paymentDate;
 
     public DividendDTO convertToDividendDTO(Boolean isFixed) {
-        return new DividendDTO();
+        return new DividendDTO(dividendDate, isFixed, symbol, dividend, paymentDate);
     }
 }

@@ -1,11 +1,9 @@
 package donTouch.stock_server.stock.service;
 
-import donTouch.stock_server.krStock.domain.KrStock;
 import donTouch.stock_server.krStock.domain.KrStockJpaRepository;
 import donTouch.stock_server.stock.domain.Stock;
 import donTouch.stock_server.stock.dto.FindStockForm;
 import donTouch.stock_server.stock.dto.StockDTO;
-import donTouch.stock_server.usStock.domain.UsStock;
 import donTouch.stock_server.usStock.domain.UsStockJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,31 +20,48 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public List<StockDTO> findStock(FindStockForm findStockForm) {
-        List<UsStock> usStockList;
-        List<KrStock> krStockList;
-
+        List<Stock> combinedStockList;
         if (findStockForm.getDividendMonth() == null) {
-            usStockList = usStockJpaRepository.findAll();
-            krStockList = krStockJpaRepository.findAll();
+            combinedStockList = getCombinedStockList();
         } else {
-            usStockList = usStockJpaRepository.findByDividendMonth(findStockForm.getDividendMonth());
-            krStockList = krStockJpaRepository.findByDividendMonth(findStockForm.getDividendMonth());
+            combinedStockList = getCombinedStockListFilteredByMonth(findStockForm.getDividendMonth());
         }
-
-        List<Stock> combinedStockList = new ArrayList<>();
-        combinedStockList.addAll(usStockList);
-        combinedStockList.addAll(krStockList);
 
         combinedStockList.sort(Comparator.comparing(Stock::getDividendYieldTtm).reversed());
 
-        int start = findStockForm.getSize() * findStockForm.getPage();
-        int end = start + findStockForm.getSize();
+        List<Stock> pagedStockList = getPagedStockList(combinedStockList, findStockForm.getPage(), findStockForm.getSize());
 
-        List<Stock> pagedStockList = combinedStockList.subList(start, end);
+        return getStockDTOList(pagedStockList);
+    }
 
-        return pagedStockList.stream()
+    List<Stock> getCombinedStockList() {
+        List<Stock> combinedStockList = new ArrayList<>();
+
+        combinedStockList.addAll(usStockJpaRepository.findAll());
+        combinedStockList.addAll(krStockJpaRepository.findAll());
+
+        return combinedStockList;
+    }
+
+    List<Stock> getCombinedStockListFilteredByMonth(int month) {
+        List<Stock> combinedStockList = new ArrayList<>();
+
+        combinedStockList.addAll(usStockJpaRepository.findByDividendMonth(month));
+        combinedStockList.addAll(krStockJpaRepository.findByDividendMonth(month));
+
+        return combinedStockList;
+    }
+
+    List<Stock> getPagedStockList(List<Stock> stockList, int page, int size) {
+        int start = size * page;
+        int end = start + size;
+
+        return stockList.subList(start, end);
+    }
+
+    List<StockDTO> getStockDTOList(List<Stock> stockList) {
+        return stockList.stream()
                 .map(Stock::convertToStockDTO)
                 .toList();
     }
-
 }
