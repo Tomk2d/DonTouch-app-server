@@ -1,16 +1,13 @@
-package donTouch.stock_server.krStock.domain;
+package donTouch.stock_server.dividend.domain;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import donTouch.stock_server.stock.domain.Stock;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.Getter;
 
 @Entity
-@Getter
-@Table(name = "kr_stocks")
+@Table(name = "kr_stock_dividend_fixed")
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class KrStock extends Stock {
-    String corpCode;
+public class KrStockDividendFixed extends Dividend {
+    private Integer krStockId;
 }

@@ -1,5 +1,7 @@
 package donTouch.user_server.user.service;
 
-public interface UserService {
+import donTouch.user_server.user.dto.UsersDto;
 
+public interface UserService {
+    UsersDto findUserByEmail(String email);
 }

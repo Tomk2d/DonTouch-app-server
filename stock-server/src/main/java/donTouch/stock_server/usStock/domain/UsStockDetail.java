@@ -1,4 +1,4 @@
-package donTouch.stock_server.krStock.domain;
+package donTouch.stock_server.usStock.domain;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -10,13 +10,13 @@ import lombok.Getter;
 
 @Entity
 @Getter
-@Table(name = "kr_stock_details")
+@Table(name = "us_stock_details")
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class KrStockDetail extends StockDetail {
-    private Integer krStockId;
+public class UsStockDetail extends StockDetail {
+    private Integer usStockId;
 
     public StockDetailDTO convertToDTO() {
-        return new StockDetailDTO(getId(), krStockId, getSymbol(), getMarketCap(), getPeRatioTtm(),
+        return new StockDetailDTO(getId(), usStockId, getSymbol(), getMarketCap(), getPeRatioTtm(),
                 getTenYShareHoldersEquityGrowthPerShare(), getFiveYShareHoldersEquityGrowthPerShare(), getThreeYShareHoldersEquityGrowthPerShare(),
                 getTenYDividendPerShareGrowthPerShare(), getFiveYDividendPerShareGrowthPerShare(), getThreeYDividendPerShareGrowthPerShare());
     }
