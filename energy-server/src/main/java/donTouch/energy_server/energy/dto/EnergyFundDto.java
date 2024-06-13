@@ -12,8 +12,8 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class EnergyFundDto {
-    @NotBlank(message = "id가 빈칸입니다.")
-    private String id;
+    @NotBlank(message = "energyId가 빈칸입니다.")
+    private String energyId;
     @NotBlank(message = "title이 빈칸입니다.")
     private String title;
     @NotBlank(message = "titleImageUrl이 빈칸입니다.")
@@ -25,6 +25,6 @@ public class EnergyFundDto {
     private int investment_period;
     @NotNull(message = "fundingAmount가 null입니다.")
     private Double fundingAmount;
-    @NotNull(message = "sumOfInvestmentAndReservation 가 null 입니다.")
+    @NotNull(message = "sumOfInvestmentAndReservation가 null 입니다.")
     private int sumOfInvestmentAndReservation;
 }

@@ -8,6 +8,6 @@ import org.mapstruct.factory.Mappers;
 public interface EnergyFundMapper {
     EnergyFundMapper INSTANCE = Mappers.getMapper(EnergyFundMapper.class);
 
-    EnergyFundDto toDto(EnergyFund estateFund);
-    EnergyFund toEntity(EnergyFundDto estateFundDto);
+    EnergyFundDto toDto(EnergyFund energyFund);
+    EnergyFund toEntity(EnergyFundDto energyFundDto);
 }
