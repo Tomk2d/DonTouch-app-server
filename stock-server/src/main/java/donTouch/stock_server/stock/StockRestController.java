@@ -9,10 +9,7 @@ import donTouch.utils.utils.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.management.InstanceNotFoundException;
 import java.util.List;
@@ -20,6 +17,7 @@ import java.util.Map;
 
 @AllArgsConstructor
 @RestController
+@CrossOrigin(origins = "http://localhost:5174")
 @RequestMapping("/api/stocks")
 public class StockRestController {
     private final KafkaService kafkaService;
