@@ -1,21 +1,15 @@
 package donTouch.stock_server.stock.service;
 
-import donTouch.stock_server.krStock.domain.KrStock;
-import donTouch.stock_server.krStock.domain.KrStockDetail;
-import donTouch.stock_server.krStock.domain.KrStockDetailJpaRepository;
-import donTouch.stock_server.krStock.domain.KrStockJpaRepository;
+import donTouch.stock_server.krStock.domain.*;
 import donTouch.stock_server.stock.domain.Stock;
-import donTouch.stock_server.stock.dto.FindStockDetailForm;
-import donTouch.stock_server.stock.dto.FindStocksForm;
-import donTouch.stock_server.stock.dto.StockDTO;
-import donTouch.stock_server.usStock.domain.UsStock;
-import donTouch.stock_server.usStock.domain.UsStockDetail;
-import donTouch.stock_server.usStock.domain.UsStockDetailJpaRepository;
-import donTouch.stock_server.usStock.domain.UsStockJpaRepository;
+import donTouch.stock_server.stock.domain.StockPrice;
+import donTouch.stock_server.stock.dto.*;
+import donTouch.stock_server.usStock.domain.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.management.InstanceNotFoundException;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -26,6 +20,9 @@ public class StockServiceImpl implements StockService {
 
     private final KrStockDetailJpaRepository krStockDetailJpaRepository;
     private final UsStockDetailJpaRepository usStockDetailJpaRepository;
+
+    private final KrStockPriceJpaRepository krStockPriceJpaRepository;
+    private final UsStockPriceJpaRepository usStockPriceJpaRepository;
 
     @Override
     public List<StockDTO> findStocks(FindStocksForm findStocksForm) {
@@ -45,7 +42,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public Map<String, Object> findStockDetail(FindStockDetailForm findStockDetailForm) throws InstanceNotFoundException {
-        Map<String, Object> stockDetail = new HashMap<>();
+        Map<String, Object> stockDetail = new LinkedHashMap<>();
 
         if (findStockDetailForm.getExchange().equals("KSC")) {
             Optional<KrStock> krStock = krStockJpaRepository.findById(findStockDetailForm.getStockId());
@@ -82,6 +79,45 @@ public class StockServiceImpl implements StockService {
         return stockDetail;
     }
 
+    @Override
+    public Map<String, Object> findStockPrices(FindStockPricesForm findStockPricesForm) throws InstanceNotFoundException {
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = today.minusMonths(findStockPricesForm.getMonth());
+
+        List<StockPrice> stockPriceList;
+
+        if (findStockPricesForm.getExchange().equals("KSC")) {
+            stockPriceList = new ArrayList<>(krStockPriceJpaRepository.findAllByKrStockIdAndPriceDateGreaterThanEqual(findStockPricesForm.getStockId(), startDate));
+        } else {
+            stockPriceList = new ArrayList<>(usStockPriceJpaRepository.findAllByUsStockIdAndPriceDateGreaterThanEqual(findStockPricesForm.getStockId(), startDate));
+        }
+
+        if (stockPriceList.isEmpty()) {
+            throw new InstanceNotFoundException();
+        }
+
+        response.put("exchange", findStockPricesForm.getExchange());
+        response.put("stock_id", findStockPricesForm.getStockId());
+        response.put("symbol", stockPriceList.get(0).getSymbol());
+
+        stockPriceList.sort(Comparator.comparing(StockPrice::getPriceDate).reversed());
+        response.put("close_prices", applyIntervalAndConvertToDTO(stockPriceList, findStockPricesForm.getInterval()));
+
+        return response;
+    }
+
+    List<StockPriceDTO> applyIntervalAndConvertToDTO(List<StockPrice> stockPriceList, int interval) {
+        List<StockPriceDTO> filteredStockPriceDTOList = new ArrayList<>();
+        for (int i = 0; i < stockPriceList.size(); i++) {
+            if (i % interval == 0) {
+                StockPrice stockPrice = stockPriceList.get(i);
+                filteredStockPriceDTOList.add(stockPrice.convertToDTO());
+            }
+        }
+        return filteredStockPriceDTOList;
+    }
 
     List<Stock> getCombinedStockList() {
         List<Stock> combinedStockList = new ArrayList<>();
