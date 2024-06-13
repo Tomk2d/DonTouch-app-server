@@ -23,11 +23,11 @@ public class EnergyFundServiceImplement implements EnergyFundService{
         if (energyFundList.isEmpty()) {
             throw new NullPointerException("EstateFund List is empty");
         }
-        List<EnergyFundDto> estateFundDtoList = new ArrayList<>();
-        energyFundList.forEach(estateFund -> {
-            EnergyFundDto dto = energyMapper.toDto(estateFund);
-            estateFundDtoList.add(dto);
+        List<EnergyFundDto> energyFundDtoList = new ArrayList<>();
+        energyFundList.forEach(energyFund -> {
+            EnergyFundDto dto = energyMapper.toDto(energyFund);
+            energyFundDtoList.add(dto);
         });
-        return estateFundDtoList;
+        return energyFundDtoList;
     }
 }
