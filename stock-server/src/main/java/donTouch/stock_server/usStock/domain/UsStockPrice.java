@@ -1,4 +1,4 @@
-package donTouch.stock_server.krStock.domain;
+package donTouch.stock_server.usStock.domain;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -9,8 +9,8 @@ import lombok.Getter;
 
 @Entity
 @Getter
-@Table(name = "kr_stock_prices")
+@Table(name = "us_stock_prices")
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class KrStockPrice extends StockPrice {
-    Integer krStockId;
+public class UsStockPrice extends StockPrice {
+    Integer usStockId;
 }

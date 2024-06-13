@@ -2,6 +2,7 @@ package donTouch.stock_server.stock;
 
 import donTouch.stock_server.kafka.service.KafkaService;
 import donTouch.stock_server.stock.dto.FindStockDetailForm;
+import donTouch.stock_server.stock.dto.FindStockPricesForm;
 import donTouch.stock_server.stock.dto.FindStocksForm;
 import donTouch.stock_server.stock.dto.StockDTO;
 import donTouch.stock_server.stock.service.StockService;
@@ -40,7 +41,6 @@ public class StockRestController {
         if (stockDTOList == null) {
             return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
         return ApiUtils.success(stockDTOList);
     }
 
@@ -55,11 +55,23 @@ public class StockRestController {
             return ApiUtils.success(stockDetail);
 
         } catch (InstanceNotFoundException e) {
-            return ApiUtils.error("check id", HttpStatus.NOT_FOUND);
+            return ApiUtils.error("stock detail is not found", HttpStatus.NOT_FOUND);
         }
     }
 
-//    @PostMapping("/price")
+    @PostMapping("/chart")
+    public ApiUtils.ApiResult<Map<String, Object>> findStockPrices(@Valid @RequestBody FindStockPricesForm findStockPricesForm) {
+        try {
+            Map<String, Object> stockPrices = stockService.findStockPrices(findStockPricesForm);
 
+            if (stockPrices == null) {
+                return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            return ApiUtils.success(stockPrices);
+
+        } catch (InstanceNotFoundException e) {
+            return ApiUtils.error("stock prices not found", HttpStatus.NOT_FOUND);
+        }
+    }
 }
 
