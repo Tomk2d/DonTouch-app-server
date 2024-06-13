@@ -16,7 +16,7 @@ public class EnergyFund {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private String energyId;
 
     private String title;
     private String titleImageUrl;
@@ -27,6 +27,4 @@ public class EnergyFund {
 
     private Integer sumOfInvestmentAndReservation;
 
-    @OneToOne(mappedBy = "energyFund", cascade = CascadeType.ALL)
-    private EnergyFundDetail energyFundDetail;
 }

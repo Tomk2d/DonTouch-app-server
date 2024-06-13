@@ -112,7 +112,4 @@ public class EnergyFundDetail {
     @Column(name = "collateral_recovery_value_4")
     private String collateralRecoveryValue4;
 
-    @OneToOne
-    @JoinColumn(name = "id")
-    private EnergyFund energyFund;
 }

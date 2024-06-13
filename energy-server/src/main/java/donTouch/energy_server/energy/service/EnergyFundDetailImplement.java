@@ -12,19 +12,19 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class EnergyFundDetailImplement implements EnergyFundDetailService{
-
+public class EnergyFundDetailImplement implements EnergyFundDetailService {
     private final EnergyFundJpaRepository energyRepository;
     private final EnergyFundDetailJpaRepository energyDetailRepository;
+
     @Override
     public EnergyFundDetailDto getEnergyFundDetail(String energyId) {
         Optional<EnergyFund> energyFundOptional = energyRepository.findById(energyId);
-        Optional<EnergyFundDetail> energyFundDetailOptional = energyDetailRepository.findByEnergyId(energyId);
+        Optional<EnergyFundDetail> energyFundDetailOptional = energyDetailRepository.findEnergyInfoById(energyId);
 
         if (energyFundOptional.isEmpty()) {
-            throw new NullPointerException("energy fund not found : id = "+energyId);
+            throw new NullPointerException("energy fund not found : id = " + energyId);
         }
-        if(energyFundDetailOptional.isEmpty()) {
+        if (energyFundDetailOptional.isEmpty()) {
             throw new NullPointerException("energy fund detail not found : id = " + energyId);
         }
 
@@ -32,7 +32,7 @@ public class EnergyFundDetailImplement implements EnergyFundDetailService{
         EnergyFundDetail energyFundDetail = energyFundDetailOptional.get();
 
         return new EnergyFundDetailDto(
-                energyFund.getId(),
+                energyFund.getEnergyId(),
                 energyFund.getTitle(),
                 energyFund.getTitleImageUrl(),
                 energyFund.getEarningRate(),
@@ -90,4 +90,13 @@ public class EnergyFundDetailImplement implements EnergyFundDetailService{
                 energyFundDetail.getCollateralRecoveryValue4()
         );
     }
+//    @Override
+//    public EnergyFundDetailDto getEnergyFundDetail(String energyId) {
+//        EnergyFundDetailDto getEnergyInfoDto = energyDetailRepository.findEnergyInfoById(energyId);
+//
+//        if (getEnergyInfoDto == null) {
+//            throw new NullPointerException("energy fund detail not found : id = " + energyId);
+//        }
+//        return getEnergyInfoDto;
+//    }
 }

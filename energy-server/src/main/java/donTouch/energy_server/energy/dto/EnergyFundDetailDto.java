@@ -10,8 +10,8 @@ import lombok.*;
 @Getter
 public class EnergyFundDetailDto {
 
-    @NotBlank(message = "id가 빈칸입니다.")
-    private String id;
+    @NotBlank(message = "energyId가 빈칸입니다.")
+    private String energyId;
     @NotBlank(message = "title이 빈칸입니다.")
     private String title;
     @NotBlank(message = "titleImageUrl이 빈칸입니다.")
