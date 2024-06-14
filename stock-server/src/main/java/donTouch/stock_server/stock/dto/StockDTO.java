@@ -12,6 +12,8 @@ public class StockDTO {
     private String type;
     private String exchange;
 
-    Integer dividendMonth;
-    Double dividendYieldTtm;
+    private Integer dividendMonth;
+    private Double dividendYieldTtm;
+
+    private Double personalizedScore;
 }

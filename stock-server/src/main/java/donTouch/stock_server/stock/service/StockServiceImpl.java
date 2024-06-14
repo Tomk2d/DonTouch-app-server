@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.management.InstanceNotFoundException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -33,11 +34,11 @@ public class StockServiceImpl implements StockService {
             combinedStockList = getCombinedStockListFilteredByMonth(findStocksForm.getDividendMonth());
         }
 
-        combinedStockList.sort(Comparator.comparing(Stock::getDividendYieldTtm).reversed());
+        List<StockDTO> stockDTOList = getStockDTOList(combinedStockList, findStocksForm);
 
-        List<Stock> pagedStockList = getPagedStockList(combinedStockList, findStocksForm.getPage(), findStocksForm.getSize());
+        stockDTOList.sort(Comparator.comparingDouble(StockDTO::getPersonalizedScore).reversed());
 
-        return getStockDTOList(pagedStockList);
+        return getPagedStockDTOList(stockDTOList, findStocksForm.getPage(), findStocksForm.getSize());
     }
 
     @Override
@@ -137,16 +138,17 @@ public class StockServiceImpl implements StockService {
         return combinedStockList;
     }
 
-    List<Stock> getPagedStockList(List<Stock> stockList, int page, int size) {
+    List<StockDTO> getPagedStockDTOList(List<StockDTO> stockDTOList, int page, int size) {
         int start = size * page;
         int end = start + size;
 
-        return stockList.subList(start, end);
+        return stockDTOList.subList(start, end);
     }
 
-    List<StockDTO> getStockDTOList(List<Stock> stockList) {
+    List<StockDTO> getStockDTOList(List<Stock> stockList, FindStocksForm findStocksForm) {
         return stockList.stream()
-                .map(Stock::convertToDTO)
-                .toList();
+                .map(stock -> stock.convertToDTO(
+                        findStocksForm.getSafeScore(), findStocksForm.getGrowthScore(), findStocksForm.getDividendScore()))
+                .collect(Collectors.toList());
     }
 }

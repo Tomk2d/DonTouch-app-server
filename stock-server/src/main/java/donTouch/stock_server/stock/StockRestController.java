@@ -24,14 +24,6 @@ public class StockRestController {
     private final KafkaService kafkaService;
     private final StockService stockService;
 
-//    @PostMapping("/combination")
-//    public ResponseEntity<ApiUtils.ApiResult> signUp(@Valid @RequestBody StockCombinationDto stockCombinationDto) {
-//        // ID 중복 체크
-//        isDuplicateId(signUpDto);
-//        String savedMember = memberService.signUp(signUpDto);
-//        return new ResponseEntity(success(savedMember), HttpStatus.CREATED);
-//    }
-
     @PostMapping("")
     public ApiUtils.ApiResult<List<StockDTO>> findStocks(@RequestBody @Valid FindStocksForm findStocksForm) {
         List<StockDTO> stockDTOList = stockService.findStocks(findStocksForm);
