@@ -19,7 +19,7 @@ public class EnergyFundDetailImplement implements EnergyFundDetailService {
     @Override
     public EnergyFundDetailDto getEnergyFundDetail(String energyId) {
         Optional<EnergyFund> energyFundOptional = energyRepository.findById(energyId);
-        Optional<EnergyFundDetail> energyFundDetailOptional = energyDetailRepository.findEnergyInfoById(energyId);
+        Optional<EnergyFundDetail> energyFundDetailOptional = energyDetailRepository.findEnergyInfoByEnergyId(energyId);
 
         if (energyFundOptional.isEmpty()) {
             throw new NullPointerException("energy fund not found : id = " + energyId);
@@ -45,6 +45,8 @@ public class EnergyFundDetailImplement implements EnergyFundDetailService {
                 energyFundDetail.getBorrowerInfo2Content(),
                 energyFundDetail.getBorrowerInfo3Title(),
                 energyFundDetail.getBorrowerInfo3Content(),
+                energyFundDetail.getStartPeriod(),
+                energyFundDetail.getEndPeriod(),
                 energyFundDetail.getFundUsage(),
                 energyFundDetail.getRepaymentMethod(),
                 energyFundDetail.getEarlyRepaymentFee(),

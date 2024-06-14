@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -20,7 +22,7 @@ public class EnergyFundDetailDto {
     @NotNull(message = "earningRate가 null입니다.")
     private Double earningRate;
     @NotNull(message = "investment_period가 null입니다.")
-    private int investment_period;
+    private int investmentPeriod;
     @NotNull(message = "fundingAmount가 null입니다.")
     private Double fundingAmount;
     @NotNull(message = "sumOfInvestmentAndReservation 가 null 입니다.")
@@ -32,6 +34,9 @@ public class EnergyFundDetailDto {
     private String borrowerInfo2Content;
     private String borrowerInfo3Title;
     private String borrowerInfo3Content;
+
+    private LocalDateTime startPeriod;
+    private LocalDateTime endPeriod;
 
     private String fundUsage;
     private String repaymentMethod;

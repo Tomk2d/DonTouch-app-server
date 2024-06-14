@@ -17,5 +17,5 @@ public interface EnergyFundDetailJpaRepository extends JpaRepository<EnergyFundD
 //            "efd.collateralRecoveryValue1, efd.collateralRecoveryValue2, efd.collateralRecoveryValue3, efd.collateralRecoveryValue4) FROM EnergyFund ef JOIN EnergyFundDetail efd ON ef.id = efd.energyId WHERE ef.id = :energyId")
 //    EnergyFundDetailDto findEnergyInfoById(@Param("energyId") String energyId);
 
-    Optional<EnergyFundDetail> findEnergyInfoById(String energyId);
+    Optional<EnergyFundDetail> findEnergyInfoByEnergyId(String energyId);
 }

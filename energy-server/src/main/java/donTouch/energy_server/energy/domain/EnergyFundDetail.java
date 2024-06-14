@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -17,6 +20,9 @@ public class EnergyFundDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private String energyId;
+
+    private LocalDateTime startPeriod;
+    private LocalDateTime endPeriod;
 
     @Column(name = "borrower_info_1_title")
     private String borrowerInfo1Title;
