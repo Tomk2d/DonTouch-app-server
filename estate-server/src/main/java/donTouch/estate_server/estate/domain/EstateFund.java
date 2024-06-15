@@ -52,5 +52,10 @@ public class EstateFund {
 
     @JsonDeserialize(using = StringToDoubleDeserializer.class)
     @JsonProperty("loanAmountBaseLtv")
-    private Double loanAmountBaseLtv;
+    private Long loanAmountBaseLtv;
+
+    @JsonProperty("eightCreditGrade")
+    private String eightCreditGrade;
+
+    private Long currentInvest;
 }

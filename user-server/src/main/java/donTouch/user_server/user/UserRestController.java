@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @AllArgsConstructor
 @RestController
@@ -62,6 +63,9 @@ public class UserRestController {
     public ApiResult<BankAccountDto> calBankAccount(@RequestBody @Valid BankCalculateForm bankCalculateForm) {
         try{
             BankAccountDto result = bankAccountService.calculateMoney(bankCalculateForm);
+            if (result == null){
+                return ApiUtils.error("잔고가 부족합니다.", HttpStatus.BAD_REQUEST);
+            }
             return ApiUtils.success(result);
         }catch (NullPointerException e) {
             return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);

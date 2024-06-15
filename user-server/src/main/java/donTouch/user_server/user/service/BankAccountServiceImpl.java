@@ -51,11 +51,10 @@ public class BankAccountServiceImpl implements BankAccountService {
         Long cash = bank.getCash();
 
         if (price<0 && cash < Math.abs(price)){
-            throw new NullPointerException("잔고가 부족합니다.");
+            return null;
         }else{
             bank.setCash(cash + price);
             BankAccount result = bankRepository.save(bank);
-
             return bankMapper.toDto(result);
         }
     }

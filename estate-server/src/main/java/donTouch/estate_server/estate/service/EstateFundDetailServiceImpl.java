@@ -14,8 +14,8 @@ public class EstateFundDetailServiceImpl implements EstateFundDetailService {
     private final EstateFundDetailJpaRepository estateFundDetailRepository;
 
     @Override
-    public EstateFundDetailDto findEstateInfoById(int id) {
-       EstateFundDetailDto result = estateFundDetailRepository.findEstateInfoById(id);
+    public EstateFundDetail findEstateInfoById(int id) {
+       EstateFundDetail result = estateFundDetailRepository.findEstateFundDetailByFundId(id);
        if (result == null) {
            throw new NullPointerException("EstateFundDetail with id " + id + " not found");
        }

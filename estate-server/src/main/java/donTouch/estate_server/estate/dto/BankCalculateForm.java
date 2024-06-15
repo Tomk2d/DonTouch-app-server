@@ -1,4 +1,4 @@
-package donTouch.user_server.user.dto;
+package donTouch.estate_server.estate.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -9,8 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Autowired;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @ToString
 @Getter
@@ -22,15 +23,4 @@ public class BankCalculateForm {
     private Long userId;
     @NotNull(message = "price가 null 입니다.")
     private Long price;
-
-    public BankCalculateForm() {
-    }
-    public BankCalculateForm(Long userId, Long price) {
-        this.userId = userId;
-        this.price = price;
-    }
-    public String getTopic() {
-        // 실제 토픽 이름을 반환하는 로직
-        return "response_topic"; // 예시로 "response_topic"을 반환
-    }
 }

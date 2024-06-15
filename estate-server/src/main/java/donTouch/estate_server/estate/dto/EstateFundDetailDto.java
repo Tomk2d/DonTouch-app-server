@@ -19,6 +19,7 @@ public class EstateFundDetailDto {
     private int totalAmountInvestments;
     private Double sumOfInvestmentAndReservation;
     private Double loanAmountBaseLtv;
+    private int currentInvest;
     private Integer estateId;
     private Double latitude;
     private Double longitude;
