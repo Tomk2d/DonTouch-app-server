@@ -51,7 +51,9 @@ public class KafkaConfig {
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG
             , JsonSerializer.class);
         props.put(JsonSerializer.TYPE_MAPPINGS,
-            "UsersDto:donTouch.user_server.kafka.dto.UsersDto");
+            "UsersDto:donTouch.user_server.kafka.dto.UsersDto,"
+                + "BankCalculateForm:donTouch.user_server.user.dto.BankCalculateForm,"
+                + "IsSuccessDto:donTouch.user_server.kafka.dto.IsSuccessDto");
         return props;
     }
     @Bean

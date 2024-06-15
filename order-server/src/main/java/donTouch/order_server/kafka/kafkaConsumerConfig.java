@@ -9,21 +9,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.messaging.converter.StringMessageConverter;
 
-@Enabled
+@EnableKafka
 @Configuration
 public class kafkaConsumerConfig {
     private Environment env;
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
-    public kafkaConsumerConfig(Environment env) {
+    public kafkaConsumerConfig(Environment env, KafkaTemplate<String, Object> kafkaTemplate) {
         this.env = env;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public ConsumerFactory<String, Object> consumerFactory() {
@@ -32,7 +36,7 @@ public class kafkaConsumerConfig {
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
             env.getProperty("bootstrap.servers"));
         props.put(ConsumerConfig.GROUP_ID_CONFIG,
-            "stock_group");
+            "order_group");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
             ErrorHandlingDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
@@ -43,9 +47,14 @@ public class kafkaConsumerConfig {
             JsonDeserializer.class);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         props.put(JsonDeserializer.TYPE_MAPPINGS,
-            "UsersDto:donTouch.order_server.kafka.dto.UsersDto");
+            "UsersDto:donTouch.order_server.kafka.dto.UsersDto,"
+                + "BankCalculateForm:donTouch.order_server.holding.dto.BankCalculateForm,"
+                + "IsSuccessDto:donTouch.order_server.kafka.dto.IsSuccessDto,"
+                + "HoldingEstateFundForm:donTouch.order_server.holding.dto.HoldingEstateFundForm,"
+                + "BankAccountLogDto:donTouch.order_server.kafka.dto.BankAccountLogDto");
         return new DefaultKafkaConsumerFactory<>(props);
     }
+
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
@@ -58,4 +67,3 @@ public class kafkaConsumerConfig {
         return new StringMessageConverter();
     }
 }
-

@@ -13,6 +13,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.messaging.converter.StringMessageConverter;
@@ -21,10 +22,13 @@ import org.springframework.messaging.converter.StringMessageConverter;
 @Configuration
 public class kafkaConsumerConfig {
     private Environment env;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+
 
     @Autowired
-    public kafkaConsumerConfig(Environment env) {
+    public kafkaConsumerConfig(Environment env, KafkaTemplate<String, Object> kafkaTemplate) {
         this.env = env;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public ConsumerFactory<String, Object> consumerFactory() {
@@ -44,14 +48,19 @@ public class kafkaConsumerConfig {
             JsonDeserializer.class);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         props.put(JsonDeserializer.TYPE_MAPPINGS,
-            "UsersDto:donTouch.user_server.kafka.dto.UsersDto");
+            "UsersDto:donTouch.user_server.kafka.dto.UsersDto,"
+                + "BankCalculateForm:donTouch.user_server.user.dto.BankCalculateForm,"
+                + "IsSuccessDto:donTouch.user_server.kafka.dto.IsSuccessDto");
         return new DefaultKafkaConsumerFactory<>(props);
     }
+
+
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
 
         factory.setConsumerFactory(consumerFactory());
+        factory.setReplyTemplate(kafkaTemplate);
         return factory;
     }
     @Bean
