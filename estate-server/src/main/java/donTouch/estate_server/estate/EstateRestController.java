@@ -1,5 +1,6 @@
 package donTouch.estate_server.estate;
 
+import donTouch.estate_server.estate.domain.EstateFund;
 import donTouch.estate_server.estate.domain.EstateFundDetail;
 import donTouch.estate_server.estate.dto.BuyEstateFundForm;
 import donTouch.estate_server.estate.service.EstateFundDetailService;
@@ -53,6 +54,18 @@ public class EstateRestController {
             Boolean result = estateFundService.buyEstateFund(buyEstateFundForm);
             if (!result){
                 return ApiUtils.error("거래에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+            }
+            return ApiUtils.success(result);
+        }catch (NullPointerException e){
+            return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @PostMapping("/api/estate/sell")
+    public ApiResult<Boolean> sellEstate(@RequestBody BuyEstateFundForm buyEstateFundForm){
+        try{
+            Boolean result = estateFundService.sellEstateFund(buyEstateFundForm);
+            if (result==false){
+                return ApiUtils.error("판매에 실패하였습니다.", HttpStatus.BAD_REQUEST);
             }
             return ApiUtils.success(result);
         }catch (NullPointerException e){
