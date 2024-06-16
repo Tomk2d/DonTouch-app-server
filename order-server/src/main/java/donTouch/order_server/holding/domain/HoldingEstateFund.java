@@ -38,7 +38,6 @@ public class HoldingEstateFund {
     @NotNull
     private Long userId;
     @NotNull
-    @Column(unique = true)
     private int estateFundId;
     @NotNull
     private String estateName;

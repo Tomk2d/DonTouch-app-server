@@ -8,11 +8,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Builder
 @Getter
 @JsonSerialize
 @JsonDeserialize
+@ToString
 public class HoldingEstateFundForm {
     @NotNull(message = "유저아이디가 없습니다.")
     private Long userId;

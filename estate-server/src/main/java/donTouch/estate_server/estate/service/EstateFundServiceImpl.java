@@ -2,22 +2,23 @@ package donTouch.estate_server.estate.service;
 
 import donTouch.estate_server.estate.domain.EstateFund;
 import donTouch.estate_server.estate.domain.EstateFundJpaRepository;
-import donTouch.estate_server.estate.dto.BankAccountDto;
 import donTouch.estate_server.estate.dto.BankCalculateForm;
 import donTouch.estate_server.estate.dto.BuyEstateFundForm;
 import donTouch.estate_server.estate.dto.EstateFundDto;
+import donTouch.estate_server.estate.dto.HoldingEstateFundDto;
 import donTouch.estate_server.estate.utils.EstateFundMapper;
 import donTouch.estate_server.kafka.dto.BankAccountLogDto;
 import donTouch.estate_server.kafka.dto.HoldingEstateFundForm;
 import donTouch.estate_server.kafka.service.KafkaProducerService;
 import donTouch.utils.utils.ApiUtils.ApiResult;
-import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -45,6 +46,7 @@ public class EstateFundServiceImpl implements EstateFundService {
         return estateFundDtoList;
     }
 
+
     @Override
     public Boolean buyEstateFund(BuyEstateFundForm buyEstateFundForm) {
         Long userId = buyEstateFundForm.getUserId();
@@ -52,9 +54,6 @@ public class EstateFundServiceImpl implements EstateFundService {
         int inputCash= buyEstateFundForm.getInputCash();
         String estateName = buyEstateFundForm.getEstateName();
         double estateEarningRate = buyEstateFundForm.getEstateEarningRate();
-
-        System.out.println("userId ======================== " + userId);
-
 
         EstateFund findedEstateFund = estateFundRepository.findById(estateFundId)
             .orElseThrow(()-> new NullPointerException("부동산 id 가 잘못되었습니다."));
@@ -77,6 +76,47 @@ public class EstateFundServiceImpl implements EstateFundService {
 
         kafkaProducerService.requestAddEstate(new HoldingEstateFundForm(userId, estateFundId,inputCash,estateName, estateEarningRate));
         kafkaProducerService.requestAddBankLog(new BankAccountLogDto(userId, (long) inputCash, 1, estateName));
+        return true;
+    }
+
+    @Override
+    public Boolean sellEstateFund(BuyEstateFundForm buyEstateFundForm) {
+        Long userId = buyEstateFundForm.getUserId();
+        int estateFundId = buyEstateFundForm.getEstateFundId();
+        int inputCash= buyEstateFundForm.getInputCash();
+        String estateName = buyEstateFundForm.getEstateName();
+        double estateEarningRate = buyEstateFundForm.getEstateEarningRate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HoldingEstateFundForm requestBody = new HoldingEstateFundForm(userId, estateFundId, inputCash, estateName, estateEarningRate);
+        HttpEntity<HoldingEstateFundForm> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<HoldingEstateFundDto> responseEntity = restTemplate.postForEntity(
+            "http://localhost:8085/api/holding/estate/sell",
+            requestEntity,
+            HoldingEstateFundDto.class
+        );
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            HoldingEstateFundDto responseBody = responseEntity.getBody();
+
+            BankCalculateForm requestBodyBank = new BankCalculateForm(responseBody.getUserId(), (long) responseBody.getInputCash());
+            ApiResult result = restTemplate.postForEntity("http://localhost:8081/api/user/bank/cal", requestBodyBank, ApiResult.class).getBody();
+            if(result.getResponse().equals("잔고가 부족합니다.")){
+                throw new NullPointerException("입금이 되지 않았습니다.");
+            }
+            kafkaProducerService.requestAddBankLog(new BankAccountLogDto(
+                responseBody.getUserId(),
+                (long) responseBody.getInputCash(), 0,
+                responseBody.getEstateName())
+            );
+        } else {
+            throw new NullPointerException("판매할 상품이 없습니다.");
+        }
+
+
+
         return true;
     }
 }
