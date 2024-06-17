@@ -1,5 +1,6 @@
 package donTouch.estate_server.estate.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import donTouch.estate_server.estate.domain.EstateFund;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -29,5 +30,9 @@ public class EstateFundDto {
     private Double sumOfInvestmentAndReservation;
     @NotNull(message = "loanAmountBaseLtv 가 null 입니다.")
     private Double loanAmountBaseLtv;
+    @NotNull(message = "등급이 null 입니다.")
+    private String eightCreditGrade;
+
+    private Long currentInvest;
 
 }

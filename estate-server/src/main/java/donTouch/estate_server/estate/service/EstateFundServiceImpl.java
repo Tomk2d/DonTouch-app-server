@@ -115,8 +115,6 @@ public class EstateFundServiceImpl implements EstateFundService {
             throw new NullPointerException("판매할 상품이 없습니다.");
         }
 
-
-
         return true;
     }
 }
