@@ -29,8 +29,6 @@ public class StockServiceImpl implements StockService {
     public List<StockDTO> findStocks(FindStocksForm findStocksForm) {
         List<Stock> combinedStockList = getCombinedStockList(findStocksForm.getSearchWord(), findStocksForm.getDividendMonth());
 
-        System.out.println("keyword: " + findStocksForm.getSearchWord());
-
         List<StockDTO> stockDTOList = getStockDTOList(combinedStockList, findStocksForm);
 
         stockDTOList.sort(Comparator.comparingDouble(StockDTO::getPersonalizedScore).reversed());
