@@ -24,5 +24,5 @@ public class FindCombinationForm {
 
     @NotNull(message = "input investmentAmount")
     @Min(value = 0, message = "investmentAmount must be 0 or more")
-    private Integer investmentAmount;
+    private Long investmentAmount;
 }

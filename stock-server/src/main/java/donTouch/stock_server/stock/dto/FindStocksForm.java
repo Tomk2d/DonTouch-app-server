@@ -3,9 +3,11 @@ package donTouch.stock_server.stock.dto;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class FindStocksForm {
     private String searchWord;
 

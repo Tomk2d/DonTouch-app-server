@@ -1,8 +1,7 @@
 package donTouch.stock_server.stock.service;
 
 import donTouch.stock_server.krStock.domain.*;
-import donTouch.stock_server.stock.domain.Stock;
-import donTouch.stock_server.stock.domain.StockPrice;
+import donTouch.stock_server.stock.domain.*;
 import donTouch.stock_server.stock.dto.*;
 import donTouch.stock_server.usStock.domain.*;
 import lombok.AllArgsConstructor;
@@ -106,9 +105,145 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public Map<String, Object> findCombination(FindCombinationForm findCombinationForm) {
+        // 2차원 배열 fixed
+        List<List<StockDTO>> fixedStockList = getFixedCombinations(findCombinationForm);
+        List<List<Combination>> distirbutedStockList = distributeStock(fixedStockList, findCombinationForm.getInvestmentAmount());
+
+        return convertToMap(distirbutedStockList);
+    }
+
+    List<List<Combination>> distributeStock(List<List<StockDTO>> fixedStockList, Long investmentAmount) {
+        List<List<Combination>> combinationDTOList = convertToCombinationDTO(fixedStockList);
+        PriorityQueue<Combination> queueSortedByPrice = getQueueSortedByPrice(combinationDTOList);
+        long boughtStockPrice = 0;
+        long[] dividend = {-1, 0, 0, 0};
+
+        while (!queueSortedByPrice.isEmpty()) {
+            Combination combination = queueSortedByPrice.poll();
+
+            if (dividend[combination.getStock().getDividendMonth()] > 0) {
+                continue;
+            }
+
+            if (boughtStockPrice + combination.getPrice() > investmentAmount) {
+                break;
+            }
+
+            combination.addQuantity();
+            dividend[combination.getStock().getDividendMonth()] += combination.getDividend();
+
+            boughtStockPrice += combination.getPrice();
+        }
+
+        PriorityQueue<MonthDividend> queueSortedByDividend = new PriorityQueue<>(new Comparator<MonthDividend>() {
+            @Override
+            public int compare(MonthDividend o1, MonthDividend o2) {
+                return Long.compare(o1.getDividend(), o2.getDividend());
+            }
+        });
+        queueSortedByDividend.add(new MonthDividend(1, dividend[1]));
+        queueSortedByDividend.add(new MonthDividend(2, dividend[2]));
+        queueSortedByDividend.add(new MonthDividend(3, dividend[3]));
+
+        while (true) {
+            MonthDividend lowestDividendMonth = queueSortedByDividend.poll();
+            List<Combination> combinationListToBuy = combinationDTOList.get(lowestDividendMonth.getMonth() - 1);
+            Combination combinationToBuy = combinationListToBuy.get(0);
+
+            if (combinationListToBuy.size() == 1 && boughtStockPrice + combinationToBuy.getPrice() > investmentAmount) {
+                queueSortedByDividend.add(lowestDividendMonth);
+                break;
+            }
+
+            if (combinationListToBuy.size() >= 2) {
+                long amount0 = combinationListToBuy.get(0).getAmount();
+                long amount1 = combinationListToBuy.get(1).getAmount();
+
+                if (amount0 > amount1) {
+                    combinationToBuy = combinationListToBuy.get(1);
+                }
+            }
+
+            boughtStockPrice += combinationToBuy.getPrice();
+            combinationToBuy.addQuantity();
+
+            lowestDividendMonth.addDividend(combinationToBuy.getPrice());
+            queueSortedByDividend.add(lowestDividendMonth);
+        }
+
+        return combinationDTOList;
+    }
+
+    PriorityQueue<Combination> getQueueSortedByPrice(List<List<Combination>> combinationDTOList) {
+        PriorityQueue<Combination> pq = new PriorityQueue<>((o1, o2) -> Integer.compare(o1.getPrice(), o2.getPrice()));
+
+        for (List<Combination> combinations : combinationDTOList) {
+            pq.addAll(combinations);
+        }
+
+        return pq;
+    }
+
+    List<List<Combination>> convertToCombinationDTO(List<List<StockDTO>> fixedStockList) {
+        List<List<Combination>> combinationDTOList = new ArrayList<>();
+
+        for (List<StockDTO> stockDTOList : fixedStockList) {
+            List<Combination> combination = new ArrayList<>();
+
+            for (StockDTO stockDTO : stockDTOList) {
+                combination.add(new Combination(stockDTO, getPrice(stockDTO.getExchange(), stockDTO.getId()), 0));
+            }
+            combinationDTOList.add(combination);
+        }
+        return combinationDTOList;
+    }
+
+    int getPrice(String exchange, Integer id) {
+        // 달러 변환까지 해야 함. 현재 id로 랜덤(?)
+        return id % 10 * 10000;
+    }
+
+    Map<String, Object> convertToMap(List<List<Combination>> distirbutedStockList) {
         Map<String, Object> response = new LinkedHashMap<>();
-        response.put("test", "test");
+        int group = 1;
+        long totalDividend = 0;
+
+        for (List<Combination> combinationList : distirbutedStockList) {
+            List<CombinationDTO> combinationDTOList = new ArrayList<>();
+
+            for (Combination combination : combinationList) {
+                if (combination.getQuantity() > 0) {
+                    combinationDTOList.add(combination.convertToDTO());
+                    totalDividend += combination.getDividend();
+                }
+            }
+            response.put("combination" + group++, combinationDTOList);
+        }
+
+        response.put("totalDividend", totalDividend);
         return response;
+    }
+
+    List<List<StockDTO>> getFixedCombinations(FindCombinationForm findCombinationForm) {
+        List<List<StockDTO>> fixedStockList = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            fixedStockList.add(findStocks(new FindStocksForm(null, i + 1, findCombinationForm.getSafeScore(), findCombinationForm.getGrowthScore(), findCombinationForm.getDividendScore(), 0, 2)));
+        }
+
+        double minScore = fixedStockList.get(0).get(0).getPersonalizedScore();
+        for (int i = 1; i < fixedStockList.size(); i++) {
+            if (minScore > fixedStockList.get(i).get(0).getPersonalizedScore()) {
+                minScore = fixedStockList.get(i).get(0).getPersonalizedScore();
+            }
+        }
+
+        for (List<StockDTO> stockDTOS : fixedStockList) {
+            if (stockDTOS.get(1).getPersonalizedScore() < minScore) {
+                stockDTOS.remove(1);
+            }
+        }
+        return fixedStockList;
     }
 
     List<StockPriceDTO> applyIntervalAndConvertToDTO(List<StockPrice> stockPriceList, int interval) {
