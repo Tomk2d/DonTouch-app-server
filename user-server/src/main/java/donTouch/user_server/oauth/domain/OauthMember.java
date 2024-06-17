@@ -33,7 +33,7 @@ public class OauthMember {
     public String email() {
         return email;
     }
-    public String snsType() {
-        return email;
+    public Integer snsType() {
+        return snsType;
     }
 }

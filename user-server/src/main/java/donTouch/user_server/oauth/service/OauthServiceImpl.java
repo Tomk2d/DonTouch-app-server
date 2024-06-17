@@ -25,9 +25,6 @@ public class OauthServiceImpl implements OauthService{
     @Override
     public LoginResponse login(OauthServerType oauthServerType, String authCode) {
         OauthMember oauthMember = oauthMemberClientComposite.fetch(oauthServerType, authCode);
-
-        log.info(String.valueOf(oauthMember));
-
         OauthMember saved = oauthMemberRepository.findByEmail(oauthMember.email())
                 .orElseGet(() -> oauthMemberRepository.save(oauthMember));
 

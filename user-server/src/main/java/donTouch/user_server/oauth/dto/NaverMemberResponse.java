@@ -13,10 +13,12 @@ public record NaverMemberResponse(
         Response response
 ) {
     public OauthMember toDomain() {
+
         return OauthMember.builder()
                 //.oauthId(new OauthId(String.valueOf(response.id), NAVER))
-                .nickname(response.nickname)
+                .nickname(response.name)
                 //.profileImageUrl(response.profileImage)
+                .email(response.email)
                 .snsType(2)
                 .build();
     }
@@ -27,12 +29,10 @@ public record NaverMemberResponse(
             String nickname,
             String name,
             String email,
-            String gender,
             String age,
             String birthday,
             String profileImage,
-            String birthyear,
-            String mobile
+            String birthyear
     ) {
     }
 }
