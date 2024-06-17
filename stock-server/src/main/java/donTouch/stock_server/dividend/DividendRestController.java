@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/calendar")
+@RequestMapping("/api/stocks/calendar")
 public class DividendRestController {
     private final DividendService dividendService;
 
