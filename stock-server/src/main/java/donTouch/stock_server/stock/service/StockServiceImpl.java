@@ -167,7 +167,7 @@ public class StockServiceImpl implements StockService {
             boughtStockPrice += combinationToBuy.getPrice();
             combinationToBuy.addQuantity();
 
-            lowestDividendMonth.addDividend(combinationToBuy.getPrice());
+            lowestDividendMonth.addDividend(combinationToBuy.getDividendPerShare());
             queueSortedByDividend.add(lowestDividendMonth);
         }
 
@@ -206,10 +206,11 @@ public class StockServiceImpl implements StockService {
     Map<String, Object> convertToMap(List<List<Combination>> distirbutedStockList) {
         Map<String, Object> response = new LinkedHashMap<>();
         int group = 1;
-        long totalDividend = 0;
 
         for (List<Combination> combinationList : distirbutedStockList) {
+            Map<String, Object> combinationInfo = new LinkedHashMap<>();
             List<CombinationDTO> combinationDTOList = new ArrayList<>();
+            long totalDividend = 0;
 
             for (Combination combination : combinationList) {
                 if (combination.getQuantity() > 0) {
@@ -217,10 +218,13 @@ public class StockServiceImpl implements StockService {
                     totalDividend += combination.getDividend();
                 }
             }
-            response.put("combination" + group++, combinationDTOList);
+
+            combinationInfo.put("stocks", combinationDTOList);
+            combinationInfo.put("totalDividend", totalDividend);
+
+            response.put("combination" + group++, combinationInfo);
         }
 
-        response.put("totalDividend", totalDividend);
         return response;
     }
 

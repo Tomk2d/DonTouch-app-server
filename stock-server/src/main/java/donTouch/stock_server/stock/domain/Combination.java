@@ -15,6 +15,10 @@ public class Combination {
         quantity++;
     }
 
+    public int getDividendPerShare() {
+        return (int) (price * stock.getDividendYieldTtm());
+    }
+
     public long getDividend() {
         return (long) (price * stock.getDividendYieldTtm()) * quantity / 4;
     }
