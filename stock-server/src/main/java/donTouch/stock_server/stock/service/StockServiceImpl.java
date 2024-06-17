@@ -29,6 +29,8 @@ public class StockServiceImpl implements StockService {
     public List<StockDTO> findStocks(FindStocksForm findStocksForm) {
         List<Stock> combinedStockList = getCombinedStockList(findStocksForm.getSearchWord(), findStocksForm.getDividendMonth());
 
+        System.out.println("keyword: " + findStocksForm.getSearchWord());
+
         List<StockDTO> stockDTOList = getStockDTOList(combinedStockList, findStocksForm);
 
         stockDTOList.sort(Comparator.comparingDouble(StockDTO::getPersonalizedScore).reversed());
@@ -119,27 +121,23 @@ public class StockServiceImpl implements StockService {
         List<Stock> combinedStockList = new ArrayList<>();
 
         if (searchWord == null && dividendMonth == null) {
-            System.out.println("둘다 null");
             combinedStockList.addAll(usStockJpaRepository.findAll());
             combinedStockList.addAll(krStockJpaRepository.findAll());
             return combinedStockList;
         }
 
         if (searchWord == null) {
-            System.out.println("searchWord is null");
             combinedStockList.addAll(usStockJpaRepository.findByDividendMonth(dividendMonth));
             combinedStockList.addAll(krStockJpaRepository.findByDividendMonth(dividendMonth));
             return combinedStockList;
         }
 
         if (dividendMonth == null) {
-            System.out.println("dividendMonth is null");
             combinedStockList.addAll(usStockJpaRepository.findDistinctBySymbolContainingOrNameContaining(searchWord, searchWord));
             combinedStockList.addAll(krStockJpaRepository.findDistinctBySymbolContainingOrNameContaining(searchWord, searchWord));
             return combinedStockList;
         }
 
-        System.out.println("둘다 null아님");
         combinedStockList.addAll(usStockJpaRepository.findDistinctBySymbolContainingOrNameContainingAndDividendMonth(searchWord, searchWord, dividendMonth));
         combinedStockList.addAll(krStockJpaRepository.findDistinctBySymbolContainingOrNameContainingAndDividendMonth(searchWord, searchWord, dividendMonth));
         return combinedStockList;
