@@ -61,7 +61,7 @@ public class StockRestController {
         }
     }
 
-    @PostMapping("/combination")
+    @PostMapping("/combination/create")
     public ApiUtils.ApiResult<Map<String, Object>> findCombination(@Valid @RequestBody FindCombinationForm findCombinationForm) {
         Map<String, Object> combination = stockService.findCombination(findCombinationForm);
 
@@ -69,6 +69,21 @@ public class StockRestController {
             return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return ApiUtils.success(combination);
+    }
+
+    @PostMapping("/combination/distribute")
+    public ApiUtils.ApiResult<Map<String, Object>> distributeCombination(@Valid @RequestBody DistributeCombinationForm distributeCombinationForm) {
+        try {
+            Map<String, Object> distribution = stockService.distributeCombination(distributeCombinationForm);
+
+            if (distribution == null) {
+                return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            return ApiUtils.success(distribution);
+        } catch (IllegalStateException e) {
+            return ApiUtils.error("each combination should have 1 or more stocks", HttpStatus.BAD_REQUEST);
+        }
+
     }
 }
 

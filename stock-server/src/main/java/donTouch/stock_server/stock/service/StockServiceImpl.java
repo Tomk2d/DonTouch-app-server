@@ -105,11 +105,83 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public Map<String, Object> findCombination(FindCombinationForm findCombinationForm) {
-        // 2차원 배열 fixed
         List<List<StockDTO>> fixedStockList = getFixedCombinations(findCombinationForm);
         List<List<Combination>> distirbutedStockList = distributeStock(fixedStockList, findCombinationForm.getInvestmentAmount());
 
         return convertToMap(distirbutedStockList);
+    }
+
+    @Override
+    public Map<String, Object> distributeCombination(DistributeCombinationForm distributeCombinationForm) {
+        List<List<StockDTO>> fixedStockList = convertToFixedStockList(distributeCombinationForm);
+
+        for (List<StockDTO> stockDTOList : fixedStockList) {
+            if (stockDTOList.isEmpty()) {
+                throw new IllegalStateException();
+            }
+        }
+
+        List<List<Combination>> distirbutedStockList = distributeStock(fixedStockList, distributeCombinationForm.getInvestmentAmount());
+
+        return convertToMap(distirbutedStockList);
+    }
+
+    List<List<StockDTO>> convertToFixedStockList(DistributeCombinationForm distributeCombinationForm) {
+        List<List<StockDTO>> response = new ArrayList<>();
+
+        response.add(createCombination(distributeCombinationForm.getExchange11(),
+                distributeCombinationForm.getStockId11(),
+                distributeCombinationForm.getExchange12(),
+                distributeCombinationForm.getStockId12()));
+
+        response.add(createCombination(distributeCombinationForm.getExchange21(),
+                distributeCombinationForm.getStockId21(),
+                distributeCombinationForm.getExchange22(),
+                distributeCombinationForm.getStockId22()));
+
+        response.add(createCombination(distributeCombinationForm.getExchange31(),
+                distributeCombinationForm.getStockId31(),
+                distributeCombinationForm.getExchange32(),
+                distributeCombinationForm.getStockId32()));
+
+        return response;
+    }
+
+    List<StockDTO> createCombination(String exchange1, Integer stockId1, String exchange2, Integer stockId2) {
+        List<StockDTO> combination = new ArrayList<>();
+
+        StockDTO stock1 = findStockAndConvertToStockDTO(exchange1, stockId1);
+        StockDTO stock2 = findStockAndConvertToStockDTO(exchange2, stockId2);
+
+        if (stock1 != null) {
+            combination.add(stock1);
+        }
+        if (stock2 != null) {
+            combination.add(stock2);
+        }
+        return combination;
+    }
+
+    StockDTO findStockAndConvertToStockDTO(String exchange, Integer stockId) {
+        if (exchange == null || stockId == null) {
+            return null;
+        }
+
+        if (exchange.equals("KSC")) {
+            Optional<KrStock> foundKrStock = krStockJpaRepository.findById(stockId);
+            if (foundKrStock.isEmpty()) {
+                return null;
+            }
+            Stock krStock = foundKrStock.get();
+            return krStock.convertToDTO();
+        }
+
+        Optional<UsStock> foundUsStock = usStockJpaRepository.findById(stockId);
+        if (foundUsStock.isEmpty()) {
+            return null;
+        }
+        Stock usStock = foundUsStock.get();
+        return usStock.convertToDTO();
     }
 
     List<List<Combination>> distributeStock(List<List<StockDTO>> fixedStockList, Long investmentAmount) {
