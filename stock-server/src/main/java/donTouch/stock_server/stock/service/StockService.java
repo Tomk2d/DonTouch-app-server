@@ -14,4 +14,6 @@ public interface StockService {
     Map<String, Object> findStockPrices(FindStockPricesForm findStockPricesForm) throws InstanceNotFoundException;
 
     Map<String, Object> findCombination(FindCombinationForm findCombinationForm);
+
+    Map<String, Object> distributeCombination(DistributeCombinationForm distributeCombinationForm);
 }
