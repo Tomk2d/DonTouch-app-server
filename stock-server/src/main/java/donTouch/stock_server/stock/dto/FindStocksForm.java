@@ -7,6 +7,12 @@ import lombok.Getter;
 
 @Getter
 public class FindStocksForm {
+    private String searchWord;
+
+    @Min(value = 1, message = "dividendMonth must be between 1 and 3")
+    @Max(value = 3, message = "dividendMonth must be between 1 and 3")
+    private Integer dividendMonth;
+
     @NotNull(message = "input safeScore")
     @Min(value = 0, message = "safeScore must be between 0 and 100")
     @Max(value = 100, message = "safeScore must be between 0 and 100")
@@ -21,10 +27,6 @@ public class FindStocksForm {
     @Min(value = 0, message = "dividendScore must be between 0 and 100")
     @Max(value = 100, message = "dividendScore must be between 0 and 100")
     private Integer dividendScore;
-
-    @Min(value = 1, message = "dividendMonth must be between 1 and 3")
-    @Max(value = 3, message = "dividendMonth must be between 1 and 3")
-    private Integer dividendMonth;
 
     @NotNull(message = "input page")
     @Min(value = 0, message = "page must be 0 or more")

@@ -18,11 +18,16 @@ public class Dividend {
     private LocalDate dividendDate;
 
     private String symbol;
+    private String name;
     private Double dividend;
 
     private LocalDate paymentDate;
 
     public DividendDTO convertToDividendDTO(Boolean isFixed) {
-        return new DividendDTO(id, dividendDate, isFixed, symbol, dividend, paymentDate);
+        return new DividendDTO(id, dividendDate, isFixed, symbol, name, dividend, paymentDate);
+    }
+
+    public Integer getStockId() {
+        return null;
     }
 }
