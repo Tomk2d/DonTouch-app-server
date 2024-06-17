@@ -118,26 +118,27 @@ public class StockServiceImpl implements StockService {
     List<Stock> getCombinedStockList(String searchWord, Integer dividendMonth) {
         List<Stock> combinedStockList = new ArrayList<>();
 
-        if (searchWord == null && dividendMonth == null) {
-            combinedStockList.addAll(usStockJpaRepository.findAll());
-            combinedStockList.addAll(krStockJpaRepository.findAll());
+        System.out.println("searchWord: " + searchWord + ", dividendMonth: " + dividendMonth);
+        if (dividendMonth != null) {
+            combinedStockList.addAll(krStockJpaRepository.findAllByDividendMonth(dividendMonth));
+            combinedStockList.addAll(usStockJpaRepository.findAllByDividendMonth(dividendMonth));
+
+            if (searchWord != null) {
+                return combinedStockList.stream()
+                        .filter(stock -> stock.getName().contains(searchWord))
+                        .collect(Collectors.toList());
+            }
             return combinedStockList;
         }
 
-        if (searchWord == null) {
-            combinedStockList.addAll(usStockJpaRepository.findByDividendMonth(dividendMonth));
-            combinedStockList.addAll(krStockJpaRepository.findByDividendMonth(dividendMonth));
-            return combinedStockList;
-        }
-
-        if (dividendMonth == null) {
-            combinedStockList.addAll(usStockJpaRepository.findDistinctBySymbolContainingOrNameContaining(searchWord, searchWord));
+        if (searchWord != null) {
             combinedStockList.addAll(krStockJpaRepository.findDistinctBySymbolContainingOrNameContaining(searchWord, searchWord));
+            combinedStockList.addAll(usStockJpaRepository.findDistinctBySymbolContainingOrNameContaining(searchWord, searchWord));
             return combinedStockList;
         }
 
-        combinedStockList.addAll(usStockJpaRepository.findDistinctBySymbolContainingOrNameContainingAndDividendMonth(searchWord, searchWord, dividendMonth));
-        combinedStockList.addAll(krStockJpaRepository.findDistinctBySymbolContainingOrNameContainingAndDividendMonth(searchWord, searchWord, dividendMonth));
+        combinedStockList.addAll(krStockJpaRepository.findAll());
+        combinedStockList.addAll(usStockJpaRepository.findAll());
         return combinedStockList;
     }
 

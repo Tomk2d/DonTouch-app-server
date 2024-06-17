@@ -18,7 +18,7 @@ import java.util.Map;
 
 @AllArgsConstructor
 @RestController
-@CrossOrigin(origins = "http://localhost:5174")
+@CrossOrigin(origins = {"http://localhost:5174", "http://localhost:5173"})
 @RequestMapping("/api/stocks")
 public class StockRestController {
     private final KafkaService kafkaService;
