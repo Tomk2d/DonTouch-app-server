@@ -11,45 +11,29 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-@Table(name = "oauth_member",
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "oauth_id_unique",
-                        columnNames = {
-                                "oauth_server_id",
-                                "oauth_server"
-                        }
-                ),
-        }
-)
+@Table(name = "oauth_user")
 public class OauthMember {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Embedded
-    private OauthId oauthId;
+//
+//    @Embedded
+//    private OauthId oauthId;
     private String nickname;
-    private String profileImageUrl;
+    //private String profileImageUrl;
     private String email;
+    private Integer snsType;
 
-    public Long id() {
-        return id;
-    }
-
-    public OauthId oauthId() {
-        return oauthId;
-    }
 
     public String nickname() {
         return nickname;
     }
 
-    public String profileImageUrl() {
-        return profileImageUrl;
-    }
     public String email() {
+        return email;
+    }
+    public String snsType() {
         return email;
     }
 }

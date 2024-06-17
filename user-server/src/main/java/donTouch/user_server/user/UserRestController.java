@@ -1,7 +1,9 @@
 package donTouch.user_server.user;
 
 import donTouch.user_server.kafka.service.KafkaService;
+import donTouch.user_server.oauth.domain.OauthMember;
 import donTouch.user_server.oauth.domain.OauthServerType;
+import donTouch.user_server.oauth.dto.LoginResponse;
 import donTouch.user_server.user.dto.BankAccountDto;
 import donTouch.user_server.user.dto.BankCalculateForm;
 import donTouch.user_server.user.dto.BankCreateForm;
@@ -83,18 +85,17 @@ public class UserRestController {
             HttpServletResponse response
     ) {
         String redirectUrl = oauthService.getAuthCodeRequestUrl(oauthServerType);
-        log.info(redirectUrl);
         response.sendRedirect(redirectUrl);
-        return ApiUtils.success("로그인 성공");
+        return ApiUtils.success("토큰 요청 성공");
     }
 
     @GetMapping("/api/user/oauth/login/{oauthServerType}")
-    public ApiResult<String> login(
+    public ApiResult<LoginResponse> login(
             @PathVariable OauthServerType oauthServerType,
             @RequestParam("code") String code
     ) {
-        String loginEmail = oauthService.login(oauthServerType, code);
-        return ApiUtils.success(loginEmail);
+        log.info("두두두두두두");
+        LoginResponse loginUser = oauthService.login(oauthServerType, code);
+        return ApiUtils.success(loginUser);
     }
-
 }

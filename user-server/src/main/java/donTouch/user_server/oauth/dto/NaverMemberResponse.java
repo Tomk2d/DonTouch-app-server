@@ -2,7 +2,6 @@ package donTouch.user_server.oauth.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import donTouch.user_server.oauth.domain.OauthId;
 import donTouch.user_server.oauth.domain.OauthMember;
 
 import static donTouch.user_server.oauth.domain.OauthServerType.NAVER;
@@ -15,9 +14,10 @@ public record NaverMemberResponse(
 ) {
     public OauthMember toDomain() {
         return OauthMember.builder()
-                .oauthId(new OauthId(String.valueOf(response.id), NAVER))
+                //.oauthId(new OauthId(String.valueOf(response.id), NAVER))
                 .nickname(response.nickname)
-                .profileImageUrl(response.profileImage)
+                //.profileImageUrl(response.profileImage)
+                .snsType(2)
                 .build();
     }
 

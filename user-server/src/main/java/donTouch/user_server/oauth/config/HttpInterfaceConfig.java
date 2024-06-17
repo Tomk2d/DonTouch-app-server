@@ -10,6 +10,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 @Configuration
 public class HttpInterfaceConfig {
+
     @Bean
     public KakaoApiClient kakaoApiClient() {
         return createHttpInterface(KakaoApiClient.class);

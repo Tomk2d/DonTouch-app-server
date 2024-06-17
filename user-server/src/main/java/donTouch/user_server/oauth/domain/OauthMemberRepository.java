@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface OauthMemberRepository extends JpaRepository<OauthMember, Long> {
 
-    Optional<OauthMember> findByOauthId(OauthId oauthId);
+    Optional<OauthMember> findByEmail(String email);
 }

@@ -2,7 +2,6 @@ package donTouch.user_server.oauth.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import donTouch.user_server.oauth.domain.OauthId;
 import donTouch.user_server.oauth.domain.OauthMember;
 
 import java.time.LocalDateTime;
@@ -19,10 +18,11 @@ public record KakaoMemberResponse(
 
     public OauthMember toDomain() {
         return OauthMember.builder()
-                .oauthId(new OauthId(String.valueOf(id), KAKAO))
+                //.oauthId(new OauthId(String.valueOf(id), KAKAO))
                 .nickname(kakaoAccount.profile.nickname)
-                .profileImageUrl(kakaoAccount.profile.profileImageUrl)
-                .email(kakaoAccount.profile.email)
+               // .profileImageUrl(kakaoAccount.profile.profileImageUrl)
+                .email(kakaoAccount.email)
+                .snsType(1)
                 .build();
     }
 
@@ -38,17 +38,9 @@ public record KakaoMemberResponse(
             boolean isEmailValid,
             boolean isEmailVerified,
             String email,
-            boolean ageRangeNeedsAgreement,
-            String ageRange,
-            boolean birthyearNeedsAgreement,
             String birthyear,
-            boolean birthdayNeedsAgreement,
             String birthday,
             String birthdayType,
-            boolean genderNeedsAgreement,
-            String gender,
-            boolean phoneNumberNeedsAgreement,
-            String phoneNumber,
             boolean ciNeedsAgreement,
             String ci,
             LocalDateTime ciAuthenticatedAt
@@ -59,9 +51,7 @@ public record KakaoMemberResponse(
     public record Profile(
             String nickname,
             String thumbnailImageUrl,
-            String profileImageUrl,
-            String email,
-            boolean isDefaultImage
+            String profileImageUrl
     ) {
     }
 }

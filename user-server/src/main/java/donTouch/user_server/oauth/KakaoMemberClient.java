@@ -6,16 +6,17 @@ import donTouch.user_server.oauth.domain.OauthServerType;
 import donTouch.user_server.oauth.dto.KakaoMemberResponse;
 import donTouch.user_server.oauth.dto.KakaoToken;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class KakaoMemberClient implements OauthMemberClient{
-    private final KakaoApiClient kakaoApiClient;
+    private final KakaoApiClientImpl kakaoApiClient;
     private final KakaoOauthConfig kakaoOauthConfig;
-
 
     @Override
     public OauthServerType supportServer() {
@@ -24,10 +25,11 @@ public class KakaoMemberClient implements OauthMemberClient{
 
     @Override
     public OauthMember fetch(String authCode) {
-        KakaoToken tokenInfo = kakaoApiClient.fetchToken(tokenRequestParams(authCode));
+        MultiValueMap<String, String> params = tokenRequestParams(authCode);
+        KakaoToken tokenInfo = kakaoApiClient.fetchToken(params);
         KakaoMemberResponse kakaoMemberResponse =
-                kakaoApiClient.fetchMember("Bearer " + tokenInfo.accessToken());  // (2)
-        return kakaoMemberResponse.toDomain();  // (3)
+                kakaoApiClient.fetchMember(tokenInfo.accessToken());
+        return kakaoMemberResponse.toDomain();
     }
 
     private MultiValueMap<String, String> tokenRequestParams(String authCode) {
@@ -37,6 +39,7 @@ public class KakaoMemberClient implements OauthMemberClient{
         params.add("redirect_uri", kakaoOauthConfig.redirectUri());
         params.add("code", authCode);
         params.add("client_secret", kakaoOauthConfig.clientSecret());
+
         return params;
     }
 }
