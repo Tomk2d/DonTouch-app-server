@@ -7,6 +7,8 @@ import java.util.List;
 
 @Repository
 public interface UsStockJpaRepository extends JpaRepository<UsStock, Integer> {
-    List<UsStock> findByDividendMonth(int month);
+    List<UsStock> findAllByDividendMonth(Integer month);
+
+    List<UsStock> findDistinctBySymbolContainingOrNameContainingOrEnglishNameContaining(String symbol, String name, String englishName);
 }
 
