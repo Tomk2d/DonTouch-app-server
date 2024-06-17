@@ -104,6 +104,13 @@ public class StockServiceImpl implements StockService {
         return response;
     }
 
+    @Override
+    public Map<String, Object> findCombination(FindCombinationForm findCombinationForm) {
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("test", "test");
+        return response;
+    }
+
     List<StockPriceDTO> applyIntervalAndConvertToDTO(List<StockPrice> stockPriceList, int interval) {
         List<StockPriceDTO> filteredStockPriceDTOList = new ArrayList<>();
         for (int i = 0; i < stockPriceList.size(); i++) {
