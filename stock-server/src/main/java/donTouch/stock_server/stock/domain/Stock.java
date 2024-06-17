@@ -22,14 +22,14 @@ public class Stock {
     private String type;
     private String exchange;
 
-    Integer dividendMonth;
-    Double dividendYieldTtm;
+    private Integer dividendMonth;
+    private Double dividendYieldTtm;
 
-    Double safeScore;
-    Double growthScore;
-    Double dividendScore;
+    private Double safeScore;
+    private Double growthScore;
+    private Double dividendScore;
 
-    LocalDateTime updatedDate;
+    private LocalDateTime updatedDate;
 
     public StockDTO convertToDTO(Integer userSafeScore, Integer userGrowthScore, Integer userDividendScore) {
 //        Double personalizedScore = safeScore * userSafeScore + growthScore * userGrowthScore + dividendScore * userDividendScore;
