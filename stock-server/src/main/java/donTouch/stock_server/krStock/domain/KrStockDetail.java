@@ -16,7 +16,7 @@ public class KrStockDetail extends StockDetail {
     private Integer krStockId;
 
     public StockDetailDTO convertToDTO() {
-        return new StockDetailDTO(getId(), krStockId, getSymbol(), getMarketCap(), getPeRatioTtm(),
+        return new StockDetailDTO(krStockId, getSymbol(), getMarketCap(), getPeRatioTtm(),
                 getTenYShareHoldersEquityGrowthPerShare(), getFiveYShareHoldersEquityGrowthPerShare(), getThreeYShareHoldersEquityGrowthPerShare(),
                 getTenYDividendPerShareGrowthPerShare(), getFiveYDividendPerShareGrowthPerShare(), getThreeYDividendPerShareGrowthPerShare());
     }

@@ -8,4 +8,9 @@ import java.util.List;
 @Repository
 public interface KrStockJpaRepository extends JpaRepository<KrStock, Integer> {
     List<KrStock> findByDividendMonth(int month);
+
+    List<KrStock> findDistinctBySymbolContainingOrNameContaining(String symbol, String name);
+
+    List<KrStock> findDistinctBySymbolContainingOrNameContainingAndDividendMonth(String symbol, String name, int month);
+
 }

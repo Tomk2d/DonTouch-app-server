@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class StockDetailDTO {
-    private Integer id;
     private Integer stockId;
     private String symbol;
 
