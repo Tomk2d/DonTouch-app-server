@@ -16,7 +16,7 @@ public class UsStockDetail extends StockDetail {
     private Integer usStockId;
 
     public StockDetailDTO convertToDTO() {
-        return new StockDetailDTO(getId(), usStockId, getSymbol(), getMarketCap(), getPeRatioTtm(),
+        return new StockDetailDTO(usStockId, getSymbol(), getMarketCap(), getPeRatioTtm(),
                 getTenYShareHoldersEquityGrowthPerShare(), getFiveYShareHoldersEquityGrowthPerShare(), getThreeYShareHoldersEquityGrowthPerShare(),
                 getTenYDividendPerShareGrowthPerShare(), getFiveYDividendPerShareGrowthPerShare(), getThreeYDividendPerShareGrowthPerShare());
     }
