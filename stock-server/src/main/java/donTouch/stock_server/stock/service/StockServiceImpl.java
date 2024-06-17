@@ -118,22 +118,23 @@ public class StockServiceImpl implements StockService {
     List<Stock> getCombinedStockList(String searchWord, Integer dividendMonth) {
         List<Stock> combinedStockList = new ArrayList<>();
 
-        System.out.println("searchWord: " + searchWord + ", dividendMonth: " + dividendMonth);
         if (dividendMonth != null) {
             combinedStockList.addAll(krStockJpaRepository.findAllByDividendMonth(dividendMonth));
             combinedStockList.addAll(usStockJpaRepository.findAllByDividendMonth(dividendMonth));
 
             if (searchWord != null) {
                 return combinedStockList.stream()
-                        .filter(stock -> stock.getName().contains(searchWord))
+                        .filter(stock -> stock.getName().toLowerCase().contains(searchWord.toLowerCase())
+                                || stock.getSymbol().toLowerCase().contains(searchWord.toLowerCase())
+                                || stock.getEnglishName().toLowerCase().contains(searchWord.toLowerCase()))
                         .collect(Collectors.toList());
             }
             return combinedStockList;
         }
 
         if (searchWord != null) {
-            combinedStockList.addAll(krStockJpaRepository.findDistinctBySymbolContainingOrNameContaining(searchWord, searchWord));
-            combinedStockList.addAll(usStockJpaRepository.findDistinctBySymbolContainingOrNameContaining(searchWord, searchWord));
+            combinedStockList.addAll(krStockJpaRepository.findDistinctBySymbolContainingOrNameContainingOrEnglishNameContaining(searchWord, searchWord, searchWord));
+            combinedStockList.addAll(usStockJpaRepository.findDistinctBySymbolContainingOrNameContainingOrEnglishNameContaining(searchWord, searchWord, searchWord));
             return combinedStockList;
         }
 

@@ -19,6 +19,7 @@ public class Stock {
     int id;
     private String symbol;
     private String name;
+    private String englishName;
     private String type;
     private String exchange;
 
@@ -32,10 +33,6 @@ public class Stock {
     private LocalDateTime updatedDate;
 
     public StockDTO convertToDTO(Integer userSafeScore, Integer userGrowthScore, Integer userDividendScore) {
-//        Double personalizedScore = safeScore * userSafeScore + growthScore * userGrowthScore + dividendScore * userDividendScore;
-
-        Integer maxScore = Math.max(userSafeScore, Math.max(userGrowthScore, userDividendScore));
-
         Double personalizedScore = safeScore * (double) userSafeScore * 4
                 + growthScore * (double) userGrowthScore
                 + dividendScore * (double) userDividendScore * 3;
