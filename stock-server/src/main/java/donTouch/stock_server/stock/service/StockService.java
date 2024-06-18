@@ -16,4 +16,5 @@ public interface StockService {
     Map<String, Object> findCombination(FindCombinationForm findCombinationForm);
 
     Map<String, Object> distributeCombination(DistributeCombinationForm distributeCombinationForm);
+
 }

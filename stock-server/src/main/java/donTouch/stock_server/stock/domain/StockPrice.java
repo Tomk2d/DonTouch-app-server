@@ -14,10 +14,14 @@ public class StockPrice {
     Integer id;
     String symbol;
 
-    LocalDate priceDate;
-    Double closePrice;
+    LocalDate date;
+
+    Double open;
+    Double high;
+    Double low;
+    Double close;
 
     public StockPriceDTO convertToDTO() {
-        return new StockPriceDTO(priceDate, closePrice);
+        return new StockPriceDTO(date, open, high, low, close);
     }
 }
