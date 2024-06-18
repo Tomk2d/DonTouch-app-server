@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ExchangeRestController {
     @GetMapping("/usd")
     public ApiUtils.ApiResult<ExchangeRate> getUsdExchangeRate() {
-        // test commit
         return ApiUtils.success(ExchangeRate.USD);
     }
 }
