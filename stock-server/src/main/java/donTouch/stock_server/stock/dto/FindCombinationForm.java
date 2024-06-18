@@ -3,18 +3,10 @@ package donTouch.stock_server.stock.dto;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
-public class FindStocksForm {
-    private String searchWord;
-
-    @Min(value = 1, message = "dividendMonth must be between 1 and 3")
-    @Max(value = 3, message = "dividendMonth must be between 1 and 3")
-    private Integer dividendMonth;
-
+public class FindCombinationForm {
     @NotNull(message = "input safeScore")
     @Min(value = 0, message = "safeScore must be between 0 and 100")
     @Max(value = 100, message = "safeScore must be between 0 and 100")
@@ -30,11 +22,7 @@ public class FindStocksForm {
     @Max(value = 100, message = "dividendScore must be between 0 and 100")
     private Integer dividendScore;
 
-    @NotNull(message = "input page")
-    @Min(value = 0, message = "page must be 0 or more")
-    private Integer page;
-
-    @NotNull(message = "input size")
-    @Min(value = 0, message = "size must be 0 or more")
-    private Integer size;
+    @NotNull(message = "input investmentAmount")
+    @Min(value = 0, message = "investmentAmount must be 0 or more")
+    private Long investmentAmount;
 }
