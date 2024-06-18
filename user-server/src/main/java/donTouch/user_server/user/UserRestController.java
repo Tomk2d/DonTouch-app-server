@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
+@CrossOrigin(origins = {"http://localhost:5174", "http://localhost:5173"})
 @Slf4j
 public class UserRestController {
     private final OauthService oauthService;
@@ -78,17 +79,6 @@ public class UserRestController {
         }
     }
 
-    @SneakyThrows
-    @GetMapping("/api/user/oauth/{oauthServerType}")
-    public ApiResult<String> redirectAuthCodeRequestUrl(
-            @PathVariable OauthServerType oauthServerType,
-            HttpServletResponse response
-    ) {
-        String redirectUrl = oauthService.getAuthCodeRequestUrl(oauthServerType);
-        response.sendRedirect(redirectUrl);
-        return ApiUtils.success("토큰 요청 성공");
-    }
-
     @GetMapping("/api/user/oauth/login/{oauthServerType}")
     public ApiResult<LoginResponse> login(
             @PathVariable OauthServerType oauthServerType,
@@ -97,5 +87,19 @@ public class UserRestController {
         log.info("두두두두두두");
         LoginResponse loginUser = oauthService.login(oauthServerType, code);
         return ApiUtils.success(loginUser);
+    }
+
+    @SneakyThrows
+    @GetMapping("/api/user/oauth/{oauthServerType}")
+    public ApiResult<String> redirectAuthCodeRequestUrl(
+            @PathVariable OauthServerType oauthServerType,
+            HttpServletResponse response
+    ) {
+        log.info("여기 들어오니? 제발 들어와줘");
+        String redirectUrl = oauthService.getAuthCodeRequestUrl(oauthServerType);
+
+        log.info(redirectUrl);
+        response.sendRedirect(redirectUrl);
+        return ApiUtils.success("토큰 요청 성공");
     }
 }

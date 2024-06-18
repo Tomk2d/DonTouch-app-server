@@ -30,6 +30,8 @@ public class KakaoApiClientImpl implements KakaoApiClient {
                 .retrieve()
                 .bodyToMono(KakaoToken.class);
 
+        log.info(responseMono.toString());
+
         KakaoToken response = responseMono.block();
         log.info("Fetched token info: {}", response);
         return response;
