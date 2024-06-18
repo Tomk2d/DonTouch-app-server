@@ -26,5 +26,6 @@ public class EnergyFund {
     private Double fundingAmount;
 
     private Integer sumOfInvestmentAndReservation;
+    private String creditRating;
 
 }
