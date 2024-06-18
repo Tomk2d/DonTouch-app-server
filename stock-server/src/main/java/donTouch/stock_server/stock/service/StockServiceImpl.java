@@ -285,7 +285,7 @@ public class StockServiceImpl implements StockService {
         Optional<UsStockPrice> price = usStockPriceJpaRepository.findTopByUsStockIdOrderByDate(stockId);
         if (price.isPresent()) {
             double closePrice = price.get().getClose();
-            double krwPrice = ExchangeRate.USD.getBuying();
+            double krwPrice = ExchangeRate.USD.getBuying() * closePrice;
             return (int) krwPrice;
         }
 
