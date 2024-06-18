@@ -27,4 +27,6 @@ public class EnergyFundDto {
     private Double fundingAmount;
     @NotNull(message = "sumOfInvestmentAndReservation가 null 입니다.")
     private int sumOfInvestmentAndReservation;
+    @NotNull(message = "crditRating이 null 입니다.")
+    private String creditRating;
 }
