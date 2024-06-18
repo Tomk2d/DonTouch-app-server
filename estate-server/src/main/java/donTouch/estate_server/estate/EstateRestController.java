@@ -3,6 +3,7 @@ package donTouch.estate_server.estate;
 import donTouch.estate_server.estate.domain.EstateFund;
 import donTouch.estate_server.estate.domain.EstateFundDetail;
 import donTouch.estate_server.estate.dto.BuyEstateFundForm;
+import donTouch.estate_server.estate.dto.EstateFundDetailDto;
 import donTouch.estate_server.estate.service.EstateFundDetailService;
 import donTouch.utils.utils.ApiUtils;
 import donTouch.utils.utils.ApiUtils.ApiResult;
@@ -48,7 +49,7 @@ public class EstateRestController {
             return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-    @PostMapping("/api/estate/buy")
+    @PostMapping("/api/estates/buy")
     public ApiResult<Boolean> buyEstate(@RequestBody BuyEstateFundForm buyEstateFundForm){
         try{
             Boolean result = estateFundService.buyEstateFund(buyEstateFundForm);
@@ -60,7 +61,7 @@ public class EstateRestController {
             return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-    @PostMapping("/api/estate/sell")
+    @PostMapping("/api/estates/sell")
     public ApiResult<Boolean> sellEstate(@RequestBody BuyEstateFundForm buyEstateFundForm){
         try{
             Boolean result = estateFundService.sellEstateFund(buyEstateFundForm);
