@@ -4,14 +4,15 @@ import donTouch.user_server.like.domain.LikeKrStock;
 import donTouch.user_server.like.domain.LikeKrStockJpaRepository;
 import donTouch.user_server.like.domain.LikeUsStock;
 import donTouch.user_server.like.domain.LikeUsStockJpaRepository;
-import donTouch.user_server.like.dto.FindLikeStockForm;
 import donTouch.user_server.like.dto.LikeStockDTO;
 import donTouch.user_server.like.dto.LikeStockForm;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -32,19 +33,25 @@ public class LikeStockServiceImpl implements LikeStockService {
     }
 
     @Override
-    public List<LikeStockDTO> findLikeStocks(FindLikeStockForm findLikeStockForm) {
-        System.out.println("userID: " + findLikeStockForm.getUserId());
-        List<LikeKrStock> likeKrStockList = likeKrStockJpaRepository.findAllByUserId(findLikeStockForm.getUserId());
-        List<LikeUsStock> likeUsStockList = likeUsStockJpaRepository.findAllByUserId(findLikeStockForm.getUserId());
+    public Map<String, Object> findLikeStocks(Long userId) {
+        Map<String, Object> response = new HashMap<>();
 
-        List<LikeStockDTO> findLikeStockDTOList = new ArrayList<>();
+        List<LikeKrStock> likeKrStockList = likeKrStockJpaRepository.findAllByUserId(userId);
+        List<LikeUsStock> likeUsStockList = likeUsStockJpaRepository.findAllByUserId(userId);
+
+        List<LikeStockDTO> likeKrStockDTOList = new ArrayList<>();
         for (LikeKrStock likeKrStock : likeKrStockList) {
-            findLikeStockDTOList.add(likeKrStock.convertToDTO());
-        }
-        for (LikeUsStock likeUsStock : likeUsStockList) {
-            findLikeStockDTOList.add(likeUsStock.convertToDTO());
+            likeKrStockDTOList.add(likeKrStock.convertToDTO());
         }
 
-        return findLikeStockDTOList;
+        List<LikeStockDTO> likeUsStockDTOList = new ArrayList<>();
+        for (LikeUsStock likeUsStock : likeUsStockList) {
+            likeUsStockDTOList.add(likeUsStock.convertToDTO());
+        }
+
+        response.put("krStocks", likeKrStockDTOList);
+        response.put("usStocks", likeUsStockDTOList);
+
+        return response;
     }
 }

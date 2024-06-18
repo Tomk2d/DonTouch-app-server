@@ -1,6 +1,5 @@
 package donTouch.user_server.like;
 
-import donTouch.user_server.like.dto.FindLikeStockForm;
 import donTouch.user_server.like.dto.LikeStockDTO;
 import donTouch.user_server.like.dto.LikeStockForm;
 import donTouch.user_server.like.service.LikeStockService;
@@ -10,7 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -38,10 +37,9 @@ public class LikeRestController {
         return ApiUtils.success(savedStock);
     }
 
-    @PostMapping("/like/stocks")
-    public ApiUtils.ApiResult<List<LikeStockDTO>> findLikeStocks(@RequestBody @Valid FindLikeStockForm findLikeStockForm) {
-        System.out.println("id: " + findLikeStockForm.getUserId());
-        List<LikeStockDTO> likeStockDTOList = likeStockService.findLikeStocks(findLikeStockForm);
+    @GetMapping("/like/stocks/{userId}")
+    public ApiUtils.ApiResult<Map<String, Object>> findLikeStocks(@PathVariable Long userId) {
+        Map<String, Object> likeStockDTOList = likeStockService.findLikeStocks(userId);
 
         if (likeStockDTOList == null) {
             return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
