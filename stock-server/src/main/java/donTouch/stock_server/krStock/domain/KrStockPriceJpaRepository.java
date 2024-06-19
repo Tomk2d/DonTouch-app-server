@@ -5,11 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface KrStockPriceJpaRepository extends JpaRepository<KrStockPrice, Integer> {
     List<KrStockPrice> findAllByKrStockIdAndDateGreaterThanEqual(Integer usStockId, LocalDate startDate);
-
-    Optional<KrStockPrice> findTopByKrStockIdOrderByDate(Integer krStockId);
 }

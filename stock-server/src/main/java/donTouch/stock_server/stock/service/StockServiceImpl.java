@@ -25,6 +25,9 @@ public class StockServiceImpl implements StockService {
     private final KrStockPriceJpaRepository krStockPriceJpaRepository;
     private final UsStockPriceJpaRepository usStockPriceJpaRepository;
 
+    private final KrLatestCloseJpaRepository krLatestCloseJpaRepository;
+    private final UsLatestCloseJpaRepository usLatestCloseJpaRepository;
+
     @Override
     public List<StockDTO> findStocks(FindStocksForm findStocksForm) {
         List<Stock> combinedStockList = getCombinedStockList(findStocksForm.getSearchWord(), findStocksForm.getDividendMonth());
@@ -264,16 +267,16 @@ public class StockServiceImpl implements StockService {
             List<Combination> combination = new ArrayList<>();
 
             for (StockDTO stockDTO : stockDTOList) {
-                combination.add(new Combination(stockDTO, getPrice(stockDTO.getExchange(), stockDTO.getId()), 0));
+                combination.add(new Combination(stockDTO, getLatestClosePrice(stockDTO.getExchange(), stockDTO.getId()), 0));
             }
             combinationDTOList.add(combination);
         }
         return combinationDTOList;
     }
 
-    int getPrice(String exchange, Integer stockId) {
+    int getLatestClosePrice(String exchange, Integer stockId) {
         if (exchange.equals("KSC")) {
-            Optional<KrStockPrice> price = krStockPriceJpaRepository.findTopByKrStockIdOrderByDate(stockId);
+            Optional<KrLatestClose> price = krLatestCloseJpaRepository.findByKrStockId(stockId);
             if (price.isPresent()) {
                 double closePrice = price.get().getClose();
                 return (int) closePrice;
@@ -282,7 +285,7 @@ public class StockServiceImpl implements StockService {
             throw new NullPointerException();
         }
 
-        Optional<UsStockPrice> price = usStockPriceJpaRepository.findTopByUsStockIdOrderByDate(stockId);
+        Optional<UsLatestClose> price = usLatestCloseJpaRepository.findByUsStockId(stockId);
         if (price.isPresent()) {
             double closePrice = price.get().getClose();
             double krwPrice = ExchangeRate.USD.getBuying() * closePrice;
