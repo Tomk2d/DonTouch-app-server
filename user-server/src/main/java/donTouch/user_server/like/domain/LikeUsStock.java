@@ -21,6 +21,6 @@ public class LikeUsStock {
     private Integer usStockId;
 
     public LikeStockDTO convertToDTO() {
-        return new LikeStockDTO(id, exchange, usStockId);
+        return new LikeStockDTO(exchange, usStockId);
     }
 }

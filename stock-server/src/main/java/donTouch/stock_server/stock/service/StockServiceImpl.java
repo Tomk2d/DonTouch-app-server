@@ -1,7 +1,10 @@
 package donTouch.stock_server.stock.service;
 
 import donTouch.stock_server.krStock.domain.*;
-import donTouch.stock_server.stock.domain.*;
+import donTouch.stock_server.stock.domain.Combination;
+import donTouch.stock_server.stock.domain.MonthDividend;
+import donTouch.stock_server.stock.domain.Stock;
+import donTouch.stock_server.stock.domain.StockPrice;
 import donTouch.stock_server.stock.dto.*;
 import donTouch.stock_server.usStock.domain.*;
 import donTouch.utils.exchangeRate.ExchangeRate;
@@ -206,7 +209,7 @@ public class StockServiceImpl implements StockService {
             }
 
             combination.addQuantity();
-            dividend[combination.getStock().getDividendMonth()] += combination.getDividend();
+            dividend[combination.getStock().getDividendMonth()] += combination.getDividendPerShareAndQuarter();
 
             boughtStockPrice += combination.getPrice();
         }
@@ -243,7 +246,7 @@ public class StockServiceImpl implements StockService {
             boughtStockPrice += combinationToBuy.getPrice();
             combinationToBuy.addQuantity();
 
-            lowestDividendMonth.addDividend(combinationToBuy.getDividendPerShare());
+            lowestDividendMonth.addDividend(combinationToBuy.getDividendPerShareAndQuarter());
             queueSortedByDividend.add(lowestDividendMonth);
         }
 
@@ -307,7 +310,7 @@ public class StockServiceImpl implements StockService {
             for (Combination combination : combinationList) {
                 if (combination.getQuantity() > 0) {
                     combinationDTOList.add(combination.convertToDTO());
-                    totalDividend += combination.getDividend();
+                    totalDividend += combination.getTotalDividendPerQuarter();
                 }
             }
 
