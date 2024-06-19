@@ -1,19 +1,22 @@
-package donTouch.order_server.holding.dto;
+package donTouch.energy_server.energy.dto;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
+
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Setter
 @Getter
-public class HoldingEstateFundDto {
+public class HoldingEnergyFundDto {
     private int id;
     private Long userId;
-    private int estateId;
+    private int energyId;
 
     private String titleImageUrl;
     private String title;
@@ -22,6 +25,5 @@ public class HoldingEstateFundDto {
     private int investmentPeriod;
     private int inputCash;
     private Date startPeriod;
-    private Date createdAt;
 }
 

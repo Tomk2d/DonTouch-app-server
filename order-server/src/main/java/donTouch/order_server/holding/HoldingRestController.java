@@ -1,14 +1,14 @@
 package donTouch.order_server.holding;
 
-import donTouch.order_server.holding.dto.BankCalculateForm;
+import donTouch.order_server.holding.dto.HoldingEnergyFundDto;
 import donTouch.order_server.holding.dto.HoldingEstateFundDto;
 import donTouch.order_server.holding.dto.HoldingEstateFundForm;
+import donTouch.order_server.holding.service.HoldingEnergyFundService;
 import donTouch.order_server.holding.service.HoldingEstateFundService;
 import donTouch.utils.utils.ApiUtils;
 import donTouch.utils.utils.ApiUtils.ApiResult;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HoldingRestController {
     private final HoldingEstateFundService holdingEstateFundService;
+    private final HoldingEnergyFundService holdingEnergyFundService;
 
     @GetMapping("/api/holding/allEstate/{userId}")
     public ApiResult<List<HoldingEstateFundDto>> allEstate(@PathVariable Long userId) {
@@ -37,6 +38,20 @@ public class HoldingRestController {
             return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/api/holding/allEnergy/{userId}")
+    public ApiResult<List<HoldingEnergyFundDto>> allEnergy(@PathVariable Long userId) {
+        try{
+            List<HoldingEnergyFundDto> result = holdingEnergyFundService.getAllEnergy(userId);
+            if (result == null) {
+                return ApiUtils.error("보유 주식이 없습니다.", HttpStatus.NOT_FOUND);
+            }
+            return ApiUtils.success(result);
+        }catch (NullPointerException e){
+            return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping("/api/holding/estate/sell")
     public ResponseEntity<Object> findEstateAndDelete(@RequestBody HoldingEstateFundForm holdingEstateFundForm) {
         try{

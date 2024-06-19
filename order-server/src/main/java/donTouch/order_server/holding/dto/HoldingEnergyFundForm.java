@@ -15,11 +15,11 @@ import java.util.Date;
 @JsonDeserialize
 @NoArgsConstructor
 @AllArgsConstructor
-public class HoldingEstateFundForm {
+public class HoldingEnergyFundForm {
     @NotNull(message = "유저아이디가 없습니다.")
     private Long userId;
     @NotNull(message = "에너지 id가 없습니다.")
-    private int estateId;
+    private int energyId;
     @NotNull(message = "이미지가 없습니다.")
     private String titleImageUrl;
     @NotNull(message = "에너지 이름이 없습니다.")

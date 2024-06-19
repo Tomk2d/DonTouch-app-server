@@ -48,7 +48,7 @@ public class EstateRestController {
             return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-    @PostMapping("/api/estate/buy")
+    @PostMapping("/api/estates/buy")
     public ApiResult<Boolean> buyEstate(@RequestBody BuyEstateFundForm buyEstateFundForm){
         try{
             Boolean result = estateFundService.buyEstateFund(buyEstateFundForm);
@@ -60,7 +60,7 @@ public class EstateRestController {
             return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-    @PostMapping("/api/estate/sell")
+    @PostMapping("/api/estates/sell")
     public ApiResult<Boolean> sellEstate(@RequestBody BuyEstateFundForm buyEstateFundForm){
         try{
             Boolean result = estateFundService.sellEstateFund(buyEstateFundForm);
