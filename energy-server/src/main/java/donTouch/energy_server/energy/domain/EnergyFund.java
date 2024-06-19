@@ -9,6 +9,7 @@ import lombok.*;
 
 @Entity @Table(name = "energy_fund")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -22,9 +23,10 @@ public class EnergyFund {
     private String titleImageUrl;
 
     private Double earningRate;
-    private Integer investment_period;
+    private Integer investmentPeriod;
     private Double fundingAmount;
 
     private Integer sumOfInvestmentAndReservation;
+    private String creditRating;
 
 }

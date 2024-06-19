@@ -9,6 +9,10 @@ import donTouch.order_server.holding.dto.KrStockTradingLogDto;
 import donTouch.order_server.holding.service.HoldingEstateFundService;
 import donTouch.order_server.holding.service.HoldingKrStockService;
 import donTouch.order_server.holding.service.KrStockTradingLogService;
+import donTouch.order_server.holding.dto.HoldingEnergyFundForm;
+import donTouch.order_server.holding.dto.HoldingEstateFundForm;
+import donTouch.order_server.holding.service.HoldingEnergyFundService;
+import donTouch.order_server.holding.service.HoldingEstateFundService;
 import donTouch.order_server.kafka.dto.BankAccountLogDto;
 import donTouch.order_server.kafka.dto.CompleteStockForm;
 import java.util.LinkedHashMap;
@@ -25,10 +29,22 @@ import org.springframework.stereotype.Service;
 public class KafkaConsumerService {
     private KafkaTemplate<String, Object> kafkaTemplate;
     private final HoldingEstateFundService holdingEstateFundService;
+    private final HoldingEnergyFundService holdingEnergyFundService;
     private final BankAccountService bankAccountService;
     private final HoldingKrStockService holdingKrStockService;
     private final KrStockTradingLogService krStockTradingLogService;
     private final ObjectMapper objectMapper;
+
+
+
+    @Autowired
+    public KafkaConsumerService(KafkaTemplate<String, Object> kafkaTemplate,
+                                HoldingEstateFundService holdingEstateFundService, HoldingEnergyFundService holdingEnergyFundService, BankAccountService bankAccountService) {
+        this.kafkaTemplate = kafkaTemplate;
+        this.holdingEstateFundService = holdingEstateFundService;
+        this.holdingEnergyFundService = holdingEnergyFundService;
+        this.bankAccountService = bankAccountService;
+    }
 
     @KafkaListener(topics="response_calculate_bank", groupId = "order_group")
     public Boolean getCalculateResponse(Boolean isSuccess){
@@ -37,8 +53,16 @@ public class KafkaConsumerService {
 
     @KafkaListener(topics = "request_add_holding_estate", groupId = "order_group")
     public void saveHoldingEstate(HoldingEstateFundForm data){
+        System.out.println(data.getEstateId()+data.getUserId()+data.getTitle());
         holdingEstateFundService.saveEstate(data);
     }
+
+    @KafkaListener(topics = "request_add_holding_energy", groupId = "order_group")
+    public void saveHoldingEnergy(HoldingEnergyFundForm data){
+        System.out.println(data.getEnergyId()+data.getUserId()+data.getTitle());
+        holdingEnergyFundService.saveEnergy(data);
+    }
+
     @KafkaListener(topics = "request_add_bank_account", groupId = "order_group")
     public void saveBankAccountLog(BankAccountLogDto data){
         bankAccountService.saveBankAccountLog(data);

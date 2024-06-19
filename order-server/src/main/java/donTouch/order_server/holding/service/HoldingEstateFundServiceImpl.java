@@ -1,10 +1,10 @@
 package donTouch.order_server.holding.service;
 
+import donTouch.order_server.holding.domain.HoldingEnergyFund;
 import donTouch.order_server.holding.domain.HoldingEstateFund;
-import donTouch.order_server.holding.dto.HoldingEstateFundDto;
 import donTouch.order_server.holding.domain.HoldingEstateFundRepository;
+import donTouch.order_server.holding.dto.HoldingEstateFundDto;
 import donTouch.order_server.holding.dto.HoldingEstateFundForm;
-import donTouch.order_server.kafka.service.KafkaConsumerService;
 import donTouch.order_server.utils.EstateFundMapper;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
@@ -47,12 +47,28 @@ public class HoldingEstateFundServiceImpl implements HoldingEstateFundService {
     @Override
     public HoldingEstateFundDto findByUserIdAndEstateFundId(HoldingEstateFundForm holdingEstateFundForm) {
         Long userId = holdingEstateFundForm.getUserId();
-        int estateFundId = holdingEstateFundForm.getEstateFundId();
+        int estateFundId = holdingEstateFundForm.getEstateId();
 
-        HoldingEstateFund holdingEstateFund = holdingEstateFundRepository.findByUserIdAndEstateFundId(userId, estateFundId)
+        HoldingEstateFund holdingEstateFund = holdingEstateFundRepository.findByUserIdAndEstateId(userId, estateFundId)
             .orElseThrow(()-> new NullPointerException("not holding estate fund"));
         holdingEstateFundRepository.delete(holdingEstateFund);
         HoldingEstateFundDto result = estateFundMapper.toDto(holdingEstateFund);
         return result;
+    }
+
+    @Override
+    public Integer getEstateTotalCash(Long userId) {
+        List<HoldingEstateFund> listDto = holdingEstateFundRepository.findAllByUserId(userId)
+                .orElseThrow(() -> new NullPointerException("not found for holding energy fund"));
+
+        if(listDto.isEmpty()){
+            return null;
+        }
+
+        Integer totalCash = 0;
+        for(HoldingEstateFund holdingEstateFund : listDto){
+            totalCash += holdingEstateFund.getInputCash();
+        }
+        return totalCash;
     }
 }

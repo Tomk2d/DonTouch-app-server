@@ -9,5 +9,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class StockPriceDTO {
     LocalDate date;
-    Double closePrice;
+    Double open;
+    Double high;
+    Double low;
+    Double close;
+    Long volume;
 }

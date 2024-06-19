@@ -1,9 +1,6 @@
 package donTouch.stock_server.stock.service;
 
-import donTouch.stock_server.stock.dto.FindStockDetailForm;
-import donTouch.stock_server.stock.dto.FindStockPricesForm;
-import donTouch.stock_server.stock.dto.FindStocksForm;
-import donTouch.stock_server.stock.dto.StockDTO;
+import donTouch.stock_server.stock.dto.*;
 
 import javax.management.InstanceNotFoundException;
 import java.util.List;
@@ -15,4 +12,9 @@ public interface StockService {
     Map<String, Object> findStockDetail(FindStockDetailForm findStockDetailForm) throws InstanceNotFoundException;
 
     Map<String, Object> findStockPrices(FindStockPricesForm findStockPricesForm) throws InstanceNotFoundException;
+
+    Map<String, Object> findCombination(FindCombinationForm findCombinationForm);
+
+    Map<String, Object> distributeCombination(DistributeCombinationForm distributeCombinationForm);
+
 }

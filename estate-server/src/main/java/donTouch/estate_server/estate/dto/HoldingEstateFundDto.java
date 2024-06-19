@@ -1,12 +1,11 @@
 package donTouch.estate_server.estate.dto;
 
-import java.sql.Date;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Date;
 
 @Builder
 @AllArgsConstructor
@@ -15,9 +14,14 @@ import lombok.Setter;
 public class HoldingEstateFundDto {
     private int id;
     private Long userId;
-    private int estateFundId;
+    private int estateId;
+
+    private String titleImageUrl;
+    private String title;
+
+    private double earningRate;
+    private int investmentPeriod;
     private int inputCash;
-    private String estateName;
-    private double estateEarningRate;
-    private Date createAt;
+    private Date startPeriod;
+    private Date createdAt;
 }

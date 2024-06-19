@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface KrStockPriceJpaRepository extends JpaRepository<KrStockPrice, Integer> {
-    List<KrStockPrice> findAllByKrStockIdAndPriceDateGreaterThanEqual(Integer usStockId, LocalDate startDate);
+    List<KrStockPrice> findAllByKrStockIdAndDateGreaterThanEqual(Integer usStockId, LocalDate startDate);
 }
