@@ -108,6 +108,10 @@ public class EstateFundServiceImpl implements EstateFundService {
                 .orElseThrow(()-> new NullPointerException("부동산 id 가 잘못되었습니다."));
         EstateFundDetail estateFundDetail = estateFundDetailRepository.findByEstateId(estateFundId);
 
+        findedEstateFund.setCurrentInvest(findedEstateFund.getCurrentInvest() - (long) buyEstateFundForm.getInputCash());
+        EstateFund savedEstateFund = estateFundRepository.save(findedEstateFund);
+        System.out.println("현재 투자 금액 =================== " + savedEstateFund.getCurrentInvest());
+
         String titleImageUrl = findedEstateFund.getTitleMainImageUrl();
         int investmentPeriod = findedEstateFund.getLength();
         Date startPeriod = estateFundDetail.getStartDatetime();

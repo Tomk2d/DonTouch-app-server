@@ -79,7 +79,7 @@ public class EnergyFundServiceImplement implements EnergyFundService {
             throw new NullPointerException("계좌를 찾을 수 없습니다.");
         }
 
-        findedEnergyFund.setSumOfInvestmentAndReservation(findedEnergyFund.getSumOfInvestmentAndReservation() + buyEnergyFundForm.getInputCash()/100000000);
+        findedEnergyFund.setSumOfInvestmentAndReservation(findedEnergyFund.getSumOfInvestmentAndReservation() + buyEnergyFundForm.getInputCash());
         EnergyFund savedEnergyFund = energyRepository.save(findedEnergyFund);
         System.out.println("현재 투자 금액 =================== " + savedEnergyFund.getSumOfInvestmentAndReservation());
 
@@ -105,13 +105,20 @@ public class EnergyFundServiceImplement implements EnergyFundService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        EnergyFund findedEstateFund = energyRepository.findById(energyFundId)
+        EnergyFund findedEnergyFund = energyRepository.findById(energyFundId)
                 .orElseThrow(()-> new NullPointerException("부동산 id 가 잘못되었습니다."));
+
+
+        findedEnergyFund.setSumOfInvestmentAndReservation(findedEnergyFund.getSumOfInvestmentAndReservation() - buyEnergyFundForm.getInputCash());
+        EnergyFund savedEnergyFund = energyRepository.save(findedEnergyFund);
+        System.out.println("현재 투자 금액 =================== " + savedEnergyFund.getSumOfInvestmentAndReservation());
+
+
         EnergyFundDetail estateFundDetail = energyFundDetailRepository.findEnergyInfoByEnergyId(energyFundId)
                 .orElseThrow(()->new NullPointerException("해당 상품의 상세 정보가 없습니다."));
 
-        String titleImageUrl = findedEstateFund.getTitleImageUrl();
-        int investmentPeriod = findedEstateFund.getInvestmentPeriod();
+        String titleImageUrl = findedEnergyFund.getTitleImageUrl();
+        int investmentPeriod = findedEnergyFund.getInvestmentPeriod();
         LocalDateTime startPeriod = estateFundDetail.getStartPeriod();
         HoldingEnergyFundForm requestBody = new HoldingEnergyFundForm(userId, energyFundId, titleImageUrl, estateName, estateEarningRate , investmentPeriod, inputCash, startPeriod);
         HttpEntity<HoldingEnergyFundForm> requestEntity = new HttpEntity<>(requestBody, headers);
