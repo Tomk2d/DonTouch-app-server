@@ -4,6 +4,7 @@ import donTouch.stock_server.krStock.domain.*;
 import donTouch.stock_server.stock.domain.*;
 import donTouch.stock_server.stock.dto.*;
 import donTouch.stock_server.usStock.domain.*;
+import donTouch.utils.exchangeRate.ExchangeRate;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,9 @@ public class StockServiceImpl implements StockService {
 
     private final KrStockPriceJpaRepository krStockPriceJpaRepository;
     private final UsStockPriceJpaRepository usStockPriceJpaRepository;
+
+    private final KrLatestCloseJpaRepository krLatestCloseJpaRepository;
+    private final UsLatestCloseJpaRepository usLatestCloseJpaRepository;
 
     @Override
     public List<StockDTO> findStocks(FindStocksForm findStocksForm) {
@@ -84,9 +88,9 @@ public class StockServiceImpl implements StockService {
         List<StockPrice> stockPriceList;
 
         if (findStockPricesForm.getExchange().equals("KSC")) {
-            stockPriceList = new ArrayList<>(krStockPriceJpaRepository.findAllByKrStockIdAndPriceDateGreaterThanEqual(findStockPricesForm.getStockId(), startDate));
+            stockPriceList = new ArrayList<>(krStockPriceJpaRepository.findAllByKrStockIdAndDateGreaterThanEqual(findStockPricesForm.getStockId(), startDate));
         } else {
-            stockPriceList = new ArrayList<>(usStockPriceJpaRepository.findAllByUsStockIdAndPriceDateGreaterThanEqual(findStockPricesForm.getStockId(), startDate));
+            stockPriceList = new ArrayList<>(usStockPriceJpaRepository.findAllByUsStockIdAndDateGreaterThanEqual(findStockPricesForm.getStockId(), startDate));
         }
 
         if (stockPriceList.isEmpty()) {
@@ -97,8 +101,8 @@ public class StockServiceImpl implements StockService {
         response.put("stock_id", findStockPricesForm.getStockId());
         response.put("symbol", stockPriceList.get(0).getSymbol());
 
-        stockPriceList.sort(Comparator.comparing(StockPrice::getPriceDate).reversed());
-        response.put("close_prices", applyIntervalAndConvertToDTO(stockPriceList, findStockPricesForm.getInterval()));
+        stockPriceList.sort(Comparator.comparing(StockPrice::getDate).reversed());
+        response.put("prices", applyIntervalAndConvertToDTO(stockPriceList, findStockPricesForm.getInterval()));
 
         return response;
     }
@@ -263,16 +267,32 @@ public class StockServiceImpl implements StockService {
             List<Combination> combination = new ArrayList<>();
 
             for (StockDTO stockDTO : stockDTOList) {
-                combination.add(new Combination(stockDTO, getPrice(stockDTO.getExchange(), stockDTO.getId()), 0));
+                combination.add(new Combination(stockDTO, getLatestClosePrice(stockDTO.getExchange(), stockDTO.getId()), 0));
             }
             combinationDTOList.add(combination);
         }
         return combinationDTOList;
     }
 
-    int getPrice(String exchange, Integer id) {
-        // 달러 변환까지 해야 함. 현재 id로 랜덤(?)
-        return id % 10 * 10000;
+    int getLatestClosePrice(String exchange, Integer stockId) {
+        if (exchange.equals("KSC")) {
+            Optional<KrLatestClose> price = krLatestCloseJpaRepository.findByKrStockId(stockId);
+            if (price.isPresent()) {
+                double closePrice = price.get().getClose();
+                return (int) closePrice;
+            }
+
+            throw new NullPointerException();
+        }
+
+        Optional<UsLatestClose> price = usLatestCloseJpaRepository.findByUsStockId(stockId);
+        if (price.isPresent()) {
+            double closePrice = price.get().getClose();
+            double krwPrice = ExchangeRate.USD.getBuying() * closePrice;
+            return (int) krwPrice;
+        }
+
+        throw new NullPointerException();
     }
 
     Map<String, Object> convertToMap(List<List<Combination>> distirbutedStockList) {

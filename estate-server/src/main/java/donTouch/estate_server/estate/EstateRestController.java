@@ -3,6 +3,7 @@ package donTouch.estate_server.estate;
 import donTouch.estate_server.estate.domain.EstateFund;
 import donTouch.estate_server.estate.domain.EstateFundDetail;
 import donTouch.estate_server.estate.dto.BuyEstateFundForm;
+import donTouch.estate_server.estate.dto.EstateFundDetailDto;
 import donTouch.estate_server.estate.service.EstateFundDetailService;
 import donTouch.utils.utils.ApiUtils;
 import donTouch.utils.utils.ApiUtils.ApiResult;

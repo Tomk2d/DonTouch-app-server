@@ -1,16 +1,21 @@
-package donTouch.stock_server.krStock.domain;
+package donTouch.stock_server.usStock.domain;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import donTouch.stock_server.stock.domain.StockPrice;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 
 @Entity
 @Getter
-@Table(name = "kr_stock_full_prices")
+@Table(name = "us_latest_close")
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class KrStockPrice extends StockPrice {
-    Integer krStockId;
+public class UsLatestClose {
+    @Id
+    private Integer id;
+
+    private Integer usStockId;
+
+    private Double close;
 }

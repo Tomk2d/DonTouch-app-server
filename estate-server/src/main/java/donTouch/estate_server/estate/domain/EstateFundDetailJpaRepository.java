@@ -13,6 +13,5 @@ public interface EstateFundDetailJpaRepository extends JpaRepository<EstateFundD
         "FROM EstateFund f JOIN EstateFundDetail d ON f.id = d.estateId WHERE f.id = :id")
     EstateFundDetailDto findEstateInfoById(@Param("id") int id);
 
-    @Query("SELECT d FROM EstateFundDetail d JOIN EstateFund f ON d.estateId = f.id WHERE f.id = :id")
-    EstateFundDetail findEstateFundDetailByFundId(@Param("id") int id);
+    EstateFundDetail findByEstateId(@Param("id") int id);
 }

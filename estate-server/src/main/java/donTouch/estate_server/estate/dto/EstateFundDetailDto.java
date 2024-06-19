@@ -1,25 +1,27 @@
 package donTouch.estate_server.estate.dto;
 
 import java.util.Date;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class EstateFundDetailDto {
-    private int id;
+    private Integer id;
     private String title;
-    private int length;
+    private Integer length;
     private String titleMainImageUrl;
     private Double earningRate;
-    private int totalAmountInvestments;
+    private Integer totalAmountInvestments;
     private Double sumOfInvestmentAndReservation;
     private Double loanAmountBaseLtv;
-    private int currentInvest;
+    private Long currentInvest;
     private Integer estateId;
     private Double latitude;
     private Double longitude;
