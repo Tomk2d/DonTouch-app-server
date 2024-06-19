@@ -52,7 +52,9 @@ public class KafkaConfig {
         props.put(JsonSerializer.TYPE_MAPPINGS,
             "UsersDto:donTouch.order_server.kafka.dto.UsersDto,"
                 + "BankCalculateForm:donTouch.order_server.holding.dto.BankCalculateForm,"
-                + "IsSuccessDto:donTouch.order_server.kafka.dto.IsSuccessDto"
+                + "IsSuccessDto:donTouch.order_server.kafka.dto.IsSuccessDto,"
+                + "KrHoldingStocksDto:donTouch.order_server.kafka.dto.KrHoldingStocksDto,"
+                + "KrStockTradingLogDto:donTouch.order_server.kafka.dto.KrStockTradingLogDto"
         );
         return props;
     }

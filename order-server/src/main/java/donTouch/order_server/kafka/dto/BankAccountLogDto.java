@@ -35,8 +35,7 @@ public class BankAccountLogDto {
     public BankAccountLogDto() {
     }
 
-    public BankAccountLogDto(Long userId, Long inOutCash, int inOutType,
-        String inOutTitle) {
+    public BankAccountLogDto(Long userId, Long inOutCash, int inOutType, String inOutTitle) {
         this.userId = userId;
         this.inOutCash = inOutCash;
         this.inOutType = inOutType;

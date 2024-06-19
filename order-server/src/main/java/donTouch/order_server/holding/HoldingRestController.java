@@ -1,11 +1,15 @@
 package donTouch.order_server.holding;
 
+import donTouch.order_server.holding.domain.HoldingKrStock;
 import donTouch.order_server.holding.dto.BankCalculateForm;
 import donTouch.order_server.holding.dto.HoldingEstateFundDto;
 import donTouch.order_server.holding.dto.HoldingEstateFundForm;
+import donTouch.order_server.holding.dto.HoldingKrStockFindForm;
 import donTouch.order_server.holding.service.HoldingEstateFundService;
+import donTouch.order_server.holding.service.HoldingKrStockService;
 import donTouch.utils.utils.ApiUtils;
 import donTouch.utils.utils.ApiUtils.ApiResult;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HoldingRestController {
     private final HoldingEstateFundService holdingEstateFundService;
+    private final HoldingKrStockService holdingKrStockService;
 
     @GetMapping("/api/holding/allEstate/{userId}")
     public ApiResult<List<HoldingEstateFundDto>> allEstate(@PathVariable Long userId) {
@@ -44,6 +49,15 @@ public class HoldingRestController {
             return ResponseEntity.ok(result);
         }catch (NullPointerException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND));
+        }
+    }
+    @PostMapping("/api/holding/sell/krStock")
+    public ApiResult<Object> findByUserIdAndStockId(@RequestBody @Valid HoldingKrStockFindForm holdingKrStockFindForm) {
+        try{
+            HoldingKrStock result = holdingKrStockService.sellStockUpdate(holdingKrStockFindForm);
+            return ApiUtils.success(result);
+        }catch(NullPointerException e){
+            return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }
