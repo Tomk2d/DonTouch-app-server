@@ -20,8 +20,9 @@ public class StockPrice {
     Double high;
     Double low;
     Double close;
+    Long volume;
 
     public StockPriceDTO convertToDTO() {
-        return new StockPriceDTO(date, open, high, low, close);
+        return new StockPriceDTO(date, open, high, low, close, volume);
     }
 }

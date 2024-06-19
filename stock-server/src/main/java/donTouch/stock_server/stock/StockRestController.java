@@ -3,6 +3,7 @@ package donTouch.stock_server.stock;
 import donTouch.stock_server.kafka.service.KafkaService;
 import donTouch.stock_server.stock.dto.*;
 import donTouch.stock_server.stock.service.StockService;
+import donTouch.utils.exchangeRate.ExchangeRate;
 import donTouch.utils.utils.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -90,6 +91,12 @@ public class StockRestController {
         } catch (IllegalStateException e) {
             return ApiUtils.error("each combination should have 1 or more stocks", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/exchange/usd")
+    public ApiUtils.ApiResult<ExchangeRateDTO> findExchangeRate() {
+        ExchangeRate usd = ExchangeRate.USD;
+        return ApiUtils.success(new ExchangeRateDTO(usd.getCurrency(), usd.getBuying(), usd.getSelling()));
     }
 }
 
