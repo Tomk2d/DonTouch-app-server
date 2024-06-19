@@ -19,8 +19,8 @@ import java.util.Date;
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Builder
-@Table(name="HoldingEstateFund")
-public class HoldingEstateFund {
+@Table(name="HoldingEnergyFund")
+public class HoldingEnergyFund {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -29,7 +29,7 @@ public class HoldingEstateFund {
     private Long userId;
 
     @NotNull
-    private int estateId;
+    private String energyId;
 
     @NotNull
     private String titleImageUrl;

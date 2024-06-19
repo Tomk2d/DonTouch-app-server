@@ -50,6 +50,7 @@ public class kafkaConsumerConfig {
             "UsersDto:donTouch.order_server.kafka.dto.UsersDto,"
                 + "BankCalculateForm:donTouch.order_server.holding.dto.BankCalculateForm,"
                 + "IsSuccessDto:donTouch.order_server.kafka.dto.IsSuccessDto,"
+                + "HoldingEnergyFundForm:donTouch.order_server.holding.dto.HoldingEnergyFundForm,"
                 + "HoldingEstateFundForm:donTouch.order_server.holding.dto.HoldingEstateFundForm,"
                 + "BankAccountLogDto:donTouch.order_server.kafka.dto.BankAccountLogDto");
         return new DefaultKafkaConsumerFactory<>(props);

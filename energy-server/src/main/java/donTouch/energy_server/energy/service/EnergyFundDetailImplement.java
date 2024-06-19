@@ -36,7 +36,7 @@ public class EnergyFundDetailImplement implements EnergyFundDetailService {
                 energyFund.getTitle(),
                 energyFund.getTitleImageUrl(),
                 energyFund.getEarningRate(),
-                energyFund.getInvestment_period(),
+                energyFund.getInvestmentPeriod(),
                 energyFund.getFundingAmount(),
                 energyFund.getSumOfInvestmentAndReservation(),
                 energyFundDetail.getBorrowerInfo1Title(),
