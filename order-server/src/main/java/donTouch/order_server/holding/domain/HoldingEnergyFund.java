@@ -19,7 +19,7 @@ import java.util.Date;
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Builder
-@Table(name="HoldingEnergyFundTest")
+@Table(name="HoldingEnergyFund")
 public class HoldingEnergyFund {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
