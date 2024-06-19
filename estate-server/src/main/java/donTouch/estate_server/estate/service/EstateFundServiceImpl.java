@@ -82,7 +82,7 @@ public class EstateFundServiceImpl implements EstateFundService {
         EstateFund savedEstateFund = estateFundRepository.save(findedEstateFund);
         System.out.println("현재 투자 금액 =================== " + savedEstateFund.getCurrentInvest());
 
-        EstateFundDetail estateFundDetail = estateFundDetailRepository.findEstateFundDetailByFundId(estateFundId);
+        EstateFundDetail estateFundDetail = estateFundDetailRepository.findByEstateId(estateFundId);
         String titleImageUrl = savedEstateFund.getTitleMainImageUrl();
         int investmentPeriod = savedEstateFund.getLength();
         Date startPeriod = estateFundDetail.getStartDatetime();
@@ -103,7 +103,7 @@ public class EstateFundServiceImpl implements EstateFundService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         EstateFund findedEstateFund = estateFundRepository.findById(estateFundId)
                 .orElseThrow(()-> new NullPointerException("부동산 id 가 잘못되었습니다."));
-        EstateFundDetail estateFundDetail = estateFundDetailRepository.findEstateFundDetailByFundId(estateFundId);
+        EstateFundDetail estateFundDetail = estateFundDetailRepository.findByEstateId(estateFundId);
 
         String titleImageUrl = findedEstateFund.getTitleMainImageUrl();
         int investmentPeriod = findedEstateFund.getLength();
@@ -128,7 +128,7 @@ public class EstateFundServiceImpl implements EstateFundService {
             kafkaProducerService.requestAddBankLog(new BankAccountLogDto(
                     responseBody.getUserId(),
                     (long) responseBody.getInputCash(), 0,
-                    responseBody.getEstateName())
+                    responseBody.getTitle())
             );
         } else {
             throw new NullPointerException("판매할 상품이 없습니다.");
