@@ -13,4 +13,5 @@ public class StockPriceDTO {
     Double high;
     Double low;
     Double close;
+    Long volume;
 }
