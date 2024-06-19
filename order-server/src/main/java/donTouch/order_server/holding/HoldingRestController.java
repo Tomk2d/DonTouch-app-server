@@ -1,13 +1,20 @@
 package donTouch.order_server.holding;
 
+import donTouch.order_server.holding.domain.HoldingKrStock;
+import donTouch.order_server.holding.dto.BankCalculateForm;
+import donTouch.order_server.holding.dto.HoldingEstateFundDto;
+import donTouch.order_server.holding.dto.HoldingEstateFundForm;
+import donTouch.order_server.holding.dto.HoldingKrStockFindForm;
 import donTouch.order_server.holding.dto.HoldingEnergyFundDto;
 import donTouch.order_server.holding.dto.HoldingEnergyFundForm;
 import donTouch.order_server.holding.dto.HoldingEstateFundDto;
 import donTouch.order_server.holding.dto.HoldingEstateFundForm;
 import donTouch.order_server.holding.service.HoldingEnergyFundService;
 import donTouch.order_server.holding.service.HoldingEstateFundService;
+import donTouch.order_server.holding.service.HoldingKrStockService;
 import donTouch.utils.utils.ApiUtils;
 import donTouch.utils.utils.ApiUtils.ApiResult;
+import jakarta.validation.Valid;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -22,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = {"http://localhost:5174", "http://localhost:5173"})
 public class HoldingRestController {
     private final HoldingEstateFundService holdingEstateFundService;
+    private final HoldingKrStockService holdingKrStockService;
     private final HoldingEnergyFundService holdingEnergyFundService;
 
     @GetMapping("/api/holding/allEstate/{userId}")
@@ -59,6 +67,12 @@ public class HoldingRestController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND));
         }
     }
+    @PostMapping("/api/holding/sell/krStock")
+    public ApiResult<Object> findByUserIdAndStockId(@RequestBody @Valid HoldingKrStockFindForm holdingKrStockFindForm) {
+        try{
+            HoldingKrStock result = holdingKrStockService.sellStockUpdate(holdingKrStockFindForm);
+            return ApiUtils.success(result);
+        }catch(NullPointerException e){
 
     @PostMapping("/api/holding/energy/sell")
     public ResponseEntity<Object> findEnergyAndDelete(@RequestBody HoldingEnergyFundForm holdingEnergyFundForm) {
