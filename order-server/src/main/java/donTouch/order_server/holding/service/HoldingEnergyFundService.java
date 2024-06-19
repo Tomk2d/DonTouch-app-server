@@ -8,7 +8,9 @@ import java.util.List;
 public interface HoldingEnergyFundService {
     List<HoldingEnergyFundDto> getAllEnergy(Long userId);
 
-    HoldingEnergyFundDto saveEstate(HoldingEnergyFundForm holdingEnergyFundForm);
+    Integer getEnergyTotalCash(Long userId);
+
+    HoldingEnergyFundDto saveEnergy(HoldingEnergyFundForm holdingEnergyFundForm);
 
     HoldingEnergyFundDto findByUserIdAndEnergyFundId(HoldingEnergyFundForm holdingEnergyFundForm);
 }

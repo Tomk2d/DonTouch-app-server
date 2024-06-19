@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -16,7 +17,7 @@ import java.util.Date;
 public class HoldingEnergyFundDto {
     private int id;
     private Long userId;
-    private int energyId;
+    private String energyId;
 
     private String titleImageUrl;
     private String title;
@@ -24,6 +25,6 @@ public class HoldingEnergyFundDto {
     private double earningRate;
     private int investmentPeriod;
     private int inputCash;
-    private Date startPeriod;
+    private LocalDateTime startPeriod;
 }
 

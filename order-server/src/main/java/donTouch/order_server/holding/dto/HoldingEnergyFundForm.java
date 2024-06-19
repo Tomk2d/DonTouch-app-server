@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Builder
@@ -19,7 +20,7 @@ public class HoldingEnergyFundForm {
     @NotNull(message = "유저아이디가 없습니다.")
     private Long userId;
     @NotNull(message = "에너지 id가 없습니다.")
-    private int energyId;
+    private String energyId;
     @NotNull(message = "이미지가 없습니다.")
     private String titleImageUrl;
     @NotNull(message = "에너지 이름이 없습니다.")
@@ -31,6 +32,6 @@ public class HoldingEnergyFundForm {
     @NotNull(message = "투자 금액이 없습니다.")
     private int inputCash;
     @NotNull(message = "시작 날짜가 없습니다.")
-    private Date startPeriod;
+    private LocalDateTime startPeriod;
 
 }

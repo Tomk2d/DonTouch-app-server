@@ -12,4 +12,6 @@ public interface HoldingEstateFundService {
     HoldingEstateFundDto saveEstate(HoldingEstateFundForm holdingEstateFundForm);
 
     HoldingEstateFundDto findByUserIdAndEstateFundId(HoldingEstateFundForm holdingEstateFundForm);
+
+    Integer getEstateTotalCash(Long userId);
 }

@@ -37,7 +37,22 @@ public class HoldingEnergyFundServiceImpl implements HoldingEnergyFundService{
     }
 
     @Override
-    public HoldingEnergyFundDto saveEstate(HoldingEnergyFundForm holdingEnergyFundForm) {
+    public Integer getEnergyTotalCash(Long userId) {
+        List<HoldingEnergyFund> listDto = holdingEnergyFundRepository.findAllByUserId(userId)
+                .orElseThrow(() -> new NullPointerException("not found for holding energy fund"));
+
+        if(listDto.isEmpty()){
+            return null;
+        }
+
+        Integer totalCash = 0;
+        for(HoldingEnergyFund holdingEnergyFund : listDto){
+            totalCash += holdingEnergyFund.getInputCash();
+        }
+        return totalCash;
+    }
+
+    public HoldingEnergyFundDto saveEnergy(HoldingEnergyFundForm holdingEnergyFundForm) {
         HoldingEnergyFund holdingEnergyFund = energyFundMapper.formToEnergy(holdingEnergyFundForm);
         HoldingEnergyFund savedEnergyFund = holdingEnergyFundRepository.save(holdingEnergyFund);
         Optional<HoldingEnergyFund> resultCheck = Optional.of(savedEnergyFund);
@@ -49,12 +64,13 @@ public class HoldingEnergyFundServiceImpl implements HoldingEnergyFundService{
     @Override
     public HoldingEnergyFundDto findByUserIdAndEnergyFundId(HoldingEnergyFundForm holdingEnergyFundForm) {
         Long userId = holdingEnergyFundForm.getUserId();
-        int energyId = holdingEnergyFundForm.getEnergyId();
+        String energyId = holdingEnergyFundForm.getEnergyId();
 
         HoldingEnergyFund holdingEnergyFund = holdingEnergyFundRepository.findByUserIdAndEnergyId(userId,energyId)
                 .orElseThrow(() -> new NullPointerException("not holding energy fund"));
 
         holdingEnergyFundRepository.delete(holdingEnergyFund);
-        return energyFundMapper.toDto(holdingEnergyFund);
+        HoldingEnergyFundDto result = energyFundMapper.toDto(holdingEnergyFund);
+        return result;
     }
 }

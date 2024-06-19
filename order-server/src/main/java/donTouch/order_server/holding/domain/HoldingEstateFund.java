@@ -41,7 +41,7 @@ public class HoldingEstateFund {
     private double earningRate;
 
     @NotNull
-    private int investment_period;
+    private int investmentPeriod;
 
     @NotNull
     @Min(5000)

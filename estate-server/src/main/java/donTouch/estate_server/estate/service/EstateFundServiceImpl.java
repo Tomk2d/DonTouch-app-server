@@ -77,6 +77,9 @@ public class EstateFundServiceImpl implements EstateFundService {
         if (result.getResponse().equals("잔고가 부족합니다.")) {
             throw new NullPointerException("잔고가 부족합니다.");
         }
+        if (result.getResponse().equals("계좌를 찾을 수 없습니다.")) {
+            throw new NullPointerException("계좌를 찾을 수 없습니다.");
+        }
 
         findedEstateFund.setCurrentInvest(findedEstateFund.getCurrentInvest() + (long) buyEstateFundForm.getInputCash());
         EstateFund savedEstateFund = estateFundRepository.save(findedEstateFund);
@@ -125,6 +128,10 @@ public class EstateFundServiceImpl implements EstateFundService {
             if (result.getResponse().equals("잔고가 부족합니다.")) {
                 throw new NullPointerException("입금이 되지 않았습니다.");
             }
+            if (result.getResponse().equals("계좌를 찾을 수 없습니다.")) {
+                throw new NullPointerException("계좌를 찾을 수 없습니다.");
+            }
+
             kafkaProducerService.requestAddBankLog(new BankAccountLogDto(
                     responseBody.getUserId(),
                     (long) responseBody.getInputCash(), 0,

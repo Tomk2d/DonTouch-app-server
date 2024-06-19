@@ -29,7 +29,7 @@ public class HoldingEnergyFund {
     private Long userId;
 
     @NotNull
-    private int energyId;
+    private String energyId;
 
     @NotNull
     private String titleImageUrl;

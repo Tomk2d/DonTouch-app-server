@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface HoldingEnergyFundRepository extends JpaRepository<HoldingEnergyFund, Integer> {
+public interface HoldingEnergyFundRepository extends JpaRepository<HoldingEnergyFund, String> {
     public Optional<List<HoldingEnergyFund>> findAllByUserId(Long userId);
 
-    Optional<HoldingEnergyFund> findByUserIdAndEnergyId(Long userId, int EnergyId);
+    Optional<HoldingEnergyFund> findByUserIdAndEnergyId(Long userId, String EnergyId);
 }

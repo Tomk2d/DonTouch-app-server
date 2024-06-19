@@ -1,7 +1,9 @@
 package donTouch.order_server.kafka.service;
 
 import donTouch.order_server.bankAccount.service.BankAccountService;
+import donTouch.order_server.holding.dto.HoldingEnergyFundForm;
 import donTouch.order_server.holding.dto.HoldingEstateFundForm;
+import donTouch.order_server.holding.service.HoldingEnergyFundService;
 import donTouch.order_server.holding.service.HoldingEstateFundService;
 import donTouch.order_server.kafka.dto.BankAccountLogDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +17,16 @@ import org.springframework.stereotype.Service;
 public class KafkaConsumerService {
     private KafkaTemplate<String, Object> kafkaTemplate;
     private final HoldingEstateFundService holdingEstateFundService;
+    private final HoldingEnergyFundService holdingEnergyFundService;
     private final BankAccountService bankAccountService;
+
 
     @Autowired
     public KafkaConsumerService(KafkaTemplate<String, Object> kafkaTemplate,
-        HoldingEstateFundService holdingEstateFundService, BankAccountService bankAccountService) {
+                                HoldingEstateFundService holdingEstateFundService, HoldingEnergyFundService holdingEnergyFundService, BankAccountService bankAccountService) {
         this.kafkaTemplate = kafkaTemplate;
         this.holdingEstateFundService = holdingEstateFundService;
+        this.holdingEnergyFundService = holdingEnergyFundService;
         this.bankAccountService = bankAccountService;
     }
 
@@ -32,9 +37,16 @@ public class KafkaConsumerService {
 
     @KafkaListener(topics = "request_add_holding_estate", groupId = "order_group")
     public void saveHoldingEstate(HoldingEstateFundForm data){
-        System.out.println("here I am");
+        System.out.println(data.getEstateId()+data.getUserId()+data.getTitle());
         holdingEstateFundService.saveEstate(data);
     }
+
+    @KafkaListener(topics = "request_add_holding_energy", groupId = "order_group")
+    public void saveHoldingEnergy(HoldingEnergyFundForm data){
+        System.out.println(data.getEnergyId()+data.getUserId()+data.getTitle());
+        holdingEnergyFundService.saveEnergy(data);
+    }
+
     @KafkaListener(topics = "request_add_bank_account", groupId = "order_group")
     public void saveBankAccountLog(BankAccountLogDto data){
         System.out.println("잘들어옴 =========" + data +"=========");

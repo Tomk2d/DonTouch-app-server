@@ -1,6 +1,7 @@
 package donTouch.order_server.holding;
 
 import donTouch.order_server.holding.dto.HoldingEnergyFundDto;
+import donTouch.order_server.holding.dto.HoldingEnergyFundForm;
 import donTouch.order_server.holding.dto.HoldingEstateFundDto;
 import donTouch.order_server.holding.dto.HoldingEstateFundForm;
 import donTouch.order_server.holding.service.HoldingEnergyFundService;
@@ -59,6 +60,42 @@ public class HoldingRestController {
             return ResponseEntity.ok(result);
         }catch (NullPointerException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND));
+        }
+    }
+
+    @PostMapping("/api/holding/energy/sell")
+    public ResponseEntity<Object> findEnergyAndDelete(@RequestBody HoldingEnergyFundForm holdingEnergyFundForm) {
+        try{
+            HoldingEnergyFundDto result = holdingEnergyFundService.findByUserIdAndEnergyFundId(holdingEnergyFundForm);
+            return ResponseEntity.ok(result);
+        }catch (NullPointerException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND));
+        }
+    }
+
+    @GetMapping("/api/holding/energy/totalCash/{userId}")
+    public ApiResult<Integer> totalEnergyCash(@PathVariable Long userId) {
+        try{
+            Integer result = holdingEnergyFundService.getEnergyTotalCash(userId);
+            if (result == null) {
+                return ApiUtils.error("보유 주식이 없습니다.", HttpStatus.NOT_FOUND);
+            }
+            return ApiUtils.success(result);
+        }catch (NullPointerException e){
+            return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/api/holding/estate/totalCash/{userId}")
+    public ApiResult<Integer> totalEstateCash(@PathVariable Long userId) {
+        try{
+            Integer result = holdingEstateFundService.getEstateTotalCash(userId);
+            if (result == null) {
+                return ApiUtils.error("보유 주식이 없습니다.", HttpStatus.NOT_FOUND);
+            }
+            return ApiUtils.success(result);
+        }catch (NullPointerException e){
+            return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }
