@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class LikeStockDTO {
-    private Long id;
     private String exchange;
     private Integer stockId;
 }

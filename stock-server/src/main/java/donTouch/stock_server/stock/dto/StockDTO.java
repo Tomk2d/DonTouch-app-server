@@ -16,4 +16,5 @@ public class StockDTO {
     private Double dividendYieldTtm;
 
     private Double personalizedScore;
+
 }

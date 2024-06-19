@@ -10,9 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -33,25 +31,38 @@ public class LikeStockServiceImpl implements LikeStockService {
     }
 
     @Override
-    public Map<String, Object> findLikeStocks(Long userId) {
-        Map<String, Object> response = new HashMap<>();
+    public LikeStockDTO likeStock(LikeStockForm likeStockForm) {
+        if (likeStockForm.getExchange().equals("KSC")) {
+            LikeKrStock likeKrStock = likeKrStockJpaRepository.save(likeStockForm.convertToLikeKrStock());
+            return likeKrStock.convertToDTO();
+        }
 
+        LikeUsStock likeUsStock = likeUsStockJpaRepository.save(likeStockForm.convertToLikeUsStock());
+        return likeUsStock.convertToDTO();
+    }
+
+    @Override
+    public List<LikeStockDTO> findLikeStocks(Long userId) {
         List<LikeKrStock> likeKrStockList = likeKrStockJpaRepository.findAllByUserId(userId);
         List<LikeUsStock> likeUsStockList = likeUsStockJpaRepository.findAllByUserId(userId);
 
-        List<LikeStockDTO> likeKrStockDTOList = new ArrayList<>();
+        List<LikeStockDTO> likeStockDTOList = new ArrayList<>();
         for (LikeKrStock likeKrStock : likeKrStockList) {
-            likeKrStockDTOList.add(likeKrStock.convertToDTO());
+            likeStockDTOList.add(likeKrStock.convertToDTO());
         }
 
-        List<LikeStockDTO> likeUsStockDTOList = new ArrayList<>();
         for (LikeUsStock likeUsStock : likeUsStockList) {
-            likeUsStockDTOList.add(likeUsStock.convertToDTO());
+            likeStockDTOList.add(likeUsStock.convertToDTO());
         }
 
-        response.put("krStocks", likeKrStockDTOList);
-        response.put("usStocks", likeUsStockDTOList);
+        return likeStockDTOList;
+    }
 
-        return response;
+    @Override
+    public Boolean dislikeStock(LikeStockForm likeStockForm) {
+//        if (likeStockForm.getExchange().equals("KSC")) {
+//
+//        }
+        return null;
     }
 }

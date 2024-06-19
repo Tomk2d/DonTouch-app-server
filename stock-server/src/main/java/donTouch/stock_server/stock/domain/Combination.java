@@ -1,6 +1,8 @@
 package donTouch.stock_server.stock.domain;
 
+import donTouch.stock_server.stock.dto.CombinationDTO;
 import donTouch.stock_server.stock.dto.StockDTO;
+import donTouch.utils.exchangeRate.ExchangeRate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,12 +17,18 @@ public class Combination {
         quantity++;
     }
 
-    public int getDividendPerShare() {
-        return (int) (price * stock.getDividendYieldTtm());
+    public int getDividendPerShareAndQuarter() {
+        double dividendPerShare = price * stock.getDividendYieldTtm();
+
+        if (stock.getExchange().equals("KSC")) {
+            return (int) dividendPerShare / 4;
+        }
+        double exchangedDividendPerShare = ExchangeRate.USD.getSelling();
+        return (int) exchangedDividendPerShare / 4;
     }
 
-    public long getDividend() {
-        return (long) (price * stock.getDividendYieldTtm()) * quantity / 4;
+    public Long getTotalDividendPerQuarter() {
+        return (long) getDividendPerShareAndQuarter() * quantity;
     }
 
     public long getAmount() {
@@ -28,6 +36,6 @@ public class Combination {
     }
 
     public CombinationDTO convertToDTO() {
-        return new CombinationDTO(stock.getId(), stock.getName(), stock.getSymbol(), price, quantity, getDividend());
+        return new CombinationDTO(stock.getId(), stock.getName(), stock.getSymbol(), price, quantity, getTotalDividendPerQuarter());
     }
 }

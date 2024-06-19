@@ -1,4 +1,4 @@
-package donTouch.stock_server.stock.domain;
+package donTouch.stock_server.stock.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
