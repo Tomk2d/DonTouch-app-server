@@ -14,11 +14,11 @@ import java.util.Map;
 @RestController
 @AllArgsConstructor
 @CrossOrigin(origins = {"http://localhost:5174", "http://localhost:5173"})
-@RequestMapping("/api/user")
+@RequestMapping("/api/user/like")
 public class LikeRestController {
     LikeStockService likeStockService;
 
-    @PostMapping("/like/stocks/create")
+    @PostMapping("/stocks/create")
     public ApiUtils.ApiResult<Object> likeStock(@RequestBody @Valid LikeStockForm likeStockForm) {
         if (likeStockForm.getExchange().equals("KSC")) {
             LikeStockDTO savedStock = likeStockService.likeKrStock(likeStockForm);
@@ -37,7 +37,7 @@ public class LikeRestController {
         return ApiUtils.success(savedStock);
     }
 
-    @GetMapping("/like/stocks/{userId}")
+    @GetMapping("/stocks/{userId}")
     public ApiUtils.ApiResult<Map<String, Object>> findLikeStocks(@PathVariable Long userId) {
         Map<String, Object> likeStockDTOList = likeStockService.findLikeStocks(userId);
 
@@ -45,5 +45,10 @@ public class LikeRestController {
             return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return ApiUtils.success(likeStockDTOList);
+    }
+
+    @DeleteMapping("/stocks/delete")
+    public ApiUtils.ApiResult<Object> deleteStock(@RequestBody @Valid LikeStockForm likeStockForm) {
+        return ApiUtils.success(likeStockForm);
     }
 }
