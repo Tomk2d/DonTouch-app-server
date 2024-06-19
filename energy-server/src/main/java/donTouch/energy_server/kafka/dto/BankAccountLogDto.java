@@ -1,4 +1,5 @@
-package donTouch.order_server.kafka.dto;
+package donTouch.energy_server.kafka.dto;
+
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

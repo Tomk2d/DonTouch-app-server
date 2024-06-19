@@ -89,7 +89,7 @@ public class StockRestController {
         } catch (NullPointerException e) {
             return ApiUtils.error("price not found", HttpStatus.NOT_FOUND);
         } catch (IllegalStateException e) {
-            return ApiUtils.error("each combination should have 1 or more stocks", HttpStatus.BAD_REQUEST);
+            return ApiUtils.error("combination should have 1 or more stocks", HttpStatus.BAD_REQUEST);
         }
     }
 

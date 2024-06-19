@@ -5,4 +5,6 @@ import donTouch.order_server.kafka.dto.BankAccountLogDto;
 
 public interface BankAccountService {
     public void saveBankAccountLog(BankAccountLogDto bankAccountLogDto);
+
+
 }
