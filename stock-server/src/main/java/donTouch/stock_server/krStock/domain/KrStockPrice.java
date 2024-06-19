@@ -9,7 +9,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-@Table(name = "kr_stock_prices")
+@Table(name = "kr_stock_full_prices")
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class KrStockPrice extends StockPrice {
     Integer krStockId;

@@ -1,24 +1,27 @@
 package donTouch.order_server.holding.dto;
 
-import java.sql.Date;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import lombok.*;
+
+import java.util.Date;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@Getter
 @Setter
+@Getter
 public class HoldingEstateFundDto {
     private int id;
     private Long userId;
-    private int estateFundId;
+    private int estateId;
+
+    private String titleImageUrl;
+    private String title;
+
+    private double earningRate;
+    private int investmentPeriod;
     private int inputCash;
-    private String estateName;
-    private double estateEarningRate;
-    private Date createAt;
+    private Date startPeriod;
+    private Date createdAt;
 }
+

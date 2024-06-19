@@ -3,6 +3,7 @@ package donTouch.stock_server.stock;
 import donTouch.stock_server.kafka.service.KafkaService;
 import donTouch.stock_server.stock.dto.*;
 import donTouch.stock_server.stock.service.StockService;
+import donTouch.utils.exchangeRate.ExchangeRate;
 import donTouch.utils.utils.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -63,12 +64,17 @@ public class StockRestController {
 
     @PostMapping("/combination/create")
     public ApiUtils.ApiResult<Map<String, Object>> findCombination(@Valid @RequestBody FindCombinationForm findCombinationForm) {
-        Map<String, Object> combination = stockService.findCombination(findCombinationForm);
+        try {
+            Map<String, Object> combination = stockService.findCombination(findCombinationForm);
 
-        if (combination == null) {
-            return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            if (combination == null) {
+                return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            return ApiUtils.success(combination);
+        } catch (NullPointerException e) {
+            return ApiUtils.error("price not found", HttpStatus.NOT_FOUND);
         }
-        return ApiUtils.success(combination);
+
     }
 
     @PostMapping("/combination/distribute")
@@ -80,10 +86,17 @@ public class StockRestController {
                 return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
             }
             return ApiUtils.success(distribution);
+        } catch (NullPointerException e) {
+            return ApiUtils.error("price not found", HttpStatus.NOT_FOUND);
         } catch (IllegalStateException e) {
             return ApiUtils.error("each combination should have 1 or more stocks", HttpStatus.BAD_REQUEST);
         }
+    }
 
+    @GetMapping("/exchange/usd")
+    public ApiUtils.ApiResult<ExchangeRateDTO> findExchangeRate() {
+        ExchangeRate usd = ExchangeRate.USD;
+        return ApiUtils.success(new ExchangeRateDTO(usd.getCurrency(), usd.getBuying(), usd.getSelling()));
     }
 }
 
