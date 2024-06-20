@@ -73,6 +73,9 @@ public class HoldingRestController {
             HoldingKrStock result = holdingKrStockService.sellStockUpdate(holdingKrStockFindForm);
             return ApiUtils.success(result);
         }catch(NullPointerException e){
+            return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
     @PostMapping("/api/holding/energy/sell")
     public ResponseEntity<Object> findEnergyAndDelete(@RequestBody HoldingEnergyFundForm holdingEnergyFundForm) {
