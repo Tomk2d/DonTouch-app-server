@@ -10,14 +10,8 @@ import org.springframework.stereotype.Component;
 //@Component
 public class JwtUtil {
 //    @Value("${jwt.secret}")
-    private static String secret = "RFbMT_0NteLX4qyt1PLwM40xMRKA0fEqSQcey0R7qOKOzXw0dfJV7__-1PxS2c-OS4AYluDkx8TIvZXfvaRyOw";
-////
-////    @PostConstruct
-////    public void init() {
-////        System.out.println("생성되니 친구야?");
-////        staticSecret = this.secret;
-////    }
-//
+    private static String secret = "test";
+
     public static Long extractId(String token) {
         try {
             Claims claims = Jwts.parser()
