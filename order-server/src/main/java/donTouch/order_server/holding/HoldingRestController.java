@@ -1,15 +1,15 @@
 package donTouch.order_server.holding;
-import donTouch.order_server.holding.domain.HoldingKrStock;
-import donTouch.order_server.holding.dto.*;
+
 import donTouch.order_server.bankAccount.dto.UserBankAccountLogDto;
 import donTouch.order_server.bankAccount.service.BankAccountService;
+import donTouch.order_server.holding.domain.HoldingKrStock;
+import donTouch.order_server.holding.dto.*;
 import donTouch.order_server.holding.service.HoldingEnergyFundService;
 import donTouch.order_server.holding.service.HoldingEstateFundService;
 import donTouch.order_server.holding.service.HoldingKrStockService;
 import donTouch.order_server.holding.service.HoldingUsStockService;
 import donTouch.utils.utils.ApiUtils;
 import donTouch.utils.utils.ApiUtils.ApiResult;
-
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,14 +34,14 @@ public class HoldingRestController {
 
 
     @GetMapping("/api/holding/account/{userId}")
-    public ApiResult<List<UserBankAccountLogDto>> allBankLog(@PathVariable Long userId){
-        try{
+    public ApiResult<List<UserBankAccountLogDto>> allBankLog(@PathVariable Long userId) {
+        try {
             List<UserBankAccountLogDto> result = bankAccountService.getUserBankAccountLog(userId);
-            if(result == null){
+            if (result == null) {
                 return ApiUtils.error("입출금 내역이 없습니다.", HttpStatus.NOT_FOUND);
             }
             return ApiUtils.success(result);
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -150,9 +150,8 @@ public class HoldingRestController {
         } catch (NullPointerException e) {
             return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-    }
 
-    };
+    }
 
     @GetMapping("/api/holding/stocks")
     public ApiResult<Map<String, Object>> getHoldingStockIds(@RequestParam("userId") Long userId, @RequestParam("getPrice") Boolean getPrice) {
