@@ -1,6 +1,7 @@
 package donTouch.order_server.holding;
 
 import donTouch.order_server.holding.domain.HoldingKrStock;
+
 import donTouch.order_server.holding.dto.*;
 import donTouch.order_server.holding.service.HoldingEnergyFundService;
 import donTouch.order_server.holding.service.HoldingEstateFundService;
@@ -8,6 +9,7 @@ import donTouch.order_server.holding.service.HoldingKrStockService;
 import donTouch.order_server.holding.service.HoldingUsStockService;
 import donTouch.utils.utils.ApiUtils;
 import donTouch.utils.utils.ApiUtils.ApiResult;
+
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +36,7 @@ public class HoldingRestController {
         try {
             List<HoldingEstateFundDto> result = holdingEstateFundService.getAllEstate(userId);
             if (result == null) {
-                return ApiUtils.error("보유 주식이 없습니다.", HttpStatus.NOT_FOUND);
+                return ApiUtils.error("보유 부동산 상품이 없습니다.", HttpStatus.NOT_FOUND);
             }
             return ApiUtils.success(result);
         } catch (NullPointerException e) {
@@ -47,7 +49,7 @@ public class HoldingRestController {
         try {
             List<HoldingEnergyFundDto> result = holdingEnergyFundService.getAllEnergy(userId);
             if (result == null) {
-                return ApiUtils.error("보유 주식이 없습니다.", HttpStatus.NOT_FOUND);
+                return ApiUtils.error("보유 에너지 상품이 없습니다.", HttpStatus.NOT_FOUND);
             }
             return ApiUtils.success(result);
         } catch (NullPointerException e) {
@@ -110,6 +112,29 @@ public class HoldingRestController {
             return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping("/api/holding/energy/calendar")
+    public ApiUtils.ApiResult<List<DividendP2PDto>> getEnergyCanlendar(
+            @RequestHeader("Authorization") String token,
+            @RequestBody @Valid CalendarReqForm calendarReqForm){
+        try{
+            List<DividendP2PDto> result = holdingEnergyFundService.getEnergyDividend(calendarReqForm, token);
+            return ApiUtils.success(result);
+        }catch(NullPointerException e){
+            return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/api/holding/estate/calendar")
+    public ApiUtils.ApiResult<List<DividendP2PDto>> getEstateCanlendar(
+            @RequestHeader("Authorization") String token,
+            @RequestBody @Valid CalendarReqForm calendarReqForm){
+        try{
+            List<DividendP2PDto> result = holdingEstateFundService.getEstateDividend(calendarReqForm, token);
+            return ApiUtils.success(result);
+        }catch(NullPointerException e){
+            return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
 
     @GetMapping("/api/holding/stocks")
     public ApiResult<Map<String, Object>> getHoldingStockIds(@RequestParam("userId") Long userId, @RequestParam("getPrice") Boolean getPrice) {
