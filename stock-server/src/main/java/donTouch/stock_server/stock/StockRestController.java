@@ -99,9 +99,9 @@ public class StockRestController {
     @GetMapping("/like")
     public ApiUtils.ApiResult<Map<String, Object>> findLikeStock(@RequestParam("userId") Integer userId) {
         WebClient webClient = WebClient.create();
-
+        String getLikeStockIdsUrl = "http://localhost:8081/api/user/like/stocks?userId=";
         ResponseEntity<ApiUtils.ApiResult<List<LikeStockDTO>>> responseEntity = webClient.get()
-                .uri("http://localhost:8081/api/user/like/stocks?userId=1")
+                .uri(getLikeStockIdsUrl + userId)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<ApiUtils.ApiResult<List<LikeStockDTO>>>() {
                 })

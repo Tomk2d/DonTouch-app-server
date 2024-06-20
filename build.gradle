@@ -1,24 +1,24 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.2.6'
-	id 'io.spring.dependency-management' version '1.1.5'
+    id 'java'
+    id 'org.springframework.boot' version '3.2.6'
+    id 'io.spring.dependency-management' version '1.1.5'
 }
 
 allprojects {
-	group = 'donTouch'
-	version = '0.0.1-SNAPSHOT'
+    group = 'donTouch'
+    version = '0.0.1-SNAPSHOT'
 
-	java {
-		sourceCompatibility = '17'
-	}
+    java {
+        sourceCompatibility = '17'
+    }
 
-	apply plugin : 'java'
-	apply plugin: 'org.springframework.boot'
-	apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
 
-	repositories {
-		mavenCentral()
-	}
+    repositories {
+        mavenCentral()
+    }
 
 
     dependencies {
@@ -43,28 +43,28 @@ allprojects {
 
 }
 
-project(':user-server'){
-	dependencies {
-		implementation project(':utils')
-	}
+project(':user-server') {
+    dependencies {
+        implementation project(':utils')
+    }
 }
-project(':order-server'){
-	dependencies {
-		implementation project(':utils')
-	}
+project(':order-server') {
+    dependencies {
+        implementation project(':utils')
+    }
 }
-project(':stock-server'){
-	dependencies {
-		implementation project(':utils')
-	}
+project(':stock-server') {
+    dependencies {
+        implementation project(':utils')
+    }
 }
-project(':estate-server'){
-	dependencies {
-		implementation project(':utils')
-	}
+project(':estate-server') {
+    dependencies {
+        implementation project(':utils')
+    }
 }
-project(':energy-server'){
-	dependencies {
-		implementation project(':utils')
-	}
+project(':energy-server') {
+    dependencies {
+        implementation project(':utils')
+    }
 }
