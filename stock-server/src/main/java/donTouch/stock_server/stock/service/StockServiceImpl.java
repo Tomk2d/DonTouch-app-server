@@ -137,7 +137,6 @@ public class StockServiceImpl implements StockService {
         List<StockDTO> krStockDTOList = new ArrayList<>();
         List<StockDTO> usStockDTOList = new ArrayList<>();
 
-        System.out.println("first get ex : " + likeStockDTOList.get(0).getExchange());
         for (LikeStockDTO likeStockDTO : likeStockDTOList) {
             if (likeStockDTO.getExchange().equals("KSC")) {
                 Optional<KrStock> KrStock = krStockJpaRepository.findById(likeStockDTO.getStockId());

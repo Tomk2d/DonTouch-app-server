@@ -97,27 +97,37 @@ public class StockRestController {
     }
 
     @GetMapping("/like")
-    public ApiUtils.ApiResult<Map<String, Object>> findLikeStock(@RequestParam("userId") Integer userId) {
-        WebClient webClient = WebClient.create();
-        String getLikeStockIdsUrl = "http://localhost:8081/api/user/like/stocks?userId=";
-        ResponseEntity<ApiUtils.ApiResult<List<LikeStockDTO>>> responseEntity = webClient.get()
-                .uri(getLikeStockIdsUrl + userId)
-                .retrieve()
-                .toEntity(new ParameterizedTypeReference<ApiUtils.ApiResult<List<LikeStockDTO>>>() {
-                })
-                .block();
+    public ApiUtils.ApiResult<Map<String, Object>> findLikeStock(@RequestParam("userId") Long userId) {
+        try {
+            List<LikeStockDTO> likeStockDTOList = getLikeStockDTOList(userId);
 
-        if (responseEntity == null || responseEntity.getBody() == null) {
-            return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
+            Map<String, Object> response = stockService.findLikeStocks(likeStockDTOList);
+
+            if (response == null) {
+                return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            return ApiUtils.success(response);
+        } catch (IllegalStateException e) {
+            return ApiUtils.error("get like stock id error", HttpStatus.NOT_FOUND);
         }
-        List<LikeStockDTO> likeStockDTOList = responseEntity.getBody().getResponse();
+    }
 
-        Map<String, Object> response = stockService.findLikeStocks(likeStockDTOList);
+    List<LikeStockDTO> getLikeStockDTOList(Long userId) {
+        try {
+            WebClient webClient = WebClient.create();
 
-        if (response == null) {
-            return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
+            String getLikeStockIdsUrl = "http://localhost:8081/api/user/like/stocks?userId=";
+            ResponseEntity<ApiUtils.ApiResult<List<LikeStockDTO>>> responseEntity = webClient.get()
+                    .uri(getLikeStockIdsUrl + userId)
+                    .retrieve()
+                    .toEntity(new ParameterizedTypeReference<ApiUtils.ApiResult<List<LikeStockDTO>>>() {
+                    })
+                    .block();
+
+            return responseEntity.getBody().getResponse();
+        } catch (Exception e) {
+            throw new IllegalStateException();
         }
-        return ApiUtils.success(response);
     }
 
     @GetMapping("/exchange/usd")
