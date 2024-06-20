@@ -7,6 +7,7 @@ import donTouch.stock_server.stock.domain.Stock;
 import donTouch.stock_server.stock.domain.StockPrice;
 import donTouch.stock_server.stock.dto.*;
 import donTouch.stock_server.usStock.domain.*;
+import donTouch.stock_server.web.dto.LikeStockDTO;
 import donTouch.utils.exchangeRate.ExchangeRate;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -114,8 +115,6 @@ public class StockServiceImpl implements StockService {
     public Map<String, Object> findCombination(FindCombinationForm findCombinationForm) {
         List<List<StockDTO>> fixedStockList = getFixedCombinations(findCombinationForm);
 
-        // [0]~[2]에서 size 1이면 보유종목 넣기
-
         List<List<Combination>> distirbutedStockList = distributeStock(fixedStockList, findCombinationForm.getInvestmentAmount());
 
         return convertToMap(distirbutedStockList);
@@ -136,9 +135,9 @@ public class StockServiceImpl implements StockService {
     @Override
     public Map<String, Object> findLikeStocks(List<LikeStockDTO> likeStockDTOList) {
         Map<String, Object> response = new LinkedHashMap<>();
-
         List<StockDTO> krStockDTOList = new ArrayList<>();
         List<StockDTO> usStockDTOList = new ArrayList<>();
+
         for (LikeStockDTO likeStockDTO : likeStockDTOList) {
             if (likeStockDTO.getExchange().equals("KSC")) {
                 Optional<KrStock> KrStock = krStockJpaRepository.findById(likeStockDTO.getStockId());

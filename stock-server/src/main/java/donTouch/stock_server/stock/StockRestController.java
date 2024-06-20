@@ -3,15 +3,14 @@ package donTouch.stock_server.stock;
 import donTouch.stock_server.kafka.service.KafkaService;
 import donTouch.stock_server.stock.dto.*;
 import donTouch.stock_server.stock.service.StockService;
+import donTouch.stock_server.web.Web;
+import donTouch.stock_server.web.dto.LikeStockDTO;
 import donTouch.utils.exchangeRate.ExchangeRate;
 import donTouch.utils.utils.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.management.InstanceNotFoundException;
 import java.util.List;
@@ -97,27 +96,19 @@ public class StockRestController {
     }
 
     @GetMapping("/like")
-    public ApiUtils.ApiResult<Map<String, Object>> findLikeStock(@RequestParam("userId") Integer userId) {
-        WebClient webClient = WebClient.create();
-
-        ResponseEntity<ApiUtils.ApiResult<List<LikeStockDTO>>> responseEntity = webClient.get()
-                .uri("http://localhost:8081/api/user/like/stocks?userId=1")
-                .retrieve()
-                .toEntity(new ParameterizedTypeReference<ApiUtils.ApiResult<List<LikeStockDTO>>>() {
-                })
-                .block();
-
-        if (responseEntity != null && responseEntity.getBody() != null) {
-            ApiUtils.ApiResult<List<LikeStockDTO>> apiResult = responseEntity.getBody();
-            List<LikeStockDTO> likeStockDTOList = apiResult.getResponse();
+    public ApiUtils.ApiResult<Map<String, Object>> findLikeStock(@RequestParam("userId") Long userId) {
+        try {
+            List<LikeStockDTO> likeStockDTOList = Web.getLikeStockDTOList(userId);
 
             Map<String, Object> response = stockService.findLikeStocks(likeStockDTOList);
 
-            if (response != null) {
-                return ApiUtils.success(response);
+            if (response == null) {
+                return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
             }
+            return ApiUtils.success(response);
+        } catch (IllegalStateException e) {
+            return ApiUtils.error("get like stock id error", HttpStatus.NOT_FOUND);
         }
-        return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @GetMapping("/exchange/usd")

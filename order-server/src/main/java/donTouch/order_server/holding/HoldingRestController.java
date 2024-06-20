@@ -5,6 +5,7 @@ import donTouch.order_server.holding.dto.*;
 import donTouch.order_server.holding.service.HoldingEnergyFundService;
 import donTouch.order_server.holding.service.HoldingEstateFundService;
 import donTouch.order_server.holding.service.HoldingKrStockService;
+import donTouch.order_server.holding.service.HoldingUsStockService;
 import donTouch.utils.utils.ApiUtils;
 import donTouch.utils.utils.ApiUtils.ApiResult;
 import jakarta.validation.Valid;
@@ -14,7 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @AllArgsConstructor
@@ -23,6 +26,7 @@ import java.util.List;
 public class HoldingRestController {
     private final HoldingEstateFundService holdingEstateFundService;
     private final HoldingKrStockService holdingKrStockService;
+    private final HoldingUsStockService holdingUsStockService;
     private final HoldingEnergyFundService holdingEnergyFundService;
 
     @GetMapping("/api/holding/allEstate/{userId}")
@@ -66,7 +70,7 @@ public class HoldingRestController {
         try {
             HoldingKrStock result = holdingKrStockService.sellStockUpdate(holdingKrStockFindForm);
             return ApiUtils.success(result);
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -105,5 +109,26 @@ public class HoldingRestController {
         } catch (NullPointerException e) {
             return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/api/holding/stocks")
+    public ApiResult<Map<String, Object>> getHoldingStockIds(@RequestParam("userId") Long userId, @RequestParam("getPrice") Boolean getPrice) {
+        Map<String, Object> result = new LinkedHashMap<>();
+
+        List<String> holdingKrStockSymbols = holdingKrStockService.findHoldingStockIds(userId);
+        List<String> holdingUsStockSymbols = holdingUsStockService.findHoldingStockIds(userId);
+
+        if (holdingKrStockSymbols == null || holdingUsStockSymbols == null) {
+            return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (!getPrice) {
+            result.put("krSymbols", holdingKrStockSymbols);
+            result.put("usSymbols", holdingUsStockSymbols);
+            return ApiUtils.success(result);
+        }
+
+        // getPrice == true 면 매수단가, 수량 같이 받아서 전달하기
+        return ApiUtils.error("can't get price now", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

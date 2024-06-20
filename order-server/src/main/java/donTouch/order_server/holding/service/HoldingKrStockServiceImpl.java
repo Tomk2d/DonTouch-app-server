@@ -5,12 +5,14 @@ import donTouch.order_server.holding.domain.HoldingKrStockJpaRepository;
 import donTouch.order_server.holding.dto.HoldingKrStockDto;
 import donTouch.order_server.holding.dto.HoldingKrStockFindForm;
 import donTouch.order_server.utils.KrStockMapper;
-
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Transactional
 @Slf4j
@@ -32,10 +34,11 @@ public class HoldingKrStockServiceImpl implements HoldingKrStockService {
             HoldingKrStock findEntity = findHolding.get();
             findEntity.setKrStockAmount(findEntity.getKrStockAmount() + orderAmount);
             return holdingKrStockRepository.save(findEntity);
-        }else {
+        } else {
             return holdingKrStockRepository.save(entity);
         }
     }
+
     @Transactional
     @Override
     public HoldingKrStock sellStockUpdate(HoldingKrStockFindForm holdingKrStockFindForm) {
@@ -49,7 +52,7 @@ public class HoldingKrStockServiceImpl implements HoldingKrStockService {
         if (myAmount > orderAmount) {
             result.setKrStockAmount(myAmount - orderAmount);
             HoldingKrStock updateHolding = holdingKrStockRepository.save(result);
-            System.out.println("이렇게 변했어요 : "+updateHolding);
+            System.out.println("이렇게 변했어요 : " + updateHolding);
             return updateHolding;
         } else if (myAmount == orderAmount) {
             holdingKrStockRepository.delete(result);
@@ -59,8 +62,19 @@ public class HoldingKrStockServiceImpl implements HoldingKrStockService {
             throw new NullPointerException("주식 보유수량이 주문수량보다 적습니다.");
         }
     }
+
     public HoldingKrStock findHolding(Long userId, String krStockId) {
         return holdingKrStockRepository.findByUserIdAndKrStockId(userId, krStockId)
-            .orElseThrow(()->new NullPointerException("해당 주식을 보유하고 있지 않습니다."));
+                .orElseThrow(() -> new NullPointerException("해당 주식을 보유하고 있지 않습니다."));
     }
+
+    @Override
+    public List<String> findHoldingStockIds(Long userId) {
+        List<HoldingKrStock> holdingKrStocks = holdingKrStockRepository.findAllByUserId(userId);
+
+        return holdingKrStocks.stream()
+                .map(HoldingKrStock::getKrStockId)
+                .collect(Collectors.toList());
+    }
+
 }
