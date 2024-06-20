@@ -1,6 +1,6 @@
 package donTouch.order_server.holding.dto;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,13 +14,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class KrStockTradingLogDto {
-
+public class UsStockDividendLogDto {
+    private Long id;
     private Long userId;
-    private String krStockId;
-    private Long krHoldingStockId;
-    private int krStockBuyPrice;
-    private int krStockBuyAmount;
-    private int combination;
-    private int tradingType;
+    private LocalDateTime dividendDate;
 }

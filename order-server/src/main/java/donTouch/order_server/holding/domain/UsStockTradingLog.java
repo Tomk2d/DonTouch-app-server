@@ -24,22 +24,23 @@ import lombok.ToString;
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Builder
-public class KrStockTradingLog {
+public class UsStockTradingLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotNull
     private Long userId;
     @NotNull
-    private String krStockId;
+    private String usStockId;
     @NotNull
-    private Long krHoldingStockId;
+    private Long usHoldingStockId;
     @NotNull
-    private int krStockBuyPrice;
+    private int usStockBuyPrice;
     @NotNull
-    private int krStockBuyAmount;
+    private int usStockBuyAmount;
     @Nullable
     private int combination;
     @NotNull
     private int tradingType;
 }
+

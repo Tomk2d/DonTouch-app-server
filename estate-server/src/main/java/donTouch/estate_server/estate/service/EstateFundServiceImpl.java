@@ -13,19 +13,16 @@ import donTouch.estate_server.kafka.dto.BankAccountLogDto;
 import donTouch.estate_server.kafka.dto.HoldingEstateFundForm;
 import donTouch.estate_server.kafka.service.KafkaProducerService;
 import donTouch.utils.utils.ApiUtils.ApiResult;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import donTouch.utils.utils.Sort;
 import lombok.AllArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -91,7 +88,7 @@ public class EstateFundServiceImpl implements EstateFundService {
         String titleImageUrl = savedEstateFund.getTitleMainImageUrl();
         int investmentPeriod = savedEstateFund.getLength();
         Date startPeriod = estateFundDetail.getStartDatetime();
-        kafkaProducerService.requestAddEstate(new HoldingEstateFundForm(userId, estateFundId, titleImageUrl, estateName, estateEarningRate , investmentPeriod, inputCash, startPeriod));
+        kafkaProducerService.requestAddEstate(new HoldingEstateFundForm(userId, estateFundId, titleImageUrl, estateName, estateEarningRate, investmentPeriod, inputCash, startPeriod));
         kafkaProducerService.requestAddBankLog(new BankAccountLogDto(userId, (long) inputCash, 1, estateName, LocalDateTime.now()));
         return true;
     }
@@ -107,7 +104,7 @@ public class EstateFundServiceImpl implements EstateFundService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         EstateFund findedEstateFund = estateFundRepository.findById(estateFundId)
-                .orElseThrow(()-> new NullPointerException("부동산 id 가 잘못되었습니다."));
+                .orElseThrow(() -> new NullPointerException("부동산 id 가 잘못되었습니다."));
         EstateFundDetail estateFundDetail = estateFundDetailRepository.findByEstateId(estateFundId);
 
         findedEstateFund.setCurrentInvest(findedEstateFund.getCurrentInvest() - (long) buyEstateFundForm.getInputCash());
@@ -117,7 +114,7 @@ public class EstateFundServiceImpl implements EstateFundService {
         String titleImageUrl = findedEstateFund.getTitleMainImageUrl();
         int investmentPeriod = findedEstateFund.getLength();
         Date startPeriod = estateFundDetail.getStartDatetime();
-        HoldingEstateFundForm requestBody = new HoldingEstateFundForm(userId, estateFundId, titleImageUrl, estateName, estateEarningRate , investmentPeriod, inputCash, startPeriod);
+        HoldingEstateFundForm requestBody = new HoldingEstateFundForm(userId, estateFundId, titleImageUrl, estateName, estateEarningRate, investmentPeriod, inputCash, startPeriod);
         HttpEntity<HoldingEstateFundForm> requestEntity = new HttpEntity<>(requestBody, headers);
 
         ResponseEntity<HoldingEstateFundDto> responseEntity = restTemplate.postForEntity(
@@ -148,5 +145,18 @@ public class EstateFundServiceImpl implements EstateFundService {
         }
 
         return true;
+    }
+
+    @Override
+    public List<EstateFundDto> getEstateDtoList(List<Integer> ids) {
+        List<EstateFund> estateFundList = estateFundRepository.findByIdIn(ids);
+
+        List<EstateFundDto> estateFundDtoList = new ArrayList<>();
+        estateFundList.forEach(estateFund -> {
+            EstateFundDto dto = estateFundMapper.toDto(estateFund);
+            estateFundDtoList.add(dto);
+        });
+
+        return estateFundDtoList;
     }
 }

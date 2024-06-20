@@ -8,7 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,22 +24,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Builder
-public class KrStockTradingLog {
+public class KrStockDividendLog {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotNull
     private Long userId;
-    @NotNull
-    private String krStockId;
-    @NotNull
-    private Long krHoldingStockId;
-    @NotNull
-    private int krStockBuyPrice;
-    @NotNull
-    private int krStockBuyAmount;
     @Nullable
-    private int combination;
-    @NotNull
-    private int tradingType;
+    private LocalDateTime dividendDate;
 }

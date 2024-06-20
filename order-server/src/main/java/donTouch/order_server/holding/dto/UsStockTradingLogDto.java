@@ -1,6 +1,6 @@
 package donTouch.order_server.holding.dto;
 
-import java.sql.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,13 +14,13 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class KrStockTradingLogDto {
-
+public class UsStockTradingLogDto {
     private Long userId;
-    private String krStockId;
-    private Long krHoldingStockId;
-    private int krStockBuyPrice;
-    private int krStockBuyAmount;
+    private String usStockId;
+    private Long usHoldingStockId;
+    private int usStockBuyPrice;
+    private int usStockBuyAmount;
     private int combination;
     private int tradingType;
 }
+
