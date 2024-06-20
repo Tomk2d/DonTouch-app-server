@@ -3,15 +3,14 @@ package donTouch.stock_server.stock;
 import donTouch.stock_server.kafka.service.KafkaService;
 import donTouch.stock_server.stock.dto.*;
 import donTouch.stock_server.stock.service.StockService;
+import donTouch.stock_server.web.Web;
+import donTouch.stock_server.web.dto.LikeStockDTO;
 import donTouch.utils.exchangeRate.ExchangeRate;
 import donTouch.utils.utils.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.management.InstanceNotFoundException;
 import java.util.List;
@@ -99,7 +98,7 @@ public class StockRestController {
     @GetMapping("/like")
     public ApiUtils.ApiResult<Map<String, Object>> findLikeStock(@RequestParam("userId") Long userId) {
         try {
-            List<LikeStockDTO> likeStockDTOList = getLikeStockDTOList(userId);
+            List<LikeStockDTO> likeStockDTOList = Web.getLikeStockDTOList(userId);
 
             Map<String, Object> response = stockService.findLikeStocks(likeStockDTOList);
 
@@ -109,24 +108,6 @@ public class StockRestController {
             return ApiUtils.success(response);
         } catch (IllegalStateException e) {
             return ApiUtils.error("get like stock id error", HttpStatus.NOT_FOUND);
-        }
-    }
-
-    List<LikeStockDTO> getLikeStockDTOList(Long userId) {
-        try {
-            WebClient webClient = WebClient.create();
-
-            String getLikeStockIdsUrl = "http://localhost:8081/api/user/like/stocks?userId=";
-            ResponseEntity<ApiUtils.ApiResult<List<LikeStockDTO>>> responseEntity = webClient.get()
-                    .uri(getLikeStockIdsUrl + userId)
-                    .retrieve()
-                    .toEntity(new ParameterizedTypeReference<ApiUtils.ApiResult<List<LikeStockDTO>>>() {
-                    })
-                    .block();
-
-            return responseEntity.getBody().getResponse();
-        } catch (Exception e) {
-            throw new IllegalStateException();
         }
     }
 
