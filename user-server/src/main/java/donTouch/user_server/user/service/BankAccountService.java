@@ -10,4 +10,5 @@ public interface BankAccountService {
     String createBank(BankCreateForm bankCreateForm);
 
     BankAccountDto calculateMoney(BankCalculateForm bankCalculateForm);
+    BankAccountDto calculateAccountMoney(BankCalculateForm bankCalculateForm);
 }

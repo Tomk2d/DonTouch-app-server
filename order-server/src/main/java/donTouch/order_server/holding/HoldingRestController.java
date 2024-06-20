@@ -1,8 +1,8 @@
 package donTouch.order_server.holding;
-
 import donTouch.order_server.holding.domain.HoldingKrStock;
-
 import donTouch.order_server.holding.dto.*;
+import donTouch.order_server.bankAccount.dto.UserBankAccountLogDto;
+import donTouch.order_server.bankAccount.service.BankAccountService;
 import donTouch.order_server.holding.service.HoldingEnergyFundService;
 import donTouch.order_server.holding.service.HoldingEstateFundService;
 import donTouch.order_server.holding.service.HoldingKrStockService;
@@ -30,6 +30,21 @@ public class HoldingRestController {
     private final HoldingKrStockService holdingKrStockService;
     private final HoldingUsStockService holdingUsStockService;
     private final HoldingEnergyFundService holdingEnergyFundService;
+    private final BankAccountService bankAccountService;
+
+
+    @GetMapping("/api/holding/account/{userId}")
+    public ApiResult<List<UserBankAccountLogDto>> allBankLog(@PathVariable Long userId){
+        try{
+            List<UserBankAccountLogDto> result = bankAccountService.getUserBankAccountLog(userId);
+            if(result == null){
+                return ApiUtils.error("입출금 내역이 없습니다.", HttpStatus.NOT_FOUND);
+            }
+            return ApiUtils.success(result);
+        }catch (NullPointerException e){
+            return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
     @GetMapping("/api/holding/allEstate/{userId}")
     public ApiResult<List<HoldingEstateFundDto>> allEstate(@PathVariable Long userId) {
@@ -116,11 +131,11 @@ public class HoldingRestController {
     @PostMapping("/api/holding/energy/calendar")
     public ApiUtils.ApiResult<List<DividendP2PDto>> getEnergyCanlendar(
             @RequestHeader("Authorization") String token,
-            @RequestBody @Valid CalendarReqForm calendarReqForm) {
-        try {
+            @RequestBody @Valid CalendarReqForm calendarReqForm){
+        try{
             List<DividendP2PDto> result = holdingEnergyFundService.getEnergyDividend(calendarReqForm, token);
             return ApiUtils.success(result);
-        } catch (NullPointerException e) {
+        }catch(NullPointerException e){
             return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -135,7 +150,8 @@ public class HoldingRestController {
         } catch (NullPointerException e) {
             return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-    }
+
+    };
 
     @GetMapping("/api/holding/stocks")
     public ApiResult<Map<String, Object>> getHoldingStockIds(@RequestParam("userId") Long userId, @RequestParam("getPrice") Boolean getPrice) {
