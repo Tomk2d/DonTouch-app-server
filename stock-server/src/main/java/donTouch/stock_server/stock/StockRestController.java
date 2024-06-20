@@ -7,8 +7,11 @@ import donTouch.utils.exchangeRate.ExchangeRate;
 import donTouch.utils.utils.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.management.InstanceNotFoundException;
 import java.util.List;
@@ -91,6 +94,30 @@ public class StockRestController {
         } catch (IllegalStateException e) {
             return ApiUtils.error("combination should have 1 or more stocks", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/like")
+    public ApiUtils.ApiResult<Map<String, Object>> findLikeStock(@RequestParam("userId") Integer userId) {
+        WebClient webClient = WebClient.create();
+
+        ResponseEntity<ApiUtils.ApiResult<List<LikeStockDTO>>> responseEntity = webClient.get()
+                .uri("http://localhost:8081/api/user/like/stocks?userId=1")
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<ApiUtils.ApiResult<List<LikeStockDTO>>>() {
+                })
+                .block();
+
+        if (responseEntity != null && responseEntity.getBody() != null) {
+            ApiUtils.ApiResult<List<LikeStockDTO>> apiResult = responseEntity.getBody();
+            List<LikeStockDTO> likeStockDTOList = apiResult.getResponse();
+
+            Map<String, Object> response = stockService.findLikeStocks(likeStockDTOList);
+
+            if (response != null) {
+                return ApiUtils.success(response);
+            }
+        }
+        return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @GetMapping("/exchange/usd")

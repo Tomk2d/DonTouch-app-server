@@ -133,6 +133,36 @@ public class StockServiceImpl implements StockService {
         return convertToMap(distirbutedStockList);
     }
 
+    @Override
+    public Map<String, Object> findLikeStocks(List<LikeStockDTO> likeStockDTOList) {
+        Map<String, Object> response = new LinkedHashMap<>();
+
+        List<StockDTO> krStockDTOList = new ArrayList<>();
+        List<StockDTO> usStockDTOList = new ArrayList<>();
+        for (LikeStockDTO likeStockDTO : likeStockDTOList) {
+            if (likeStockDTO.getExchange().equals("KSC")) {
+                Optional<KrStock> KrStock = krStockJpaRepository.findById(likeStockDTO.getStockId());
+
+                if (KrStock.isPresent()) {
+                    Stock stock = KrStock.get();
+                    krStockDTOList.add(stock.convertToDTO());
+                }
+                continue;
+            }
+
+            Optional<UsStock> usStock = usStockJpaRepository.findById(likeStockDTO.getStockId());
+            if (usStock.isPresent()) {
+                Stock stock = usStock.get();
+                usStockDTOList.add(stock.convertToDTO());
+            }
+        }
+
+        response.put("krLikeStocks", krStockDTOList);
+        response.put("usLikeStocks", usStockDTOList);
+
+        return response;
+    }
+
     int countStocks(DistributeCombinationForm distributeCombinationForm) {
         int cnt = 0;
         cnt += countStocksOfList(distributeCombinationForm.getCombination1());
