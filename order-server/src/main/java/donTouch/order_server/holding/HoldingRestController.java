@@ -131,11 +131,11 @@ public class HoldingRestController {
     @PostMapping("/api/holding/energy/calendar")
     public ApiUtils.ApiResult<List<DividendP2PDto>> getEnergyCanlendar(
             @RequestHeader("Authorization") String token,
-            @RequestBody @Valid CalendarReqForm calendarReqForm) {
-        try {
+            @RequestBody @Valid CalendarReqForm calendarReqForm){
+        try{
             List<DividendP2PDto> result = holdingEnergyFundService.getEnergyDividend(calendarReqForm, token);
             return ApiUtils.success(result);
-        } catch (NullPointerException e) {
+        }catch(NullPointerException e){
             return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

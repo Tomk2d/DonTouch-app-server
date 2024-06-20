@@ -22,4 +22,5 @@ public class KrStockTradingLogDto {
     private int krStockBuyPrice;
     private int krStockBuyAmount;
     private int combination;
+    private int tradingType;
 }
