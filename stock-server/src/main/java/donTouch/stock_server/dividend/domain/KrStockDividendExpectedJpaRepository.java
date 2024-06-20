@@ -6,5 +6,5 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface KrStockDividendExpectedJpaRepository extends JpaRepository<KrStockDividendExpected, Long> {
-    List<KrStockDividendExpected> findAllByDividendDateBetweenAndKrStockIdIn(LocalDate startDate, LocalDate endDate, List<Integer> krStockIds);
+    List<KrStockDividendExpected> findAllByDividendDateBetweenAndSymbolIn(LocalDate startDate, LocalDate endDate, List<String> symbols);
 }

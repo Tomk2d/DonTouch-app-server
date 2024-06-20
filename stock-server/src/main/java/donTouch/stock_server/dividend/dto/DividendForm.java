@@ -7,8 +7,8 @@ import java.time.LocalDate;
 
 @Getter
 public class DividendForm {
-    @NotNull(message = "input token")
-    private String token;
+    @NotNull(message = "input userId")
+    private Long userId;
 
     @NotNull(message = "input startDate")
     private LocalDate startDate;

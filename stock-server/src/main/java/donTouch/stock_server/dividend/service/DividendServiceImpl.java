@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -25,23 +26,26 @@ public class DividendServiceImpl implements DividendService {
     private final UsStockJpaRepository usStockJpaRepository;
 
     @Override
-    public List<DividendDTO> findCalendar(DividendForm dividendForm) {
-        // example holdings
-        List<Integer> holdingKrStockIds = List.of(5, 10, 34, 42, 109, 210);
-        List<Integer> holdingUsStockIds = List.of(1523, 1586, 579, 1104, 1615);
+    public List<DividendDTO> findCalendar(DividendForm dividendForm, Map<String, List<String>> holdingStockResponse) {
+        List<String> holdingKrStockSymbols = holdingStockResponse.get("krSymbols");
+        List<String> holdingUsStockSymbols = holdingStockResponse.get("usSymbols");
+
+        holdingKrStockSymbols = holdingKrStockSymbols.stream()
+                .map(s -> s.endsWith(".KS") ? s : s + ".KS")
+                .toList();
 
         List<DividendDTO> dividendDTOList = new ArrayList<>();
 
-        List<Dividend> dividendList = new ArrayList<>(krStockDividendFixedJpaRepository.findAllByDividendDateBetweenAndKrStockIdIn(dividendForm.getStartDate(), dividendForm.getEndDate(), holdingKrStockIds));
+        List<Dividend> dividendList = new ArrayList<>(krStockDividendFixedJpaRepository.findAllByDividendDateBetweenAndSymbolIn(dividendForm.getStartDate(), dividendForm.getEndDate(), holdingKrStockSymbols));
         dividendDTOList.addAll(convertToDividendDTOList(dividendList, true));
 
-        dividendList = new ArrayList<>(usStockDividendFixedJpaRepository.findAllByDividendDateBetweenAndUsStockIdIn(dividendForm.getStartDate(), dividendForm.getEndDate(), holdingUsStockIds));
+        dividendList = new ArrayList<>(usStockDividendFixedJpaRepository.findAllByDividendDateBetweenAndSymbolIn(dividendForm.getStartDate(), dividendForm.getEndDate(), holdingUsStockSymbols));
         dividendDTOList.addAll(convertToDividendDTOList(dividendList, true));
 
-        dividendList = new ArrayList<>(krStockDividendExpectedJpaRepository.findAllByDividendDateBetweenAndKrStockIdIn(dividendForm.getStartDate(), dividendForm.getEndDate(), holdingKrStockIds));
+        dividendList = new ArrayList<>(krStockDividendExpectedJpaRepository.findAllByDividendDateBetweenAndSymbolIn(dividendForm.getStartDate(), dividendForm.getEndDate(), holdingKrStockSymbols));
         dividendDTOList.addAll(convertToDividendDTOList(dividendList, false));
 
-        dividendList = new ArrayList<>(usStockDividendExpectedJpaRepository.findAllByDividendDateBetweenAndUsStockIdIn(dividendForm.getStartDate(), dividendForm.getEndDate(), holdingKrStockIds));
+        dividendList = new ArrayList<>(usStockDividendExpectedJpaRepository.findAllByDividendDateBetweenAndSymbolIn(dividendForm.getStartDate(), dividendForm.getEndDate(), holdingUsStockSymbols));
         dividendDTOList.addAll(convertToDividendDTOList(dividendList, false));
 
         return dividendDTOList;
