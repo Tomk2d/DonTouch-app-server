@@ -66,6 +66,20 @@ public class UserRestController {
             return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/api/user/account/cal")
+    public ApiResult<BankAccountDto> calBankUserAccount(@RequestBody @Valid BankCalculateForm bankCalculateForm) {
+        try{
+            BankAccountDto result = bankAccountService.calculateAccountMoney(bankCalculateForm);
+            if (result == null){
+                return ApiUtils.error("잔고가 부족합니다.", HttpStatus.BAD_REQUEST);
+            }
+            return ApiUtils.success(result);
+        }catch (NullPointerException e) {
+            return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping("/api/user/bank/cal")
     public ApiResult<BankAccountDto> calBankAccount(@RequestBody @Valid BankCalculateForm bankCalculateForm) {
         try{
@@ -84,7 +98,7 @@ public class UserRestController {
             @PathVariable OauthServerType oauthServerType,
             @RequestParam("code") String code
     ) {
-        log.info("두두두두두두");
+
         LoginResponse loginUser = oauthService.login(oauthServerType, code);
         return ApiUtils.success(loginUser);
     }
@@ -95,7 +109,7 @@ public class UserRestController {
             @PathVariable OauthServerType oauthServerType,
             HttpServletResponse response
     ) {
-        log.info("여기 들어오니? 제발 들어와줘");
+
         String redirectUrl = oauthService.getAuthCodeRequestUrl(oauthServerType);
 
         log.info(redirectUrl);

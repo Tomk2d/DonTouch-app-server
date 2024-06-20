@@ -1,9 +1,8 @@
 package donTouch.order_server.holding;
 
-import donTouch.order_server.holding.dto.HoldingEnergyFundDto;
-import donTouch.order_server.holding.dto.HoldingEnergyFundForm;
-import donTouch.order_server.holding.dto.HoldingEstateFundDto;
-import donTouch.order_server.holding.dto.HoldingEstateFundForm;
+import donTouch.order_server.bankAccount.dto.UserBankAccountLogDto;
+import donTouch.order_server.bankAccount.service.BankAccountService;
+import donTouch.order_server.holding.dto.*;
 import donTouch.order_server.holding.service.HoldingEnergyFundService;
 import donTouch.order_server.holding.service.HoldingEstateFundService;
 import donTouch.utils.utils.ApiUtils;
@@ -23,6 +22,21 @@ import org.springframework.web.bind.annotation.*;
 public class HoldingRestController {
     private final HoldingEstateFundService holdingEstateFundService;
     private final HoldingEnergyFundService holdingEnergyFundService;
+    private final BankAccountService bankAccountService;
+
+
+    @GetMapping("/api/holding/account/{userId}")
+    public ApiResult<List<UserBankAccountLogDto>> allBankLog(@PathVariable Long userId){
+        try{
+            List<UserBankAccountLogDto> result = bankAccountService.getUserBankAccountLog(userId);
+            if(result == null){
+                return ApiUtils.error("입출금 내역이 없습니다.", HttpStatus.NOT_FOUND);
+            }
+            return ApiUtils.success(result);
+        }catch (NullPointerException e){
+            return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
     @GetMapping("/api/holding/allEstate/{userId}")
     public ApiResult<List<HoldingEstateFundDto>> allEstate(@PathVariable Long userId) {
@@ -95,4 +109,5 @@ public class HoldingRestController {
             return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
 }

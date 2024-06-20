@@ -91,7 +91,7 @@ public class EnergyFundServiceImplement implements EnergyFundService {
         LocalDateTime startPeriod = energyFundDetail.getStartPeriod();
 
         kafkaProducerService.requestAddEnergy(new HoldingEnergyFundForm(userId, energyFundId, titleImageUrl, energyName, energyEarningRate , investmentPeriod, inputCash, startPeriod));
-        kafkaProducerService.requestAddBankLog(new BankAccountLogDto(userId, (long) inputCash, 1, energyName));
+        kafkaProducerService.requestAddBankLog(new BankAccountLogDto(userId, (long) inputCash, 1, energyName, LocalDateTime.now()));
         return true;
     }
 
@@ -141,11 +141,7 @@ public class EnergyFundServiceImplement implements EnergyFundService {
                 throw new NullPointerException("계좌를 찾을 수 없습니다.");
             }
 
-            kafkaProducerService.requestAddBankLog(new BankAccountLogDto(
-                    responseBody.getUserId(),
-                    (long) responseBody.getInputCash(), 0,
-                    responseBody.getTitle())
-            );
+            kafkaProducerService.requestAddBankLog(new BankAccountLogDto(responseBody.getUserId(), (long) responseBody.getInputCash(), 0, responseBody.getTitle(), LocalDateTime.now()));
         } else {
             throw new NullPointerException("판매할 상품이 없습니다.");
         }
