@@ -17,4 +17,5 @@ public interface StockService {
 
     Map<String, Object> distributeCombination(DistributeCombinationForm distributeCombinationForm);
 
+    Map<String, Object> findLikeStocks(List<LikeStockDTO> likeStockDTOList);
 }

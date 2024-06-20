@@ -29,8 +29,4 @@ public class BankCalculateForm {
         this.userId = userId;
         this.price = price;
     }
-    public String getTopic() {
-        // 실제 토픽 이름을 반환하는 로직
-        return "response_topic"; // 예시로 "response_topic"을 반환
-    }
 }

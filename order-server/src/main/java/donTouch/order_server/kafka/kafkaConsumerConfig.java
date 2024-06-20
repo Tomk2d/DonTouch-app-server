@@ -1,8 +1,8 @@
 package donTouch.order_server.kafka;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import jdk.jfr.Enabled;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +52,10 @@ public class kafkaConsumerConfig {
                 + "IsSuccessDto:donTouch.order_server.kafka.dto.IsSuccessDto,"
                 + "HoldingEnergyFundForm:donTouch.order_server.holding.dto.HoldingEnergyFundForm,"
                 + "HoldingEstateFundForm:donTouch.order_server.holding.dto.HoldingEstateFundForm,"
-                + "BankAccountLogDto:donTouch.order_server.kafka.dto.BankAccountLogDto");
+                + "BankAccountLogDto:donTouch.order_server.kafka.dto.BankAccountLogDto"
+        );
+
+        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, LinkedHashMap.class); // 의진아 밥사라^_^
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
