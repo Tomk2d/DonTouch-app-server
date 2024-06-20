@@ -114,8 +114,6 @@ public class StockServiceImpl implements StockService {
     public Map<String, Object> findCombination(FindCombinationForm findCombinationForm) {
         List<List<StockDTO>> fixedStockList = getFixedCombinations(findCombinationForm);
 
-        // [0]~[2]에서 size 1이면 보유종목 넣기
-
         List<List<Combination>> distirbutedStockList = distributeStock(fixedStockList, findCombinationForm.getInvestmentAmount());
 
         return convertToMap(distirbutedStockList);
@@ -136,9 +134,10 @@ public class StockServiceImpl implements StockService {
     @Override
     public Map<String, Object> findLikeStocks(List<LikeStockDTO> likeStockDTOList) {
         Map<String, Object> response = new LinkedHashMap<>();
-
         List<StockDTO> krStockDTOList = new ArrayList<>();
         List<StockDTO> usStockDTOList = new ArrayList<>();
+
+        System.out.println("first get ex : " + likeStockDTOList.get(0).getExchange());
         for (LikeStockDTO likeStockDTO : likeStockDTOList) {
             if (likeStockDTO.getExchange().equals("KSC")) {
                 Optional<KrStock> KrStock = krStockJpaRepository.findById(likeStockDTO.getStockId());

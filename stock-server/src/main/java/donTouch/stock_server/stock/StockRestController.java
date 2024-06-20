@@ -107,17 +107,17 @@ public class StockRestController {
                 })
                 .block();
 
-        if (responseEntity != null && responseEntity.getBody() != null) {
-            ApiUtils.ApiResult<List<LikeStockDTO>> apiResult = responseEntity.getBody();
-            List<LikeStockDTO> likeStockDTOList = apiResult.getResponse();
-
-            Map<String, Object> response = stockService.findLikeStocks(likeStockDTOList);
-
-            if (response != null) {
-                return ApiUtils.success(response);
-            }
+        if (responseEntity == null || responseEntity.getBody() == null) {
+            return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
+        List<LikeStockDTO> likeStockDTOList = responseEntity.getBody().getResponse();
+
+        Map<String, Object> response = stockService.findLikeStocks(likeStockDTOList);
+
+        if (response == null) {
+            return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return ApiUtils.success(response);
     }
 
     @GetMapping("/exchange/usd")

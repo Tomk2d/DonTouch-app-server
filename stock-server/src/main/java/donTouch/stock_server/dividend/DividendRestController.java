@@ -20,6 +20,8 @@ public class DividendRestController {
 
     @PostMapping("")
     public ApiUtils.ApiResult<List<DividendDTO>> findCalendar(@RequestBody @Valid DividendForm dividendForm) {
+
+
         List<DividendDTO> result = dividendService.findCalendar(dividendForm);
 
         if (result == null) {

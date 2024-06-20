@@ -1,5 +1,7 @@
 package donTouch.order_server.holding.service;
 
-public interface HoldingUsStockService {
+import java.util.List;
 
+public interface HoldingUsStockService {
+    List<String> findHoldingStockIds(Long userId);
 }
