@@ -7,6 +7,7 @@ import donTouch.stock_server.stock.domain.Stock;
 import donTouch.stock_server.stock.domain.StockPrice;
 import donTouch.stock_server.stock.dto.*;
 import donTouch.stock_server.usStock.domain.*;
+import donTouch.stock_server.web.dto.LikeStockDTO;
 import donTouch.utils.exchangeRate.ExchangeRate;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -114,8 +115,6 @@ public class StockServiceImpl implements StockService {
     public Map<String, Object> findCombination(FindCombinationForm findCombinationForm) {
         List<List<StockDTO>> fixedStockList = getFixedCombinations(findCombinationForm);
 
-        // [0]~[2]에서 size 1이면 보유종목 넣기
-
         List<List<Combination>> distirbutedStockList = distributeStock(fixedStockList, findCombinationForm.getInvestmentAmount());
 
         return convertToMap(distirbutedStockList);
@@ -131,6 +130,36 @@ public class StockServiceImpl implements StockService {
         List<List<Combination>> distirbutedStockList = distributeStock(fixedStockList, distributeCombinationForm.getInvestmentAmount());
 
         return convertToMap(distirbutedStockList);
+    }
+
+    @Override
+    public Map<String, Object> findLikeStocks(List<LikeStockDTO> likeStockDTOList) {
+        Map<String, Object> response = new LinkedHashMap<>();
+        List<StockDTO> krStockDTOList = new ArrayList<>();
+        List<StockDTO> usStockDTOList = new ArrayList<>();
+
+        for (LikeStockDTO likeStockDTO : likeStockDTOList) {
+            if (likeStockDTO.getExchange().equals("KSC")) {
+                Optional<KrStock> KrStock = krStockJpaRepository.findById(likeStockDTO.getStockId());
+
+                if (KrStock.isPresent()) {
+                    Stock stock = KrStock.get();
+                    krStockDTOList.add(stock.convertToDTO());
+                }
+                continue;
+            }
+
+            Optional<UsStock> usStock = usStockJpaRepository.findById(likeStockDTO.getStockId());
+            if (usStock.isPresent()) {
+                Stock stock = usStock.get();
+                usStockDTOList.add(stock.convertToDTO());
+            }
+        }
+
+        response.put("krLikeStocks", krStockDTOList);
+        response.put("usLikeStocks", usStockDTOList);
+
+        return response;
     }
 
     int countStocks(DistributeCombinationForm distributeCombinationForm) {

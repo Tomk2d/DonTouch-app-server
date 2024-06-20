@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -49,5 +50,6 @@ public class HoldingEstateFund {
     private int inputCash;
 
     @NotNull
-    private Date startPeriod;
+    private LocalDate startPeriod;
+    private LocalDate createdAt;
 }

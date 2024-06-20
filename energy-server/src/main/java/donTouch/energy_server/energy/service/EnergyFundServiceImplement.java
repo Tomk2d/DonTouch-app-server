@@ -4,10 +4,7 @@ import donTouch.energy_server.energy.domain.EnergyFund;
 import donTouch.energy_server.energy.domain.EnergyFundDetail;
 import donTouch.energy_server.energy.domain.EnergyFundDetailJpaRepository;
 import donTouch.energy_server.energy.domain.EnergyFundJpaRepository;
-import donTouch.energy_server.energy.dto.BankCalculateForm;
-import donTouch.energy_server.energy.dto.BuyEnergyFundForm;
-import donTouch.energy_server.energy.dto.EnergyFundDto;
-import donTouch.energy_server.energy.dto.HoldingEnergyFundDto;
+import donTouch.energy_server.energy.dto.*;
 import donTouch.energy_server.kafka.dto.BankAccountLogDto;
 import donTouch.energy_server.kafka.dto.HoldingEnergyFundForm;
 import donTouch.energy_server.kafka.service.KafkaProducerService;
@@ -15,14 +12,16 @@ import donTouch.energy_server.utils.EnergyFundMapper;
 import donTouch.utils.utils.ApiUtils;
 import donTouch.utils.utils.Sort;
 import lombok.AllArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -91,7 +90,7 @@ public class EnergyFundServiceImplement implements EnergyFundService {
         LocalDateTime startPeriod = energyFundDetail.getStartPeriod();
 
         kafkaProducerService.requestAddEnergy(new HoldingEnergyFundForm(userId, energyFundId, titleImageUrl, energyName, energyEarningRate , investmentPeriod, inputCash, startPeriod));
-        kafkaProducerService.requestAddBankLog(new BankAccountLogDto(userId, (long) inputCash, 1, energyName));
+        kafkaProducerService.requestAddBankLog(new BankAccountLogDto(userId, (long) inputCash, 1, energyName, LocalDateTime.now()));
         return true;
     }
 
@@ -141,16 +140,11 @@ public class EnergyFundServiceImplement implements EnergyFundService {
                 throw new NullPointerException("계좌를 찾을 수 없습니다.");
             }
 
-            kafkaProducerService.requestAddBankLog(new BankAccountLogDto(
-                    responseBody.getUserId(),
-                    (long) responseBody.getInputCash(), 0,
-                    responseBody.getTitle())
-            );
+            kafkaProducerService.requestAddBankLog(new BankAccountLogDto(responseBody.getUserId(), (long) responseBody.getInputCash(), 0, responseBody.getTitle(), LocalDateTime.now()));
         } else {
             throw new NullPointerException("판매할 상품이 없습니다.");
         }
 
         return true;
     }
-
 }

@@ -13,6 +13,8 @@ import donTouch.estate_server.kafka.dto.BankAccountLogDto;
 import donTouch.estate_server.kafka.dto.HoldingEstateFundForm;
 import donTouch.estate_server.kafka.service.KafkaProducerService;
 import donTouch.utils.utils.ApiUtils.ApiResult;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -90,7 +92,7 @@ public class EstateFundServiceImpl implements EstateFundService {
         int investmentPeriod = savedEstateFund.getLength();
         Date startPeriod = estateFundDetail.getStartDatetime();
         kafkaProducerService.requestAddEstate(new HoldingEstateFundForm(userId, estateFundId, titleImageUrl, estateName, estateEarningRate , investmentPeriod, inputCash, startPeriod));
-        kafkaProducerService.requestAddBankLog(new BankAccountLogDto(userId, (long) inputCash, 1, estateName));
+        kafkaProducerService.requestAddBankLog(new BankAccountLogDto(userId, (long) inputCash, 1, estateName, LocalDateTime.now()));
         return true;
     }
 
@@ -139,7 +141,7 @@ public class EstateFundServiceImpl implements EstateFundService {
             kafkaProducerService.requestAddBankLog(new BankAccountLogDto(
                     responseBody.getUserId(),
                     (long) responseBody.getInputCash(), 0,
-                    responseBody.getTitle())
+                    responseBody.getTitle(), LocalDateTime.now())
             );
         } else {
             throw new NullPointerException("판매할 상품이 없습니다.");

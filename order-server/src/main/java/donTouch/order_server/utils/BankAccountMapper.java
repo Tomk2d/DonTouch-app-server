@@ -1,6 +1,7 @@
 package donTouch.order_server.utils;
 
 import donTouch.order_server.bankAccount.domain.BankAccountLog;
+import donTouch.order_server.bankAccount.dto.UserBankAccountLogDto;
 import donTouch.order_server.kafka.dto.BankAccountLogDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -11,5 +12,6 @@ public interface BankAccountMapper {
 
     BankAccountLogDto toDto(BankAccountLog bankAccountLog);
     BankAccountLog toEntity(BankAccountLogDto bankAccountLogDto);
+    UserBankAccountLogDto toUserDto(BankAccountLog bankAccountLog);
 }
 
