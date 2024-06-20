@@ -4,7 +4,10 @@ import donTouch.energy_server.energy.domain.EnergyFund;
 import donTouch.energy_server.energy.domain.EnergyFundDetail;
 import donTouch.energy_server.energy.domain.EnergyFundDetailJpaRepository;
 import donTouch.energy_server.energy.domain.EnergyFundJpaRepository;
-import donTouch.energy_server.energy.dto.*;
+import donTouch.energy_server.energy.dto.BankCalculateForm;
+import donTouch.energy_server.energy.dto.BuyEnergyFundForm;
+import donTouch.energy_server.energy.dto.EnergyFundDto;
+import donTouch.energy_server.energy.dto.HoldingEnergyFundDto;
 import donTouch.energy_server.kafka.dto.BankAccountLogDto;
 import donTouch.energy_server.kafka.dto.HoldingEnergyFundForm;
 import donTouch.energy_server.kafka.service.KafkaProducerService;
@@ -12,13 +15,10 @@ import donTouch.energy_server.utils.EnergyFundMapper;
 import donTouch.utils.utils.ApiUtils;
 import donTouch.utils.utils.Sort;
 import lombok.AllArgsConstructor;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -62,7 +62,7 @@ public class EnergyFundServiceImplement implements EnergyFundService {
 
         EnergyFund findedEnergyFund = energyRepository.findById(energyFundId)
                 .orElseThrow(() -> new NullPointerException("에너지 id 가 잘못되었습니다."));
-        Long possibleInvest = (long) (findedEnergyFund.getFundingAmount()*100000000 - findedEnergyFund.getSumOfInvestmentAndReservation());
+        Long possibleInvest = (long) (findedEnergyFund.getFundingAmount() * 100000000 - findedEnergyFund.getSumOfInvestmentAndReservation());
 
         if (possibleInvest < inputCash) {
             throw new NullPointerException("투자 가능한 금액이 아닙니다.");
@@ -83,13 +83,13 @@ public class EnergyFundServiceImplement implements EnergyFundService {
         System.out.println("현재 투자 금액 =================== " + savedEnergyFund.getSumOfInvestmentAndReservation());
 
         EnergyFundDetail energyFundDetail = energyFundDetailRepository.findEnergyInfoByEnergyId(energyFundId)
-                .orElseThrow(()-> new NullPointerException("해당 종목의 상세 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NullPointerException("해당 종목의 상세 정보를 찾을 수 없습니다."));
 
         String titleImageUrl = savedEnergyFund.getTitleImageUrl();
         int investmentPeriod = savedEnergyFund.getInvestmentPeriod();
         LocalDateTime startPeriod = energyFundDetail.getStartPeriod();
 
-        kafkaProducerService.requestAddEnergy(new HoldingEnergyFundForm(userId, energyFundId, titleImageUrl, energyName, energyEarningRate , investmentPeriod, inputCash, startPeriod));
+        kafkaProducerService.requestAddEnergy(new HoldingEnergyFundForm(userId, energyFundId, titleImageUrl, energyName, energyEarningRate, investmentPeriod, inputCash, startPeriod));
         kafkaProducerService.requestAddBankLog(new BankAccountLogDto(userId, (long) inputCash, 1, energyName, LocalDateTime.now()));
         return true;
     }
@@ -105,7 +105,7 @@ public class EnergyFundServiceImplement implements EnergyFundService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         EnergyFund findedEnergyFund = energyRepository.findById(energyFundId)
-                .orElseThrow(()-> new NullPointerException("부동산 id 가 잘못되었습니다."));
+                .orElseThrow(() -> new NullPointerException("부동산 id 가 잘못되었습니다."));
 
 
         findedEnergyFund.setSumOfInvestmentAndReservation(findedEnergyFund.getSumOfInvestmentAndReservation() - buyEnergyFundForm.getInputCash());
@@ -114,12 +114,12 @@ public class EnergyFundServiceImplement implements EnergyFundService {
 
 
         EnergyFundDetail estateFundDetail = energyFundDetailRepository.findEnergyInfoByEnergyId(energyFundId)
-                .orElseThrow(()->new NullPointerException("해당 상품의 상세 정보가 없습니다."));
+                .orElseThrow(() -> new NullPointerException("해당 상품의 상세 정보가 없습니다."));
 
         String titleImageUrl = findedEnergyFund.getTitleImageUrl();
         int investmentPeriod = findedEnergyFund.getInvestmentPeriod();
         LocalDateTime startPeriod = estateFundDetail.getStartPeriod();
-        HoldingEnergyFundForm requestBody = new HoldingEnergyFundForm(userId, energyFundId, titleImageUrl, estateName, estateEarningRate , investmentPeriod, inputCash, startPeriod);
+        HoldingEnergyFundForm requestBody = new HoldingEnergyFundForm(userId, energyFundId, titleImageUrl, estateName, estateEarningRate, investmentPeriod, inputCash, startPeriod);
         HttpEntity<HoldingEnergyFundForm> requestEntity = new HttpEntity<>(requestBody, headers);
 
         ResponseEntity<HoldingEnergyFundDto> responseEntity = restTemplate.postForEntity(
@@ -146,5 +146,18 @@ public class EnergyFundServiceImplement implements EnergyFundService {
         }
 
         return true;
+    }
+
+    @Override
+    public List<EnergyFundDto> getEnergyFundDtoList(List<String> ids) {
+        List<EnergyFund> energyFundList = energyRepository.findAllByEnergyIdIn(ids);
+
+        List<EnergyFundDto> energyFundDtoList = new ArrayList<>();
+        energyFundList.forEach(energyFund -> {
+            EnergyFundDto dto = energyMapper.toDto(energyFund);
+            energyFundDtoList.add(dto);
+        });
+
+        return energyFundDtoList;
     }
 }

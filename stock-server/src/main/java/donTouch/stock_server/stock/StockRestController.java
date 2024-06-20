@@ -99,9 +99,11 @@ public class StockRestController {
     public ApiUtils.ApiResult<Map<String, Object>> findLikeStock(@RequestParam("userId") Long userId) {
         try {
             List<LikeStockDTO> likeStockDTOList = Web.getLikeStockDTOList(userId);
+            if (likeStockDTOList == null) {
+                return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
 
             Map<String, Object> response = stockService.findLikeStocks(likeStockDTOList);
-
             if (response == null) {
                 return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
             }

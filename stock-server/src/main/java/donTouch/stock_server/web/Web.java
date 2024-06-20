@@ -28,13 +28,19 @@ public class Web {
         }
     }
 
-    public static Map<String, List<String>> getHoldingStockDTOList(Long userId) {
+    public static Map<String, List<String>> getHoldingStockDTOList(Long userId, Boolean getPrice) {
         try {
             WebClient webClient = WebClient.create();
 
-            String getLikeStockIdsUrl = "http://localhost:8085/api/holding/stocks?getPrice=false&userId=";
+            String getLikeStockIdsUrl = "http://localhost:8085/api/holding/stocks?&userId=" + userId;
+            if (getPrice) {
+                getLikeStockIdsUrl += "&getPrice=true";
+            } else {
+                getLikeStockIdsUrl += "&getPrice=false";
+            }
+
             ResponseEntity<ApiUtils.ApiResult<Map<String, List<String>>>> responseEntity = webClient.get()
-                    .uri(getLikeStockIdsUrl + userId)
+                    .uri(getLikeStockIdsUrl)
                     .retrieve()
                     .toEntity(new ParameterizedTypeReference<ApiUtils.ApiResult<Map<String, List<String>>>>() {
                     })
