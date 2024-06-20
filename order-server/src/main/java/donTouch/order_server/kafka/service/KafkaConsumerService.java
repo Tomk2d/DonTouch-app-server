@@ -18,6 +18,7 @@ import donTouch.order_server.kafka.dto.CompleteStockForm;
 import java.util.LinkedHashMap;
 import lombok.AllArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -36,15 +37,6 @@ public class KafkaConsumerService {
     private final ObjectMapper objectMapper;
 
 
-
-    @Autowired
-    public KafkaConsumerService(KafkaTemplate<String, Object> kafkaTemplate,
-                                HoldingEstateFundService holdingEstateFundService, HoldingEnergyFundService holdingEnergyFundService, BankAccountService bankAccountService) {
-        this.kafkaTemplate = kafkaTemplate;
-        this.holdingEstateFundService = holdingEstateFundService;
-        this.holdingEnergyFundService = holdingEnergyFundService;
-        this.bankAccountService = bankAccountService;
-    }
 
     @KafkaListener(topics="response_calculate_bank", groupId = "order_group")
     public Boolean getCalculateResponse(Boolean isSuccess){
