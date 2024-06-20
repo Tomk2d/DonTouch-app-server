@@ -116,11 +116,11 @@ public class HoldingRestController {
     @PostMapping("/api/holding/energy/calendar")
     public ApiUtils.ApiResult<List<DividendP2PDto>> getEnergyCanlendar(
             @RequestHeader("Authorization") String token,
-            @RequestBody @Valid CalendarReqForm calendarReqForm){
-        try{
+            @RequestBody @Valid CalendarReqForm calendarReqForm) {
+        try {
             List<DividendP2PDto> result = holdingEnergyFundService.getEnergyDividend(calendarReqForm, token);
             return ApiUtils.success(result);
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -128,13 +128,14 @@ public class HoldingRestController {
     @PostMapping("/api/holding/estate/calendar")
     public ApiUtils.ApiResult<List<DividendP2PDto>> getEstateCanlendar(
             @RequestHeader("Authorization") String token,
-            @RequestBody @Valid CalendarReqForm calendarReqForm){
-        try{
+            @RequestBody @Valid CalendarReqForm calendarReqForm) {
+        try {
             List<DividendP2PDto> result = holdingEstateFundService.getEstateDividend(calendarReqForm, token);
             return ApiUtils.success(result);
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
 
     @GetMapping("/api/holding/stocks")
     public ApiResult<Map<String, Object>> getHoldingStockIds(@RequestParam("userId") Long userId, @RequestParam("getPrice") Boolean getPrice) {
