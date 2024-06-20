@@ -98,7 +98,6 @@ public class UserRestController {
             @PathVariable OauthServerType oauthServerType,
             @RequestParam("code") String code
     ) {
-
         LoginResponse loginUser = oauthService.login(oauthServerType, code);
         return ApiUtils.success(loginUser);
     }
@@ -109,7 +108,6 @@ public class UserRestController {
             @PathVariable OauthServerType oauthServerType,
             HttpServletResponse response
     ) {
-
         String redirectUrl = oauthService.getAuthCodeRequestUrl(oauthServerType);
 
         log.info(redirectUrl);

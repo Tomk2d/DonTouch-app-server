@@ -3,6 +3,8 @@ package donTouch.stock_server.stock;
 import donTouch.stock_server.kafka.service.KafkaService;
 import donTouch.stock_server.stock.dto.*;
 import donTouch.stock_server.stock.service.StockService;
+import donTouch.stock_server.web.Web;
+import donTouch.stock_server.web.dto.LikeStockDTO;
 import donTouch.utils.exchangeRate.ExchangeRate;
 import donTouch.utils.utils.ApiUtils;
 import jakarta.validation.Valid;
@@ -89,7 +91,23 @@ public class StockRestController {
         } catch (NullPointerException e) {
             return ApiUtils.error("price not found", HttpStatus.NOT_FOUND);
         } catch (IllegalStateException e) {
-            return ApiUtils.error("each combination should have 1 or more stocks", HttpStatus.BAD_REQUEST);
+            return ApiUtils.error("combination should have 1 or more stocks", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/like")
+    public ApiUtils.ApiResult<Map<String, Object>> findLikeStock(@RequestParam("userId") Long userId) {
+        try {
+            List<LikeStockDTO> likeStockDTOList = Web.getLikeStockDTOList(userId);
+
+            Map<String, Object> response = stockService.findLikeStocks(likeStockDTOList);
+
+            if (response == null) {
+                return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            return ApiUtils.success(response);
+        } catch (IllegalStateException e) {
+            return ApiUtils.error("get like stock id error", HttpStatus.NOT_FOUND);
         }
     }
 

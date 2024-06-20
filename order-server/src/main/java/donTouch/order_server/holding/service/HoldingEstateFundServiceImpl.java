@@ -3,10 +3,11 @@ package donTouch.order_server.holding.service;
 import donTouch.order_server.holding.domain.HoldingEnergyFund;
 import donTouch.order_server.holding.domain.HoldingEstateFund;
 import donTouch.order_server.holding.domain.HoldingEstateFundRepository;
-import donTouch.order_server.holding.dto.HoldingEstateFundDto;
-import donTouch.order_server.holding.dto.HoldingEstateFundForm;
+import donTouch.order_server.holding.dto.*;
 import donTouch.order_server.utils.EstateFundMapper;
 import jakarta.transaction.Transactional;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -70,5 +71,46 @@ public class HoldingEstateFundServiceImpl implements HoldingEstateFundService {
             totalCash += holdingEstateFund.getInputCash();
         }
         return totalCash;
+    }
+
+    @Override
+    public List<DividendP2PDto> getEstateDividend(CalendarReqForm calendarReqForm, String token) {
+        List<DividendP2PDto> dividendDtoList = new ArrayList<>();
+
+        //Long userId = JwtUtil.extractId(token);
+        List<HoldingEstateFundDto> holdingEstateFundDtoList = getAllEstate(1001L);
+        if(holdingEstateFundDtoList==null)
+            throw new NullPointerException("보유한 부동산이 없어 배당이 존재하지 않습니다.");
+
+        LocalDate startDate = calendarReqForm.getStartDate();
+        LocalDate endDate = calendarReqForm.getEndDate();
+
+        holdingEstateFundDtoList.forEach(holding -> {
+            double earningRate = holding.getEarningRate();
+            int investmentPeriod = holding.getInvestmentPeriod();
+            int inputCash = holding.getInputCash();
+            LocalDate buyDate = holding.getCreatedAt();
+            double dividendPrice = inputCash * earningRate / investmentPeriod /100;
+
+            for (long i = 1; i <= investmentPeriod; i++) {
+                LocalDate tmpDividendDate = buyDate.plusMonths(i);
+                if (checkInPeriod(startDate, endDate, tmpDividendDate)) {
+                    DividendP2PDto dividendDto = new DividendP2PDto(
+                            String.valueOf(holding.getEstateId()),
+                            holding.getTitle(),
+                            holding.getTitleImageUrl(),
+                            dividendPrice,
+                            tmpDividendDate
+                    );
+                    dividendDtoList.add(dividendDto);
+                }
+                else if(tmpDividendDate.isAfter(endDate))
+                    break;
+            }
+        });
+        return dividendDtoList;
+    }
+    public boolean checkInPeriod(LocalDate startDate, LocalDate endDate, LocalDate tmpDate){
+        return (tmpDate.isEqual(startDate) || tmpDate.isAfter(startDate)) && (tmpDate.isEqual(endDate) || tmpDate.isBefore(endDate));
     }
 }

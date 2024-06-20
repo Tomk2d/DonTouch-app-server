@@ -20,22 +20,6 @@ public class LikeRestController {
 
     @PostMapping("/stocks")
     public ApiUtils.ApiResult<Object> likeStock(@RequestBody @Valid LikeStockForm likeStockForm) {
-//        if (likeStockForm.getExchange().equals("KSC")) {
-//            LikeStockDTO savedStock = likeStockService.likeKrStock(likeStockForm);
-//
-//            if (savedStock == null) {
-//                return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
-//            }
-//            return ApiUtils.success(savedStock);
-//        }
-//
-//        LikeStockDTO savedStock = likeStockService.likeUsStock(likeStockForm);
-//
-//        if (savedStock == null) {
-//            return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//        return ApiUtils.success(savedStock);
-
         LikeStockDTO savedlikeStockDTO = likeStockService.likeStock(likeStockForm);
 
         return ApiUtils.success(savedlikeStockDTO);
@@ -52,7 +36,12 @@ public class LikeRestController {
     }
 
     @DeleteMapping("/stocks")
-    public ApiUtils.ApiResult<Object> deleteStock(@RequestBody @Valid LikeStockForm likeStockForm) {
-        return ApiUtils.success(likeStockForm);
+    public ApiUtils.ApiResult<String> deleteStock(@RequestBody @Valid LikeStockForm likeStockForm) {
+        Boolean isDeleted = likeStockService.dislikeStock(likeStockForm);
+
+        if (isDeleted == null || !isDeleted) {
+            return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return ApiUtils.success("deleted completely");
     }
 }

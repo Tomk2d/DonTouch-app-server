@@ -6,29 +6,19 @@ import donTouch.user_server.like.domain.LikeUsStock;
 import donTouch.user_server.like.domain.LikeUsStockJpaRepository;
 import donTouch.user_server.like.dto.LikeStockDTO;
 import donTouch.user_server.like.dto.LikeStockForm;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class LikeStockServiceImpl implements LikeStockService {
     LikeKrStockJpaRepository likeKrStockJpaRepository;
     LikeUsStockJpaRepository likeUsStockJpaRepository;
-
-    @Override
-    public LikeStockDTO likeKrStock(LikeStockForm likeStockForm) {
-        LikeKrStock likeKrStock = likeKrStockJpaRepository.save(likeStockForm.convertToLikeKrStock());
-        return likeKrStock.convertToDTO();
-    }
-
-    @Override
-    public LikeStockDTO likeUsStock(LikeStockForm likeStockForm) {
-        LikeUsStock likeUsStock = likeUsStockJpaRepository.save(likeStockForm.convertToLikeUsStock());
-        return likeUsStock.convertToDTO();
-    }
 
     @Override
     public LikeStockDTO likeStock(LikeStockForm likeStockForm) {
@@ -59,10 +49,16 @@ public class LikeStockServiceImpl implements LikeStockService {
     }
 
     @Override
+    @Transactional
     public Boolean dislikeStock(LikeStockForm likeStockForm) {
-//        if (likeStockForm.getExchange().equals("KSC")) {
-//
-//        }
-        return null;
+        if (likeStockForm.getExchange().equals("KSC")) {
+            likeKrStockJpaRepository.deleteByUserIdAndKrStockId(likeStockForm.getUserId(), likeStockForm.getStockId());
+            Optional<LikeKrStock> deletedLikeStock = likeKrStockJpaRepository.findByUserIdAndKrStockId(likeStockForm.getUserId(), likeStockForm.getStockId());
+            return deletedLikeStock.isEmpty();
+        }
+
+        likeUsStockJpaRepository.deleteByUserIdAndUsStockId(likeStockForm.getUserId(), likeStockForm.getStockId());
+        Optional<LikeUsStock> deletedLikeStock = likeUsStockJpaRepository.findByUserIdAndUsStockId(likeStockForm.getUserId(), likeStockForm.getStockId());
+        return deletedLikeStock.isEmpty();
     }
 }

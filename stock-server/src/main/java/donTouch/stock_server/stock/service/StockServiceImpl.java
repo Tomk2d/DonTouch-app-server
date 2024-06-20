@@ -7,6 +7,7 @@ import donTouch.stock_server.stock.domain.Stock;
 import donTouch.stock_server.stock.domain.StockPrice;
 import donTouch.stock_server.stock.dto.*;
 import donTouch.stock_server.usStock.domain.*;
+import donTouch.stock_server.web.dto.LikeStockDTO;
 import donTouch.utils.exchangeRate.ExchangeRate;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -113,6 +114,7 @@ public class StockServiceImpl implements StockService {
     @Override
     public Map<String, Object> findCombination(FindCombinationForm findCombinationForm) {
         List<List<StockDTO>> fixedStockList = getFixedCombinations(findCombinationForm);
+
         List<List<Combination>> distirbutedStockList = distributeStock(fixedStockList, findCombinationForm.getInvestmentAmount());
 
         return convertToMap(distirbutedStockList);
@@ -120,51 +122,81 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public Map<String, Object> distributeCombination(DistributeCombinationForm distributeCombinationForm) {
-        List<List<StockDTO>> fixedStockList = convertToFixedStockList(distributeCombinationForm);
-
-        for (List<StockDTO> stockDTOList : fixedStockList) {
-            if (stockDTOList.isEmpty()) {
-                throw new IllegalStateException();
-            }
+        if (countStocks(distributeCombinationForm) == 0) {
+            throw new IllegalStateException();
         }
 
+        List<List<StockDTO>> fixedStockList = convertToFixedStockList(distributeCombinationForm);
         List<List<Combination>> distirbutedStockList = distributeStock(fixedStockList, distributeCombinationForm.getInvestmentAmount());
 
         return convertToMap(distirbutedStockList);
     }
 
-    List<List<StockDTO>> convertToFixedStockList(DistributeCombinationForm distributeCombinationForm) {
-        List<List<StockDTO>> response = new ArrayList<>();
+    @Override
+    public Map<String, Object> findLikeStocks(List<LikeStockDTO> likeStockDTOList) {
+        Map<String, Object> response = new LinkedHashMap<>();
+        List<StockDTO> krStockDTOList = new ArrayList<>();
+        List<StockDTO> usStockDTOList = new ArrayList<>();
 
-        response.add(createCombination(distributeCombinationForm.getExchange11(),
-                distributeCombinationForm.getStockId11(),
-                distributeCombinationForm.getExchange12(),
-                distributeCombinationForm.getStockId12()));
+        for (LikeStockDTO likeStockDTO : likeStockDTOList) {
+            if (likeStockDTO.getExchange().equals("KSC")) {
+                Optional<KrStock> KrStock = krStockJpaRepository.findById(likeStockDTO.getStockId());
 
-        response.add(createCombination(distributeCombinationForm.getExchange21(),
-                distributeCombinationForm.getStockId21(),
-                distributeCombinationForm.getExchange22(),
-                distributeCombinationForm.getStockId22()));
+                if (KrStock.isPresent()) {
+                    Stock stock = KrStock.get();
+                    krStockDTOList.add(stock.convertToDTO());
+                }
+                continue;
+            }
 
-        response.add(createCombination(distributeCombinationForm.getExchange31(),
-                distributeCombinationForm.getStockId31(),
-                distributeCombinationForm.getExchange32(),
-                distributeCombinationForm.getStockId32()));
+            Optional<UsStock> usStock = usStockJpaRepository.findById(likeStockDTO.getStockId());
+            if (usStock.isPresent()) {
+                Stock stock = usStock.get();
+                usStockDTOList.add(stock.convertToDTO());
+            }
+        }
+
+        response.put("krLikeStocks", krStockDTOList);
+        response.put("usLikeStocks", usStockDTOList);
 
         return response;
     }
 
-    List<StockDTO> createCombination(String exchange1, Integer stockId1, String exchange2, Integer stockId2) {
+    int countStocks(DistributeCombinationForm distributeCombinationForm) {
+        int cnt = 0;
+        cnt += countStocksOfList(distributeCombinationForm.getCombination1());
+        cnt += countStocksOfList(distributeCombinationForm.getCombination2());
+        cnt += countStocksOfList(distributeCombinationForm.getCombination3());
+        return cnt;
+    }
+
+    int countStocksOfList(List<FindStockDetailForm> findStockDetailFormList) {
+        int cnt = 0;
+        for (FindStockDetailForm findStockDetailForm : findStockDetailFormList) {
+            if (findStockDetailForm.getExchange() != null && findStockDetailForm.getStockId() != null) {
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+
+    List<List<StockDTO>> convertToFixedStockList(DistributeCombinationForm distributeCombinationForm) {
+        List<List<StockDTO>> response = new ArrayList<>();
+        response.add(createCombination(distributeCombinationForm.getCombination1()));
+        response.add(createCombination(distributeCombinationForm.getCombination2()));
+        response.add(createCombination(distributeCombinationForm.getCombination3()));
+        return response;
+    }
+
+    List<StockDTO> createCombination(List<FindStockDetailForm> findStockDetailForm) {
         List<StockDTO> combination = new ArrayList<>();
 
-        StockDTO stock1 = findStockAndConvertToStockDTO(exchange1, stockId1);
-        StockDTO stock2 = findStockAndConvertToStockDTO(exchange2, stockId2);
+        for (FindStockDetailForm findStockDetailForm1 : findStockDetailForm) {
+            StockDTO stock = findStockAndConvertToStockDTO(findStockDetailForm1.getExchange(), findStockDetailForm1.getStockId());
 
-        if (stock1 != null) {
-            combination.add(stock1);
-        }
-        if (stock2 != null) {
-            combination.add(stock2);
+            if (stock != null) {
+                combination.add(stock);
+            }
         }
         return combination;
     }
@@ -220,9 +252,12 @@ public class StockServiceImpl implements StockService {
                 return Long.compare(o1.getDividend(), o2.getDividend());
             }
         });
-        queueSortedByDividend.add(new MonthDividend(1, dividend[1]));
-        queueSortedByDividend.add(new MonthDividend(2, dividend[2]));
-        queueSortedByDividend.add(new MonthDividend(3, dividend[3]));
+
+        for (int i = 1; i <= 3; i++) {
+            if (dividend[i] > 0) {
+                queueSortedByDividend.add(new MonthDividend(i, dividend[i]));
+            }
+        }
 
         while (true) {
             MonthDividend lowestDividendMonth = queueSortedByDividend.poll();

@@ -1,6 +1,7 @@
 package donTouch.stock_server.stock.service;
 
 import donTouch.stock_server.stock.dto.*;
+import donTouch.stock_server.web.dto.LikeStockDTO;
 
 import javax.management.InstanceNotFoundException;
 import java.util.List;
@@ -17,4 +18,5 @@ public interface StockService {
 
     Map<String, Object> distributeCombination(DistributeCombinationForm distributeCombinationForm);
 
+    Map<String, Object> findLikeStocks(List<LikeStockDTO> likeStockDTOList);
 }

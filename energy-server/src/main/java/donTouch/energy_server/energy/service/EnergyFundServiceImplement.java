@@ -4,10 +4,7 @@ import donTouch.energy_server.energy.domain.EnergyFund;
 import donTouch.energy_server.energy.domain.EnergyFundDetail;
 import donTouch.energy_server.energy.domain.EnergyFundDetailJpaRepository;
 import donTouch.energy_server.energy.domain.EnergyFundJpaRepository;
-import donTouch.energy_server.energy.dto.BankCalculateForm;
-import donTouch.energy_server.energy.dto.BuyEnergyFundForm;
-import donTouch.energy_server.energy.dto.EnergyFundDto;
-import donTouch.energy_server.energy.dto.HoldingEnergyFundDto;
+import donTouch.energy_server.energy.dto.*;
 import donTouch.energy_server.kafka.dto.BankAccountLogDto;
 import donTouch.energy_server.kafka.dto.HoldingEnergyFundForm;
 import donTouch.energy_server.kafka.service.KafkaProducerService;
@@ -15,14 +12,16 @@ import donTouch.energy_server.utils.EnergyFundMapper;
 import donTouch.utils.utils.ApiUtils;
 import donTouch.utils.utils.Sort;
 import lombok.AllArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -148,5 +147,4 @@ public class EnergyFundServiceImplement implements EnergyFundService {
 
         return true;
     }
-
 }
