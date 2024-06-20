@@ -40,4 +40,6 @@ public class KrStockTradingLog {
     private int krStockBuyAmount;
     @Nullable
     private int combination;
+    @NotNull
+    private int tradingType;
 }
