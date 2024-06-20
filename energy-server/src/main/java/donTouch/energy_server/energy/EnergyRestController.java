@@ -69,17 +69,19 @@ public class EnergyRestController {
 
     @GetMapping("/like")
     public ApiUtils.ApiResult<Object> getLikeEnergy(@RequestParam("userId") Long userId) {
-        List<String> likedEnergyFundIds = Web.getLikeEstateFundIds(userId);
-        
-        if (likedEnergyFundIds == null) {
-            return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        try {
+            List<String> likedEnergyFundIds = Web.getLikeEnergyFundIds(userId);
+            if (likedEnergyFundIds == null) {
+                return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
 
-        List<EnergyFundDto> energyFundDtoList = energyFundService.getEnergyFundDtoList(likedEnergyFundIds);
-
-        if (energyFundDtoList == null) {
-            return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            List<EnergyFundDto> energyFundDtoList = energyFundService.getEnergyFundDtoList(likedEnergyFundIds);
+            if (energyFundDtoList == null) {
+                return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            return ApiUtils.success(energyFundDtoList);
+        } catch (Exception e) {
+            return ApiUtils.error(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return ApiUtils.success(energyFundDtoList);
     }
 }
