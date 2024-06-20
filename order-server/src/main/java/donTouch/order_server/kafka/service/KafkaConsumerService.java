@@ -21,6 +21,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 
 @AllArgsConstructor
@@ -65,7 +66,7 @@ public class KafkaConsumerService {
             HoldingKrStock savedHolding = holdingKrStockService.save(new HoldingKrStockDto(data.getUserId(), data.getKrHoldingStockId(), data.getKrStockAmount()));
             krStockTradingLogService.save(new KrStockTradingLogDto(data.getUserId(), data.getKrHoldingStockId(), savedHolding.getId(), data.getKrStockPrice(), data.getKrStockAmount(), 0));
             System.out.println("주식수량 들어와 ?????????? " + data.getKrStockAmount());
-            bankAccountService.saveBankAccountLog(new BankAccountLogDto(data.getUserId(), data.getInOutCash(), data.getInOutType(), data.getStockName()));
+            bankAccountService.saveBankAccountLog(new BankAccountLogDto(data.getUserId(), data.getInOutCash(), data.getInOutType(), data.getStockName(), LocalDateTime.now()));
         }
     }
 
@@ -77,7 +78,7 @@ public class KafkaConsumerService {
             HoldingKrStock savedHolding = holdingKrStockService.findHolding(data.getUserId(), data.getKrHoldingStockId());
             krStockTradingLogService.save(new KrStockTradingLogDto(data.getUserId(), data.getKrHoldingStockId(), savedHolding.getId(), data.getKrStockPrice(), data.getKrStockAmount(), 0));
             System.out.println("주식수량 들어와 ?????????? " + data.getKrStockAmount());
-            bankAccountService.saveBankAccountLog(new BankAccountLogDto(data.getUserId(), data.getInOutCash(), data.getInOutType(), data.getStockName()));
+            bankAccountService.saveBankAccountLog(new BankAccountLogDto(data.getUserId(), data.getInOutCash(), data.getInOutType(), data.getStockName(),LocalDateTime.now()));
         }
     }
 }

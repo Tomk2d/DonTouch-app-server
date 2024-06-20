@@ -1,13 +1,10 @@
-package donTouch.energy_server.kafka.dto;
+package donTouch.user_server.kafka.dto;
 
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -33,7 +30,5 @@ public class BankAccountLogDto {
     @NotNull
     @Size(min = 1, max = 30)
     private String inOutTitle;
-
     private LocalDateTime inOutTime;
 }
-

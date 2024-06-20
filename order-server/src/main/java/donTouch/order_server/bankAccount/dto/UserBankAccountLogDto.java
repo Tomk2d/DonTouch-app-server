@@ -1,29 +1,23 @@
-package donTouch.energy_server.kafka.dto;
+package donTouch.order_server.bankAccount.dto;
 
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
+@Builder
+@ToString
 @Getter
 @Setter
-@ToString
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@Builder
-@JsonDeserialize
 @JsonSerialize
+@JsonDeserialize
 @NoArgsConstructor
 @AllArgsConstructor
-public class BankAccountLogDto {
+public class UserBankAccountLogDto implements Comparable<UserBankAccountLogDto>{
     @NotNull
     private Long userId;
     @NotNull
@@ -33,7 +27,11 @@ public class BankAccountLogDto {
     @NotNull
     @Size(min = 1, max = 30)
     private String inOutTitle;
+    @NotNull
+    private Date inOutTime;
 
-    private LocalDateTime inOutTime;
+    @Override
+    public int compareTo(UserBankAccountLogDto other) {
+        return this.inOutTime.compareTo(other.inOutTime);
+    }
 }
-
