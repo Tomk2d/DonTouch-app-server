@@ -66,7 +66,7 @@ public class HoldingRestController {
         try {
             HoldingKrStock result = holdingKrStockService.sellStockUpdate(holdingKrStockFindForm);
             return ApiUtils.success(result);
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -105,5 +105,10 @@ public class HoldingRestController {
         } catch (NullPointerException e) {
             return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/api/holding/stocks")
+    public ApiResult<List<HoldingStockDTO>> getHoldingStocks(@RequestParam("userId") Long userId) {
+        return null;
     }
 }
