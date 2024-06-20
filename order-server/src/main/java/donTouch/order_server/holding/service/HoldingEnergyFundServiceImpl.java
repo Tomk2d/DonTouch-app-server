@@ -3,19 +3,16 @@ package donTouch.order_server.holding.service;
 import donTouch.order_server.holding.domain.HoldingEnergyFund;
 import donTouch.order_server.holding.domain.HoldingEnergyFundRepository;
 import donTouch.order_server.holding.dto.CalendarReqForm;
-import donTouch.order_server.holding.dto.DividendEnergyDto;
+import donTouch.order_server.holding.dto.DividendP2PDto;
 import donTouch.order_server.holding.dto.HoldingEnergyFundDto;
 import donTouch.order_server.holding.dto.HoldingEnergyFundForm;
 import donTouch.order_server.utils.EnergyFundMapper;
-import donTouch.utils.utils.JwtUtil;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,8 +79,8 @@ public class HoldingEnergyFundServiceImpl implements HoldingEnergyFundService{
     }
 
     @Override
-    public List<DividendEnergyDto> getEnergyDividend(CalendarReqForm calendarReqForm, String token) {
-        List<DividendEnergyDto> dividendDtoList = new ArrayList<>();
+    public List<DividendP2PDto> getEnergyDividend(CalendarReqForm calendarReqForm, String token) {
+        List<DividendP2PDto> dividendDtoList = new ArrayList<>();
 
         //Long userId = JwtUtil.extractId(token);
         List<HoldingEnergyFundDto> holdingEnergyFundDtoList = getAllEnergy(1001L);
@@ -98,13 +95,13 @@ public class HoldingEnergyFundServiceImpl implements HoldingEnergyFundService{
             int investmentPeriod = holding.getInvestmentPeriod();
             int inputCash = holding.getInputCash();
             LocalDate buyDate = holding.getCreatedAt();
-            double dividendPrice = (inputCash * earningRate+inputCash) / investmentPeriod;
+            double dividendPrice = (inputCash * 0.01* earningRate) / investmentPeriod;
 
             for (long i = 1; i <= investmentPeriod; i++) {
                 LocalDate tmpDividendDate = buyDate.plusMonths(i);
 
                 if (checkInPeriod(startDate, endDate, tmpDividendDate)) {
-                    DividendEnergyDto dividendDto = new DividendEnergyDto(
+                    DividendP2PDto dividendDto = new DividendP2PDto(
                             holding.getEnergyId(),
                             holding.getTitle(),
                             holding.getTitleImageUrl(),

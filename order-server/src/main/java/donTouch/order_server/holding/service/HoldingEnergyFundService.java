@@ -1,7 +1,7 @@
 package donTouch.order_server.holding.service;
 
 import donTouch.order_server.holding.dto.CalendarReqForm;
-import donTouch.order_server.holding.dto.DividendEnergyDto;
+import donTouch.order_server.holding.dto.DividendP2PDto;
 import donTouch.order_server.holding.dto.HoldingEnergyFundDto;
 import donTouch.order_server.holding.dto.HoldingEnergyFundForm;
 
@@ -16,6 +16,6 @@ public interface HoldingEnergyFundService {
 
     HoldingEnergyFundDto findByUserIdAndEnergyFundId(HoldingEnergyFundForm holdingEnergyFundForm);
 
-    List<DividendEnergyDto> getEnergyDividend(CalendarReqForm calendarReqForm, String token);
+    List<DividendP2PDto> getEnergyDividend(CalendarReqForm calendarReqForm, String token);
 
 }

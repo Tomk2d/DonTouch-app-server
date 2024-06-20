@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @AllArgsConstructor
 @Getter
-public class DividendEnergyDto {
+public class DividendP2PDto {
     private String id;
 
     private String title;

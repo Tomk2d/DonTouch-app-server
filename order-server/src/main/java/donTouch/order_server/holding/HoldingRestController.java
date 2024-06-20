@@ -33,7 +33,7 @@ public class HoldingRestController {
         try {
             List<HoldingEstateFundDto> result = holdingEstateFundService.getAllEstate(userId);
             if (result == null) {
-                return ApiUtils.error("보유 주식이 없습니다.", HttpStatus.NOT_FOUND);
+                return ApiUtils.error("보유 부동산 상품이 없습니다.", HttpStatus.NOT_FOUND);
             }
             return ApiUtils.success(result);
         } catch (NullPointerException e) {
@@ -46,7 +46,7 @@ public class HoldingRestController {
         try {
             List<HoldingEnergyFundDto> result = holdingEnergyFundService.getAllEnergy(userId);
             if (result == null) {
-                return ApiUtils.error("보유 주식이 없습니다.", HttpStatus.NOT_FOUND);
+                return ApiUtils.error("보유 에너지 상품이 없습니다.", HttpStatus.NOT_FOUND);
             }
             return ApiUtils.success(result);
         } catch (NullPointerException e) {
@@ -111,11 +111,23 @@ public class HoldingRestController {
     }
 
     @PostMapping("/api/holding/energy/calendar")
-    public ApiUtils.ApiResult<List<DividendEnergyDto>> getEnergyCanlendar(
+    public ApiUtils.ApiResult<List<DividendP2PDto>> getEnergyCanlendar(
             @RequestHeader("Authorization") String token,
             @RequestBody @Valid CalendarReqForm calendarReqForm){
         try{
-            List<DividendEnergyDto> result = holdingEnergyFundService.getEnergyDividend(calendarReqForm, token);
+            List<DividendP2PDto> result = holdingEnergyFundService.getEnergyDividend(calendarReqForm, token);
+            return ApiUtils.success(result);
+        }catch(NullPointerException e){
+            return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/api/holding/estate/calendar")
+    public ApiUtils.ApiResult<List<DividendP2PDto>> getEstateCanlendar(
+            @RequestHeader("Authorization") String token,
+            @RequestBody @Valid CalendarReqForm calendarReqForm){
+        try{
+            List<DividendP2PDto> result = holdingEstateFundService.getEstateDividend(calendarReqForm, token);
             return ApiUtils.success(result);
         }catch(NullPointerException e){
             return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
