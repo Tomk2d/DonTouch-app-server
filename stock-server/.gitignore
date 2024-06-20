@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 **/application.properties
 
-
+.env
 
 ### STS ###
 .apt_generated

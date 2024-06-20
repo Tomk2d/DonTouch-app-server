@@ -1,15 +1,13 @@
 package donTouch.order_server.holding;
 
-import donTouch.order_server.holding.dto.HoldingEnergyFundDto;
-import donTouch.order_server.holding.dto.HoldingEnergyFundForm;
-import donTouch.order_server.holding.dto.HoldingEstateFundDto;
-import donTouch.order_server.holding.dto.HoldingEstateFundForm;
+import donTouch.order_server.holding.dto.*;
 import donTouch.order_server.holding.service.HoldingEnergyFundService;
 import donTouch.order_server.holding.service.HoldingEstateFundService;
 import donTouch.utils.utils.ApiUtils;
 import donTouch.utils.utils.ApiUtils.ApiResult;
 import java.util.List;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -93,6 +91,18 @@ public class HoldingRestController {
             return ApiUtils.success(result);
         }catch (NullPointerException e){
             return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/api/holding/energy/calendar")
+    public ApiUtils.ApiResult<List<DividendEnergyDto>> getEnergyCanlendar(
+            @RequestHeader("Authorization") String token,
+            @RequestBody @Valid CalendarReqForm calendarReqForm){
+        try{
+            List<DividendEnergyDto> result = holdingEnergyFundService.getEnergyDividend(calendarReqForm, token);
+            return ApiUtils.success(result);
+        }catch(NullPointerException e){
+            return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }
