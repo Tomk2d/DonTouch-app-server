@@ -1,9 +1,10 @@
 package donTouch.order_server.holding;
 
+import donTouch.order_server.holding.domain.HoldingKrStock;
+import donTouch.order_server.holding.domain.HoldingUsStock;
+import donTouch.order_server.holding.dto.*;
 import donTouch.order_server.bankAccount.dto.UserBankAccountLogDto;
 import donTouch.order_server.bankAccount.service.BankAccountService;
-import donTouch.order_server.holding.domain.HoldingKrStock;
-import donTouch.order_server.holding.dto.*;
 import donTouch.order_server.holding.service.HoldingEnergyFundService;
 import donTouch.order_server.holding.service.HoldingEstateFundService;
 import donTouch.order_server.holding.service.HoldingKrStockService;
@@ -172,5 +173,14 @@ public class HoldingRestController {
 
         // getPrice == true 면 매수단가, 수량 같이 받아서 전달하기
         return ApiUtils.error("can't get price now", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @PostMapping("/api/holding/sell/usStock")
+    public ApiResult<Object> findByUserIdAndStockIdUs(@RequestBody @Valid HoldingUsStockFindForm holdingUsStockFindForm) {
+        try {
+            HoldingUsStock result = holdingUsStockService.sellStockUpdate(holdingUsStockFindForm);
+            return ApiUtils.success(result);
+        } catch (NullPointerException e) {
+            return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 }
