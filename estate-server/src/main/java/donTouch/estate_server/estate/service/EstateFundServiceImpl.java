@@ -90,7 +90,7 @@ public class EstateFundServiceImpl implements EstateFundService {
         LocalDateTime startPeriod = estateFundDetail.getStartDatetime();
 
         kafkaProducerService.requestAddEstate(new HoldingEstateFundForm(userId, estateFundId, titleImageUrl, estateName, estateEarningRate, investmentPeriod, inputCash, startPeriod));
-        kafkaProducerService.requestAddBankLog(new BankAccountLogDto(userId, (long) inputCash, 1, estateName, LocalDateTime.now()));
+        kafkaProducerService.requestAddBankLog(new BankAccountLogDto(userId, (long) inputCash, 0, estateName, LocalDateTime.now()));
         return true;
     }
 
@@ -138,7 +138,7 @@ public class EstateFundServiceImpl implements EstateFundService {
 
             kafkaProducerService.requestAddBankLog(new BankAccountLogDto(
                     responseBody.getUserId(),
-                    (long) responseBody.getInputCash(), 0,
+                    (long) responseBody.getInputCash(), 1,
                     responseBody.getTitle(), LocalDateTime.now())
             );
         } else {
