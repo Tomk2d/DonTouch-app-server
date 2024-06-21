@@ -22,7 +22,7 @@ public class DividendRestController {
 
     @PostMapping("")
     public ApiUtils.ApiResult<List<DividendDTO>> findCalendar(@RequestBody @Valid DividendForm dividendForm) {
-        Map<String, List<String>> holdingStockResponse = Web.getHoldingStockDTOList(dividendForm.getUserId(), false);
+        Map<String, List<String>> holdingStockResponse = Web.getHoldingSymbols(dividendForm.getUserId());
 
         List<DividendDTO> result = dividendService.findCalendar(dividendForm, holdingStockResponse);
 

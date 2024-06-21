@@ -1,4 +1,4 @@
-package donTouch.order_server.holding.dto;
+package donTouch.stock_server.web.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

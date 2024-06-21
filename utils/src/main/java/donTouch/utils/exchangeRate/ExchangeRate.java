@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ExchangeRate {
-    USD("USD", 1363.92, 1391.47);
+    USD("USD", 1391.0, 1391.0);
 
     private String currency;
     private Double buying;
