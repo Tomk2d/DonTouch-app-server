@@ -439,26 +439,29 @@ public class StockServiceImpl implements StockService {
         if (dividendMonth != null) {
             combinedStockList.addAll(krStockJpaRepository.findAllByDividendMonth(dividendMonth));
             combinedStockList.addAll(usStockJpaRepository.findAllByDividendMonth(dividendMonth));
-
-            if (searchWord != null) {
-                return combinedStockList.stream()
-                        .filter(stock -> stock.getName().toLowerCase().contains(searchWord.toLowerCase())
-                                || stock.getSymbol().toLowerCase().contains(searchWord.toLowerCase())
-                                || stock.getEnglishName().toLowerCase().contains(searchWord.toLowerCase()))
-                        .collect(Collectors.toList());
-            }
-            return combinedStockList;
+        } else {
+            combinedStockList.addAll(krStockJpaRepository.findAll());
+            combinedStockList.addAll(usStockJpaRepository.findAll());
         }
 
         if (searchWord != null) {
-            combinedStockList.addAll(krStockJpaRepository.findDistinctBySymbolContainingOrNameContainingOrEnglishNameContaining(searchWord, searchWord, searchWord));
-            combinedStockList.addAll(usStockJpaRepository.findDistinctBySymbolContainingOrNameContainingOrEnglishNameContaining(searchWord, searchWord, searchWord));
-            return combinedStockList;
+            System.out.println("searchWord: " + searchWord + ", size: " + combinedStockList.size());
+            return combinedStockList.stream()
+                    .filter(stock -> stock.getName().contains(searchWord)
+                            || stock.getSymbol().toLowerCase().contains(searchWord.toLowerCase())
+                            || stock.getEnglishName().toLowerCase().contains(searchWord.toLowerCase())).collect(Collectors.toList());
         }
-
-        combinedStockList.addAll(krStockJpaRepository.findAll());
-        combinedStockList.addAll(usStockJpaRepository.findAll());
         return combinedStockList;
+
+//
+//        if (searchWord != null) {
+//            combinedStockList.addAll(krStockJpaRepository.findDistinctBySymbolContainingOrNameContainingOrEnglishNameContaining(searchWord, searchWord, searchWord));
+//            combinedStockList.addAll(usStockJpaRepository.findDistinctBySymbolContainingOrNameContainingOrEnglishNameContaining(searchWord, searchWord, searchWord));
+//            return combinedStockList;
+//        }
+
+//
+//        return combinedStockList;
     }
 
     List<StockDTO> getPagedStockDTOList(List<StockDTO> stockDTOList, int page, int size) {
