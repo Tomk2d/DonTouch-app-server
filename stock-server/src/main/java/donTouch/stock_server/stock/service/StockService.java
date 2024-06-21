@@ -24,5 +24,5 @@ public interface StockService {
 
     Map<String, Object> findHoldingStocks(Map<String, List<PurchaseInfoDTO>> likeStockDTOList);
 
-    Map<String, Object> findCombinationInfos(List<PurchasedStockDTO> purchasedStockDTOList);
+    List<Map<String, Object>> findCombinationInfos(List<PurchasedStockDTO> purchasedStockDTOList);
 }

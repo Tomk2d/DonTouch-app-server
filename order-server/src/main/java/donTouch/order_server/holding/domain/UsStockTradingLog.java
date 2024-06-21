@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -36,7 +36,7 @@ public class UsStockTradingLog {
     @NotNull
     private int usStockBuyAmount;
     @NotNull
-    private LocalDate usStockBuyTime;
+    private LocalDateTime usStockBuyTime;
     @Nullable
     private int combination;
     @NotNull

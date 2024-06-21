@@ -1,6 +1,7 @@
 package donTouch.stock_server.stock.service;
 
 import donTouch.stock_server.krStock.domain.*;
+import donTouch.stock_server.krStock.dto.PurchasedCombinationDTO;
 import donTouch.stock_server.stock.domain.Combination;
 import donTouch.stock_server.stock.domain.MonthDividend;
 import donTouch.stock_server.stock.domain.Stock;
@@ -206,11 +207,62 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public Map<String, Object> findCombinationInfos(List<PurchasedStockDTO> purchasedStockDTOList) {
-        // combinationId로 묶고, 주식 정보 붙혀야함
+    public List<Map<String, Object>> findCombinationInfos(List<PurchasedStockDTO> purchasedStockDTOList) {
+        Map<Integer, List<PurchasedStockDTO>> purchasedStockDTOMap = new HashMap<>();
+        Set<String> krSymbols = new HashSet<>();
+        Set<String> usSymbols = new HashSet<>();
 
+        for (PurchasedStockDTO purchasedStockDTO : purchasedStockDTOList) {
+            purchasedStockDTOMap.putIfAbsent(purchasedStockDTO.getCombinationId(), new ArrayList<>());
+            purchasedStockDTOMap.get(purchasedStockDTO.getCombinationId()).add(purchasedStockDTO);
 
-        return Map.of();
+            if (purchasedStockDTO.getNation().equals("kr")) {
+                krSymbols.add(purchasedStockDTO.getSymbol());
+                continue;
+            }
+            usSymbols.add(purchasedStockDTO.getSymbol());
+        }
+
+        List<KrStock> krStockList = krStockJpaRepository.findAllBySymbolIn(new ArrayList<>(krSymbols));
+        List<UsStock> usStockList = usStockJpaRepository.findALlBySymbolIn(new ArrayList<>(usSymbols));
+
+        Map<String, Stock> stocks = new LinkedHashMap<>();
+        for (KrStock krStock : krStockList) {
+            stocks.putIfAbsent(krStock.getSymbol(), krStock);
+        }
+        for (UsStock usStock : usStockList) {
+            stocks.putIfAbsent(usStock.getSymbol(), usStock);
+        }
+
+        List<Map<String, Object>> response = new ArrayList<>();
+        for (List<PurchasedStockDTO> purchasedCombination : new ArrayList<>(purchasedStockDTOMap.values())) {
+            response.add(convertToCombinationMap(purchasedCombination, stocks));
+        }
+
+        return response;
+    }
+
+    Map<String, Object> convertToCombinationMap(List<PurchasedStockDTO> purchasedStockDTOList, Map<String, Stock> stocks) {
+        List<List<PurchasedCombinationDTO>> purchasedCombinationDTOList = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            purchasedCombinationDTOList.add(new ArrayList<>());
+        }
+
+        for (PurchasedStockDTO purchasedStockDTO : purchasedStockDTOList) {
+            Stock stock = stocks.get(purchasedStockDTO.getSymbol());
+
+            purchasedCombinationDTOList.get(stock.getDividendMonth() - 1).add(
+                    new PurchasedCombinationDTO(stock.getId(), stock.getName(), stock.getSymbol(), purchasedStockDTO.getAmount())
+            );
+        }
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("date", purchasedStockDTOList.get(0).getDate());
+        response.put("combination1", purchasedCombinationDTOList.get(0));
+        response.put("combination2", purchasedCombinationDTOList.get(1));
+        response.put("combination3", purchasedCombinationDTOList.get(2));
+
+        return response;
     }
 
     int countStocks(DistributeCombinationForm distributeCombinationForm) {

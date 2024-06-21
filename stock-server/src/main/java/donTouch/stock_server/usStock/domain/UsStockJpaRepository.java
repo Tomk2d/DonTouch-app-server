@@ -13,5 +13,7 @@ public interface UsStockJpaRepository extends JpaRepository<UsStock, Integer> {
     Optional<UsStock> findBySymbol(String symbol);
 
     List<UsStock> findAllByNameContainingOrEnglishNameContaining(String name, String englishName);
+
+    List<UsStock> findALlBySymbolIn(List<String> symbols);
 }
 

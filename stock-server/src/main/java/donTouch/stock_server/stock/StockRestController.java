@@ -139,8 +139,12 @@ public class StockRestController {
     public ApiUtils.ApiResult<Object> findCombinationPurchased(@RequestParam("userId") Long userId) {
         List<PurchasedStockDTO> purchasedStockDTOList = Web.getCombinationPurchased(userId);
 
+        List<Map<String, Object>> response = stockService.findCombinationInfos(purchasedStockDTOList);
 
-        return ApiUtils.success(purchasedStockDTOList);
+        if (response == null) {
+            return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return ApiUtils.success(response);
     }
 
     @GetMapping("/exchange/usd")
