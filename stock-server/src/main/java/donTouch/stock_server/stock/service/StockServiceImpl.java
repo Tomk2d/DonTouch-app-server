@@ -9,6 +9,7 @@ import donTouch.stock_server.stock.dto.*;
 import donTouch.stock_server.usStock.domain.*;
 import donTouch.stock_server.web.dto.LikeStockDTO;
 import donTouch.stock_server.web.dto.PurchaseInfoDTO;
+import donTouch.stock_server.web.dto.PurchasedStockDTO;
 import donTouch.utils.exchangeRate.ExchangeRate;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -202,6 +203,14 @@ public class StockServiceImpl implements StockService {
         response.put("totalPurchase", krTotalPurchase + usTotalPurchase);
 
         return response;
+    }
+
+    @Override
+    public Map<String, Object> findCombinationInfos(List<PurchasedStockDTO> purchasedStockDTOList) {
+        // combinationId로 묶고, 주식 정보 붙혀야함
+
+
+        return Map.of();
     }
 
     int countStocks(DistributeCombinationForm distributeCombinationForm) {

@@ -5,10 +5,7 @@ import donTouch.order_server.bankAccount.service.BankAccountService;
 import donTouch.order_server.holding.domain.HoldingKrStock;
 import donTouch.order_server.holding.domain.HoldingUsStock;
 import donTouch.order_server.holding.dto.*;
-import donTouch.order_server.holding.service.HoldingEnergyFundService;
-import donTouch.order_server.holding.service.HoldingEstateFundService;
-import donTouch.order_server.holding.service.HoldingKrStockService;
-import donTouch.order_server.holding.service.HoldingUsStockService;
+import donTouch.order_server.holding.service.*;
 import donTouch.utils.utils.ApiUtils;
 import donTouch.utils.utils.ApiUtils.ApiResult;
 import jakarta.validation.Valid;
@@ -18,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +30,8 @@ public class HoldingRestController {
     private final HoldingUsStockService holdingUsStockService;
     private final HoldingEnergyFundService holdingEnergyFundService;
     private final BankAccountService bankAccountService;
-
+    private final KrStockTradingLogService krStockTradingLogService;
+    private final UsStockTradingLogService usStockTradingLogService;
 
     @GetMapping("/api/holding/account/{userId}")
     public ApiResult<List<UserBankAccountLogDto>> allBankLog(@PathVariable Long userId, @RequestParam int page, @RequestParam int size) {
@@ -183,7 +182,14 @@ public class HoldingRestController {
         return ApiUtils.success(result);
     }
 
-    // 구매했던 조합 get
+    @GetMapping("/api/combination")
+    public ApiResult<List<PurchasedStockDTO>> getCombinations(@RequestParam("userId") Long userId) {
+        List<PurchasedStockDTO> purchasedStockDTOList = new ArrayList<>();
+        purchasedStockDTOList.addAll(krStockTradingLogService.getPurchasedCombinationStocks(userId));
+        purchasedStockDTOList.addAll(usStockTradingLogService.getPurchasedCombinationStocks(userId));
+
+        return ApiUtils.success(purchasedStockDTOList);
+    }
 
     @PostMapping("/api/holding/sell/usStock")
     public ApiResult<Object> findByUserIdAndStockIdUs(@RequestBody @Valid HoldingUsStockFindForm holdingUsStockFindForm) {

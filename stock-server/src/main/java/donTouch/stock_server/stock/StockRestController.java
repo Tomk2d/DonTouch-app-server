@@ -6,6 +6,7 @@ import donTouch.stock_server.stock.service.StockService;
 import donTouch.stock_server.web.Web;
 import donTouch.stock_server.web.dto.LikeStockDTO;
 import donTouch.stock_server.web.dto.PurchaseInfoDTO;
+import donTouch.stock_server.web.dto.PurchasedStockDTO;
 import donTouch.utils.exchangeRate.ExchangeRate;
 import donTouch.utils.utils.ApiUtils;
 import jakarta.validation.Valid;
@@ -132,6 +133,14 @@ public class StockRestController {
         } catch (IllegalStateException e) {
             return ApiUtils.error("get like stock id error", HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/combination/purchased")
+    public ApiUtils.ApiResult<Object> findCombinationPurchased(@RequestParam("userId") Long userId) {
+        List<PurchasedStockDTO> purchasedStockDTOList = Web.getCombinationPurchased(userId);
+
+
+        return ApiUtils.success(purchasedStockDTOList);
     }
 
     @GetMapping("/exchange/usd")
