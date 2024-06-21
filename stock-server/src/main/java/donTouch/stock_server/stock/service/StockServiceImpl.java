@@ -164,9 +164,9 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public Map<String, Object> findHoldingStocks(Map<String, List<PurchaseInfoDTO>> likeStockDTOList) {
-        List<PurchaseInfoDTO> krHoldingStocks = likeStockDTOList.get("krHoldingStocks");
-        List<PurchaseInfoDTO> usHoldingStocks = likeStockDTOList.get("usHoldingStocks");
+    public Map<String, Object> findHoldingStocks(Map<String, List<PurchaseInfoDTO>> holdingStockDTOList) {
+        List<PurchaseInfoDTO> krHoldingStocks = holdingStockDTOList.get("krHoldingStocks");
+        List<PurchaseInfoDTO> usHoldingStocks = holdingStockDTOList.get("usHoldingStocks");
 
         List<IntegratedPurchaseInfoDTO> krHolding = new ArrayList<>();
         for (PurchaseInfoDTO purchaseInfoDTO : krHoldingStocks) {
@@ -181,8 +181,6 @@ public class StockServiceImpl implements StockService {
         List<IntegratedPurchaseInfoDTO> usHolding = new ArrayList<>();
         for (PurchaseInfoDTO purchaseInfoDTO : usHoldingStocks) {
             Optional<UsStock> usStock = usStockJpaRepository.findBySymbol(purchaseInfoDTO.getSymbol());
-
-            System.out.println("stock: " + purchaseInfoDTO.getSymbol());
 
             if (usStock.isPresent()) {
                 Stock stock = usStock.get();
