@@ -4,6 +4,7 @@ package donTouch.order_server.holding.dto;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Builder
@@ -22,7 +23,7 @@ public class HoldingEstateFundDto {
     private double earningRate;
     private int investmentPeriod;
     private int inputCash;
-    private LocalDate startPeriod;
-    private LocalDate createdAt;
+    private LocalDateTime startPeriod;
+    private LocalDateTime createdAt;
 }
 
