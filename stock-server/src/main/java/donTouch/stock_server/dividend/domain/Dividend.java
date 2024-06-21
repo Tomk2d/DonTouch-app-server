@@ -23,8 +23,8 @@ public class Dividend {
 
     private LocalDate paymentDate;
 
-    public DividendDTO convertToDividendDTO(Boolean isFixed) {
-        return new DividendDTO(id, dividendDate, isFixed, symbol, name, dividend, paymentDate);
+    public DividendDTO convertToDividendDTO(Boolean isFixed, Long quantity) {
+        return new DividendDTO(id, dividendDate, isFixed, symbol, name, dividend * quantity, paymentDate);
     }
 
     public Integer getStockId() {
