@@ -2,16 +2,18 @@ package donTouch.order_server.holding.service;
 
 import donTouch.order_server.holding.domain.HoldingKrStock;
 import donTouch.order_server.holding.domain.HoldingKrStockJpaRepository;
+import donTouch.order_server.holding.domain.KrStockTradingLog;
+import donTouch.order_server.holding.domain.KrStockTradingLogJpaRepository;
 import donTouch.order_server.holding.dto.HoldingKrStockDto;
 import donTouch.order_server.holding.dto.HoldingKrStockFindForm;
+import donTouch.order_server.holding.dto.PurchaseInfoDTO;
 import donTouch.order_server.utils.KrStockMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class HoldingKrStockServiceImpl implements HoldingKrStockService {
     private final HoldingKrStockJpaRepository holdingKrStockRepository;
     private final KrStockMapper krStockMapper = KrStockMapper.INSTANCE;
+    private final KrStockTradingLogJpaRepository krStockTradingLogJpaRepository;
 
     @Override
     public HoldingKrStock save(HoldingKrStockDto holdingKrStockDto) {
@@ -75,6 +78,27 @@ public class HoldingKrStockServiceImpl implements HoldingKrStockService {
         return holdingKrStocks.stream()
                 .map(HoldingKrStock::getKrStockId)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PurchaseInfoDTO> findHoldingStockInfos(Long userId, List<String> symbols) {
+        List<KrStockTradingLog> krStockTradingLogList = krStockTradingLogJpaRepository.findAllByUserIdAndKrStockIdIn(userId, symbols);
+
+        Map<String, PurchaseInfoDTO> tradedKrStocks = new HashMap<>();
+        for (KrStockTradingLog tradingLog : krStockTradingLogList) {
+            tradedKrStocks.putIfAbsent(tradingLog.getKrStockId(), new PurchaseInfoDTO(tradingLog.getKrStockId(), (long) 0, (long) 0));
+
+            PurchaseInfoDTO purchaseInfoDTO = tradedKrStocks.get(tradingLog.getKrStockId());
+            if (tradingLog.getTradingType() == 1) {
+                purchaseInfoDTO.increaseTotalPurchasePrice((long) tradingLog.getKrStockBuyPrice() * tradingLog.getKrStockBuyAmount());
+                purchaseInfoDTO.increaseQuantity((long) tradingLog.getKrStockBuyAmount());
+                continue;
+            }
+            purchaseInfoDTO.decreaseTotalPurchasePrice((long) tradingLog.getKrStockBuyPrice() * tradingLog.getKrStockBuyAmount());
+            purchaseInfoDTO.decreaseQuantity((long) tradingLog.getKrStockBuyAmount());
+        }
+
+        return new ArrayList<>(tradedKrStocks.values());
     }
 
 }

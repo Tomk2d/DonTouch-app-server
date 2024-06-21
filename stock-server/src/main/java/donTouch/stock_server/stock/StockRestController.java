@@ -5,6 +5,7 @@ import donTouch.stock_server.stock.dto.*;
 import donTouch.stock_server.stock.service.StockService;
 import donTouch.stock_server.web.Web;
 import donTouch.stock_server.web.dto.LikeStockDTO;
+import donTouch.stock_server.web.dto.PurchaseInfoDTO;
 import donTouch.utils.exchangeRate.ExchangeRate;
 import donTouch.utils.utils.ApiUtils;
 import jakarta.validation.Valid;
@@ -104,6 +105,26 @@ public class StockRestController {
             }
 
             Map<String, Object> response = stockService.findLikeStocks(likeStockDTOList);
+            if (response == null) {
+                return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            return ApiUtils.success(response);
+        } catch (IllegalStateException e) {
+            return ApiUtils.error("get like stock id error", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/holding")
+    public ApiUtils.ApiResult<Map<String, Object>> findHoldingStock(@RequestParam("userId") Long userId) {
+        try {
+            Map<String, List<PurchaseInfoDTO>> likeStockDTOList = Web.getHoldingStockPurchaseInfos(userId);
+
+            if (likeStockDTOList == null) {
+                return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            Map<String, Object> response = stockService.findHoldingStocks(likeStockDTOList);
+
             if (response == null) {
                 return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
             }

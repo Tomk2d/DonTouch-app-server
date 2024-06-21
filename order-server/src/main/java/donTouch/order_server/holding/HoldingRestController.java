@@ -1,10 +1,10 @@
 package donTouch.order_server.holding;
 
+import donTouch.order_server.bankAccount.dto.UserBankAccountLogDto;
+import donTouch.order_server.bankAccount.service.BankAccountService;
 import donTouch.order_server.holding.domain.HoldingKrStock;
 import donTouch.order_server.holding.domain.HoldingUsStock;
 import donTouch.order_server.holding.dto.*;
-import donTouch.order_server.bankAccount.dto.UserBankAccountLogDto;
-import donTouch.order_server.bankAccount.service.BankAccountService;
 import donTouch.order_server.holding.service.HoldingEnergyFundService;
 import donTouch.order_server.holding.service.HoldingEstateFundService;
 import donTouch.order_server.holding.service.HoldingKrStockService;
@@ -132,11 +132,11 @@ public class HoldingRestController {
     @PostMapping("/api/holding/energy/calendar")
     public ApiUtils.ApiResult<List<DividendP2PDto>> getEnergyCanlendar(
             @RequestHeader("Authorization") String token,
-            @RequestBody @Valid CalendarReqForm calendarReqForm){
-        try{
+            @RequestBody @Valid CalendarReqForm calendarReqForm) {
+        try {
             List<DividendP2PDto> result = holdingEnergyFundService.getEnergyDividend(calendarReqForm, token);
             return ApiUtils.success(result);
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -171,9 +171,20 @@ public class HoldingRestController {
             return ApiUtils.success(result);
         }
 
-        // getPrice == true 면 매수단가, 수량 같이 받아서 전달하기
-        return ApiUtils.error("can't get price now", HttpStatus.INTERNAL_SERVER_ERROR);
+        List<PurchaseInfoDTO> holdingKrStockPurchaseInfoDTOList = holdingKrStockService.findHoldingStockInfos(userId, holdingKrStockSymbols);
+        List<PurchaseInfoDTO> holdingUsStockPurchaseInfoDTOList = holdingUsStockService.findHoldingStockInfos(userId, holdingUsStockSymbols);
+
+        if (holdingKrStockPurchaseInfoDTOList == null || holdingUsStockPurchaseInfoDTOList == null) {
+            return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        result.put("krHoldingStocks", holdingKrStockPurchaseInfoDTOList);
+        result.put("usHoldingStocks", holdingUsStockPurchaseInfoDTOList);
+        return ApiUtils.success(result);
     }
+
+    // 구매했던 조합 get
+
     @PostMapping("/api/holding/sell/usStock")
     public ApiResult<Object> findByUserIdAndStockIdUs(@RequestBody @Valid HoldingUsStockFindForm holdingUsStockFindForm) {
         try {
