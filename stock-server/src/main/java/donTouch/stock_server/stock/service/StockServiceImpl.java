@@ -8,6 +8,7 @@ import donTouch.stock_server.stock.domain.StockPrice;
 import donTouch.stock_server.stock.dto.*;
 import donTouch.stock_server.usStock.domain.*;
 import donTouch.stock_server.web.dto.LikeStockDTO;
+import donTouch.stock_server.web.dto.PurchaseInfoDTO;
 import donTouch.utils.exchangeRate.ExchangeRate;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -158,6 +159,47 @@ public class StockServiceImpl implements StockService {
 
         response.put("krLikeStocks", krStockDTOList);
         response.put("usLikeStocks", usStockDTOList);
+
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> findHoldingStocks(Map<String, List<PurchaseInfoDTO>> holdingStockDTOList) {
+        List<PurchaseInfoDTO> krHoldingStocks = holdingStockDTOList.get("krHoldingStocks");
+        List<PurchaseInfoDTO> usHoldingStocks = holdingStockDTOList.get("usHoldingStocks");
+        long krTotalPurchase = 0;
+        long usTotalPurchase = 0;
+
+        List<IntegratedPurchaseInfoDTO> krHolding = new ArrayList<>();
+        for (PurchaseInfoDTO purchaseInfoDTO : krHoldingStocks) {
+            Optional<KrStock> krStock = krStockJpaRepository.findBySymbol(purchaseInfoDTO.getSymbol());
+
+            if (krStock.isPresent()) {
+                Stock stock = krStock.get();
+                krHolding.add(new IntegratedPurchaseInfoDTO(purchaseInfoDTO, stock.convertToDTO()));
+                krTotalPurchase += purchaseInfoDTO.getTotalPurchasePrice();
+            }
+        }
+
+        List<IntegratedPurchaseInfoDTO> usHolding = new ArrayList<>();
+        for (PurchaseInfoDTO purchaseInfoDTO : usHoldingStocks) {
+            Optional<UsStock> usStock = usStockJpaRepository.findBySymbol(purchaseInfoDTO.getSymbol());
+
+            if (usStock.isPresent()) {
+                Stock stock = usStock.get();
+                usHolding.add(new IntegratedPurchaseInfoDTO(purchaseInfoDTO, stock.convertToDTO()));
+                usTotalPurchase += purchaseInfoDTO.getTotalPurchasePrice();
+            }
+        }
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("krHoldingStocks", krHolding);
+        response.put("krTotalPurchase", krTotalPurchase);
+
+        response.put("usHoldingStocks", usHolding);
+        response.put("usTotalPurchase", usTotalPurchase);
+
+        response.put("totalPurchase", krTotalPurchase + usTotalPurchase);
 
         return response;
     }

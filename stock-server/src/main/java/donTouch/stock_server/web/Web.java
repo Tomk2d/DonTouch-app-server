@@ -1,6 +1,7 @@
 package donTouch.stock_server.web;
 
 import donTouch.stock_server.web.dto.LikeStockDTO;
+import donTouch.stock_server.web.dto.PurchaseInfoDTO;
 import donTouch.utils.utils.ApiUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
@@ -28,21 +29,35 @@ public class Web {
         }
     }
 
-    public static Map<String, List<String>> getHoldingStockDTOList(Long userId, Boolean getPrice) {
+    public static Map<String, List<String>> getHoldingSymbols(Long userId) {
         try {
             WebClient webClient = WebClient.create();
 
-            String getLikeStockIdsUrl = "http://localhost:8085/api/holding/stocks?&userId=" + userId;
-            if (getPrice) {
-                getLikeStockIdsUrl += "&getPrice=true";
-            } else {
-                getLikeStockIdsUrl += "&getPrice=false";
-            }
+            String getLikeStockIdsUrl = "http://localhost:8085/api/holding/stocks?&userId=" + userId + "&getPrice=false";
 
             ResponseEntity<ApiUtils.ApiResult<Map<String, List<String>>>> responseEntity = webClient.get()
                     .uri(getLikeStockIdsUrl)
                     .retrieve()
                     .toEntity(new ParameterizedTypeReference<ApiUtils.ApiResult<Map<String, List<String>>>>() {
+                    })
+                    .block();
+
+            return responseEntity.getBody().getResponse();
+        } catch (Exception e) {
+            throw new IllegalStateException();
+        }
+    }
+
+    public static Map<String, List<PurchaseInfoDTO>> getHoldingStockPurchaseInfos(Long userId) {
+        try {
+            WebClient webClient = WebClient.create();
+
+            String getLikeStockIdsUrl = "http://localhost:8085/api/holding/stocks?&userId=" + userId + "&getPrice=true";
+
+            ResponseEntity<ApiUtils.ApiResult<Map<String, List<PurchaseInfoDTO>>>> responseEntity = webClient.get()
+                    .uri(getLikeStockIdsUrl)
+                    .retrieve()
+                    .toEntity(new ParameterizedTypeReference<ApiUtils.ApiResult<Map<String, List<PurchaseInfoDTO>>>>() {
                     })
                     .block();
 
