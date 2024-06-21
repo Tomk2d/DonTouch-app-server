@@ -35,9 +35,9 @@ public class HoldingRestController {
 
 
     @GetMapping("/api/holding/account/{userId}")
-    public ApiResult<List<UserBankAccountLogDto>> allBankLog(@PathVariable Long userId) {
+    public ApiResult<List<UserBankAccountLogDto>> allBankLog(@PathVariable Long userId, @RequestParam int page, @RequestParam int size) {
         try {
-            List<UserBankAccountLogDto> result = bankAccountService.getUserBankAccountLog(userId);
+            List<UserBankAccountLogDto> result = bankAccountService.getUserBankAccountLog(userId, page, size);
             if (result == null) {
                 return ApiUtils.error("입출금 내역이 없습니다.", HttpStatus.NOT_FOUND);
             }
