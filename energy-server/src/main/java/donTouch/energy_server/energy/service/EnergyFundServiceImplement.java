@@ -113,12 +113,12 @@ public class EnergyFundServiceImplement implements EnergyFundService {
         System.out.println("현재 투자 금액 =================== " + savedEnergyFund.getSumOfInvestmentAndReservation());
 
 
-        EnergyFundDetail estateFundDetail = energyFundDetailRepository.findEnergyInfoByEnergyId(energyFundId)
+        EnergyFundDetail energyFundDetail = energyFundDetailRepository.findEnergyInfoByEnergyId(energyFundId)
                 .orElseThrow(() -> new NullPointerException("해당 상품의 상세 정보가 없습니다."));
 
         String titleImageUrl = findedEnergyFund.getTitleImageUrl();
         int investmentPeriod = findedEnergyFund.getInvestmentPeriod();
-        LocalDateTime startPeriod = estateFundDetail.getStartPeriod();
+        LocalDateTime startPeriod = energyFundDetail.getStartPeriod();
         HoldingEnergyFundForm requestBody = new HoldingEnergyFundForm(userId, energyFundId, titleImageUrl, estateName, estateEarningRate, investmentPeriod, inputCash, startPeriod);
         HttpEntity<HoldingEnergyFundForm> requestEntity = new HttpEntity<>(requestBody, headers);
 

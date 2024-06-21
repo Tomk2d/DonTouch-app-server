@@ -51,6 +51,6 @@ public class HoldingEnergyFund {
     private int inputCash;
 
     @NotNull
-    private LocalDate startPeriod;
-    private LocalDate createdAt;
+    private LocalDateTime startPeriod;
+    private LocalDateTime createdAt;
 }

@@ -11,6 +11,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -121,7 +123,7 @@ public class EstateFundDetail {
     private Integer interestReturnAmountWon;
 
     @JsonProperty("workStartDate")
-    private Date workStartDate;
+    private LocalDateTime workStartDate;
 
     @JsonDeserialize(using = StringToIntDeserializer.class)
     @JsonProperty("repaymentDay")
@@ -137,7 +139,7 @@ public class EstateFundDetail {
     private String comment;
 
     @JsonProperty("startDatetime")
-    private Date startDatetime;
+    private LocalDateTime startDatetime;
 
     @JsonProperty("state")
     private String state;

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -94,7 +95,7 @@ public class HoldingEnergyFundServiceImpl implements HoldingEnergyFundService{
             double earningRate = holding.getEarningRate();
             int investmentPeriod = holding.getInvestmentPeriod();
             int inputCash = holding.getInputCash();
-            LocalDate buyDate = holding.getCreatedAt();
+            LocalDate buyDate = holding.getCreatedAt().toLocalDate();
             double dividendPrice = (inputCash * 0.01* earningRate) / investmentPeriod;
 
             for (long i = 1; i <= investmentPeriod; i++) {
