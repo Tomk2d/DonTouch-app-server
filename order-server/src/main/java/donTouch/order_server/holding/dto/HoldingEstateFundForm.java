@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Builder
@@ -32,6 +33,6 @@ public class HoldingEstateFundForm {
     @NotNull(message = "투자 금액이 없습니다.")
     private int inputCash;
     @NotNull(message = "시작 날짜가 없습니다.")
-    private LocalDate startPeriod;
+    private LocalDateTime startPeriod;
 
 }

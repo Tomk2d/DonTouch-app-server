@@ -87,9 +87,10 @@ public class EstateFundServiceImpl implements EstateFundService {
         EstateFundDetail estateFundDetail = estateFundDetailRepository.findByEstateId(estateFundId);
         String titleImageUrl = savedEstateFund.getTitleMainImageUrl();
         int investmentPeriod = savedEstateFund.getLength();
-        Date startPeriod = estateFundDetail.getStartDatetime();
+        LocalDateTime startPeriod = estateFundDetail.getStartDatetime();
+
         kafkaProducerService.requestAddEstate(new HoldingEstateFundForm(userId, estateFundId, titleImageUrl, estateName, estateEarningRate, investmentPeriod, inputCash, startPeriod));
-        kafkaProducerService.requestAddBankLog(new BankAccountLogDto(userId, (long) inputCash, 1, estateName, LocalDateTime.now()));
+        kafkaProducerService.requestAddBankLog(new BankAccountLogDto(userId, (long) inputCash, 0, estateName, LocalDateTime.now()));
         return true;
     }
 
@@ -105,15 +106,15 @@ public class EstateFundServiceImpl implements EstateFundService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         EstateFund findedEstateFund = estateFundRepository.findById(estateFundId)
                 .orElseThrow(() -> new NullPointerException("부동산 id 가 잘못되었습니다."));
-        EstateFundDetail estateFundDetail = estateFundDetailRepository.findByEstateId(estateFundId);
 
+        EstateFundDetail estateFundDetail = estateFundDetailRepository.findByEstateId(estateFundId);
         findedEstateFund.setCurrentInvest(findedEstateFund.getCurrentInvest() - (long) buyEstateFundForm.getInputCash());
         EstateFund savedEstateFund = estateFundRepository.save(findedEstateFund);
         System.out.println("현재 투자 금액 =================== " + savedEstateFund.getCurrentInvest());
 
         String titleImageUrl = findedEstateFund.getTitleMainImageUrl();
         int investmentPeriod = findedEstateFund.getLength();
-        Date startPeriod = estateFundDetail.getStartDatetime();
+        LocalDateTime startPeriod = estateFundDetail.getStartDatetime();
         HoldingEstateFundForm requestBody = new HoldingEstateFundForm(userId, estateFundId, titleImageUrl, estateName, estateEarningRate, investmentPeriod, inputCash, startPeriod);
         HttpEntity<HoldingEstateFundForm> requestEntity = new HttpEntity<>(requestBody, headers);
 
@@ -137,7 +138,7 @@ public class EstateFundServiceImpl implements EstateFundService {
 
             kafkaProducerService.requestAddBankLog(new BankAccountLogDto(
                     responseBody.getUserId(),
-                    (long) responseBody.getInputCash(), 0,
+                    (long) responseBody.getInputCash(), 1,
                     responseBody.getTitle(), LocalDateTime.now())
             );
         } else {

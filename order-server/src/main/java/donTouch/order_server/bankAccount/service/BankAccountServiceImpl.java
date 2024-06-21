@@ -26,13 +26,18 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public List<UserBankAccountLogDto> getUserBankAccountLog(Long userId) {
+    public List<UserBankAccountLogDto> getUserBankAccountLog(Long userId, int page, int size) {
         List<BankAccountLog> bankAccountLogs = bankAccountLogRepository.findByUserId(userId);
         List<UserBankAccountLogDto> userBankAccountLogDtoList = new ArrayList<>();
         for(BankAccountLog bankAccountLog : bankAccountLogs){
             userBankAccountLogDtoList.add(bankAccountMapper.toUserDto(bankAccountLog));
         }
         Collections.sort(userBankAccountLogDtoList);
-        return userBankAccountLogDtoList;
+
+        List<UserBankAccountLogDto> result = new ArrayList<>();
+        for(int i = page; i < page*size + size && i < userBankAccountLogDtoList.size(); i++){
+            result.add(userBankAccountLogDtoList.get(i));
+        }
+        return result;
     }
 }

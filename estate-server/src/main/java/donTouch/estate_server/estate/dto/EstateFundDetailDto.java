@@ -1,5 +1,6 @@
 package donTouch.estate_server.estate.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -45,12 +46,12 @@ public class EstateFundDetailDto {
     private Boolean isAffirmedToPurchase;
     private Integer principalReturnAmountWon;
     private Integer interestReturnAmountWon;
-    private Date workStartDate;
+    private LocalDateTime workStartDate;
     private Integer repaymentDay;
     private Boolean isRenewalLoan;
     private Boolean isRepaymentDayFollowingExecutionDay;
     private String comment;
-    private Date startDatetime;
+    private LocalDateTime startDatetime;
     private String state;
     private Integer amount;
     private Integer investmentCount;

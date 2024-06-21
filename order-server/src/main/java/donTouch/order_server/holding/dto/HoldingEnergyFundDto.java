@@ -23,7 +23,7 @@ public class HoldingEnergyFundDto {
     private double earningRate;
     private int investmentPeriod;
     private int inputCash;
-    private LocalDate startPeriod;
-    private LocalDate createdAt;
+    private LocalDateTime startPeriod;
+    private LocalDateTime createdAt;
 }
 

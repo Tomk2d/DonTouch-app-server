@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Builder
@@ -15,6 +16,7 @@ import java.util.Date;
 @JsonSerialize
 @JsonDeserialize
 @AllArgsConstructor
+@NoArgsConstructor
 public class HoldingEstateFundForm {
     @NotNull(message = "유저아이디가 없습니다.")
     private Long userId;
@@ -31,9 +33,5 @@ public class HoldingEstateFundForm {
     @NotNull(message = "투자 금액이 없습니다.")
     private int inputCash;
     @NotNull(message = "시작 날짜가 없습니다.")
-    private Date startPeriod;
-
-    public HoldingEstateFundForm() {
-    }
-
+    private LocalDateTime startPeriod;
 }

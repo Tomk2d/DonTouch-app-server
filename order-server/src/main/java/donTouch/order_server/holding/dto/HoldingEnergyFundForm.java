@@ -33,6 +33,6 @@ public class HoldingEnergyFundForm {
     @NotNull(message = "투자 금액이 없습니다.")
     private int inputCash;
     @NotNull(message = "시작 날짜가 없습니다.")
-    private LocalDate startPeriod;
+    private LocalDateTime startPeriod;
 
 }

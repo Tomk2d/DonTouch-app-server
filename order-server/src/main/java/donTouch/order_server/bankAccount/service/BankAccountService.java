@@ -8,5 +8,5 @@ import java.util.List;
 public interface BankAccountService {
     public void saveBankAccountLog(BankAccountLogDto bankAccountLogDto);
 
-    public List<UserBankAccountLogDto> getUserBankAccountLog(Long userId);
+    public List<UserBankAccountLogDto> getUserBankAccountLog(Long userId, int page, int size);
 }

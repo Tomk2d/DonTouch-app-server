@@ -89,7 +89,7 @@ public class HoldingEstateFundServiceImpl implements HoldingEstateFundService {
             double earningRate = holding.getEarningRate();
             int investmentPeriod = holding.getInvestmentPeriod();
             int inputCash = holding.getInputCash();
-            LocalDate buyDate = holding.getCreatedAt();
+            LocalDate buyDate = holding.getCreatedAt().toLocalDate();
             double dividendPrice = inputCash * earningRate / investmentPeriod /100;
 
             for (long i = 1; i <= investmentPeriod; i++) {
