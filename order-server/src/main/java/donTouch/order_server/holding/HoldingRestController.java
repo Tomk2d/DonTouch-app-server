@@ -5,9 +5,6 @@ import donTouch.order_server.bankAccount.service.BankAccountService;
 import donTouch.order_server.holding.domain.HoldingKrStock;
 import donTouch.order_server.holding.domain.HoldingUsStock;
 import donTouch.order_server.holding.dto.*;
-import donTouch.order_server.holding.service.HoldingEnergyFundService;
-import donTouch.order_server.holding.service.HoldingKrStockService;
-import donTouch.order_server.holding.service.KrStockTradingLogService;
 import donTouch.order_server.holding.service.*;
 import donTouch.utils.utils.ApiUtils;
 import donTouch.utils.utils.ApiUtils.ApiResult;
@@ -18,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -185,14 +181,7 @@ public class HoldingRestController {
         return ApiUtils.success(result);
     }
 
-    @GetMapping("/api/combination")
-    public ApiResult<List<PurchasedStockDTO>> getCombinations(@RequestParam("userId") Long userId) {
-        List<PurchasedStockDTO> purchasedStockDTOList = new ArrayList<>();
-        purchasedStockDTOList.addAll(krStockTradingLogService.getPurchasedCombinationStocks(userId));
-        purchasedStockDTOList.addAll(usStockTradingLogService.getPurchasedCombinationStocks(userId));
-
-        return ApiUtils.success(purchasedStockDTOList);
-    }
+    // 구매했던 조합 get
 
     @PostMapping("/api/holding/sell/usStock")
     public ApiResult<Object> findByUserIdAndStockIdUs(@RequestBody @Valid HoldingUsStockFindForm holdingUsStockFindForm) {
@@ -203,6 +192,7 @@ public class HoldingRestController {
             return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
 
     @PostMapping("/api/holding/krStock/hold")
     public ApiResult<String> addMyHoldingKrStock(@RequestBody @Valid MyHoldingForm myHoldingForm) {
@@ -238,5 +228,4 @@ public class HoldingRestController {
             return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-
 }

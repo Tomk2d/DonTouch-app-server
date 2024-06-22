@@ -22,6 +22,7 @@ public class KrStockTradingLogServiceImpl implements KrStockTradingLogService {
     @Override
     public void save(KrStockTradingLogDto krStockTradingLogDto) {
         KrStockTradingLog entity = krStockLogMapper.toEntity(krStockTradingLogDto);
+        log.info(entity.toString());
         krStockTradingLogRepository.save(entity);
     }
 
