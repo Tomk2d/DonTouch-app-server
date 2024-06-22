@@ -5,6 +5,7 @@ import donTouch.user_server.user.domain.Users;
 import donTouch.user_server.user.dto.InvestmentTypeForm;
 import donTouch.user_server.user.dto.UsersDto;
 import donTouch.user_server.user.utils.EntityMapper;
+import donTouch.user_server.user.utils.UsersMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final JpaUserRepository jpaUserRepository;
+    private final UsersMapper usersMapper = UsersMapper.INSTANCE;
 
     public UsersDto findUserByEmail(String email) {
         Users user = jpaUserRepository.findByEmail(email)
@@ -21,7 +23,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public int updateInvestmentType(InvestmentTypeForm investmentTypeForm){
+    public UsersDto updateInvestmentType(InvestmentTypeForm investmentTypeForm){
         Users user = jpaUserRepository.findById(investmentTypeForm.getUserId())
                 .orElseThrow(()-> new NullPointerException("유저 정보가 없습니다."));
 
@@ -66,6 +68,6 @@ public class UserServiceImpl implements UserService {
         user.setDividendScore(dividendScore);
         jpaUserRepository.save(user);
 
-        return result;
+        return usersMapper.toDto(user);
     }
 }
