@@ -114,11 +114,11 @@ public class UserRestController {
 
 
     @PostMapping("/api/user/type")
-    public ApiResult<Integer> saveUserInvestmentType(
+    public ApiResult<UsersDto> saveUserInvestmentType(
             @RequestBody @Valid InvestmentTypeForm investmentTypeForm
             ){
         try{
-            int result = userService.updateInvestmentType(investmentTypeForm);
+            UsersDto result = userService.updateInvestmentType(investmentTypeForm);
             return ApiUtils.success(result);
         }catch(NullPointerException e){
             return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
