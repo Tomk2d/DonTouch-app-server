@@ -32,6 +32,6 @@ public class UserBankAccountLogDto implements Comparable<UserBankAccountLogDto>{
 
     @Override
     public int compareTo(UserBankAccountLogDto other) {
-        return this.inOutTime.compareTo(other.inOutTime);
+        return -1*this.inOutTime.compareTo(other.inOutTime);
     }
 }

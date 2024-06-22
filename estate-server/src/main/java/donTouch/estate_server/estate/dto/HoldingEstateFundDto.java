@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Builder
@@ -22,6 +23,6 @@ public class HoldingEstateFundDto {
     private double earningRate;
     private int investmentPeriod;
     private int inputCash;
-    private Date startPeriod;
-    private Date createdAt;
+    private LocalDateTime startPeriod;
+    private LocalDateTime createdAt;
 }

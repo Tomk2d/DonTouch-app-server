@@ -51,6 +51,12 @@ public class HoldingEnergyFund {
     private int inputCash;
 
     @NotNull
-    private LocalDate startPeriod;
-    private LocalDate createdAt;
+    private LocalDateTime startPeriod;
+    private LocalDateTime createdAt;
+    @PrePersist
+    protected void onCreate() {
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
+    }
 }
