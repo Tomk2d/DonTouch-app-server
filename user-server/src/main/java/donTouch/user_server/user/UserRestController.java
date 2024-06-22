@@ -4,10 +4,7 @@ import donTouch.user_server.kafka.service.KafkaService;
 import donTouch.user_server.oauth.domain.OauthMember;
 import donTouch.user_server.oauth.domain.OauthServerType;
 import donTouch.user_server.oauth.dto.LoginResponse;
-import donTouch.user_server.user.dto.BankAccountDto;
-import donTouch.user_server.user.dto.BankCalculateForm;
-import donTouch.user_server.user.dto.BankCreateForm;
-import donTouch.user_server.user.dto.UsersDto;
+import donTouch.user_server.user.dto.*;
 import donTouch.user_server.user.service.BankAccountService;
 import donTouch.user_server.oauth.service.OauthService;
 import donTouch.user_server.user.service.UserService;
@@ -113,5 +110,19 @@ public class UserRestController {
         log.info(redirectUrl);
         response.sendRedirect(redirectUrl);
         return ApiUtils.success("토큰 요청 성공");
+    }
+
+
+    @PostMapping("/api/user/type")
+    public ApiResult<Integer> saveUserInvestmentType(
+            @RequestBody @Valid InvestmentTypeForm investmentTypeForm
+            ){
+        try{
+            int result = userService.updateInvestmentType(investmentTypeForm);
+            return ApiUtils.success(result);
+        }catch(NullPointerException e){
+            return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 }
