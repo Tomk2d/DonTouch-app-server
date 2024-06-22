@@ -9,6 +9,8 @@ import donTouch.order_server.holding.service.HoldingEnergyFundService;
 import donTouch.order_server.holding.service.HoldingEstateFundService;
 import donTouch.order_server.holding.service.HoldingKrStockService;
 import donTouch.order_server.holding.service.HoldingUsStockService;
+import donTouch.order_server.holding.service.KrStockTradingLogService;
+import donTouch.order_server.holding.service.UsStockTradingLogService;
 import donTouch.utils.utils.ApiUtils;
 import donTouch.utils.utils.ApiUtils.ApiResult;
 import jakarta.validation.Valid;
@@ -32,6 +34,8 @@ public class HoldingRestController {
     private final HoldingUsStockService holdingUsStockService;
     private final HoldingEnergyFundService holdingEnergyFundService;
     private final BankAccountService bankAccountService;
+    private final KrStockTradingLogService krStockTradingLogService;
+    private final UsStockTradingLogService usStockTradingLogService;
 
 
     @GetMapping("/api/holding/account/{userId}")
@@ -194,4 +198,40 @@ public class HoldingRestController {
             return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping("/api/holding/krStock/hold")
+    public ApiResult<String> addMyHoldingKrStock(@RequestBody @Valid MyHoldingForm myHoldingForm) {
+        try{
+            Long userId = myHoldingForm.getUserId();
+            String code = myHoldingForm.getStockCode();
+            int price = myHoldingForm.getStockPrice();
+            int amount = myHoldingForm.getStockAmount();
+            HoldingKrStock savedResult= holdingKrStockService.save(new HoldingKrStockDto(userId, code, amount));
+            if (savedResult != null) {
+                KrStockTradingLogDto entity = new KrStockTradingLogDto(userId, code, savedResult.getId(), price, amount, 0, 1);
+                krStockTradingLogService.save(entity);
+            }
+            return ApiUtils.success("ok");
+        }catch (NullPointerException e) {
+            return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+    @PostMapping("/api/holding/usStock/hold")
+    public ApiResult<String> addMyHoldingUsStock(@RequestBody @Valid MyHoldingForm myHoldingForm){
+        try{
+            Long userId = myHoldingForm.getUserId();
+            String code = myHoldingForm.getStockCode();
+            int price = myHoldingForm.getStockPrice();
+            int amount = myHoldingForm.getStockAmount();
+            HoldingUsStock savedResult= holdingUsStockService.save(new HoldingUsStockDto(userId, code, amount));
+            if (savedResult != null) {
+                UsStockTradingLogDto entity = new UsStockTradingLogDto(userId, code, savedResult.getId(), price, amount, 0, 1);
+                usStockTradingLogService.save(entity);
+            }
+            return ApiUtils.success("ok");
+        }catch (NullPointerException e) {
+            return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
