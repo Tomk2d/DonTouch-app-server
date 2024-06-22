@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import donTouch.order_server.holding.dto.PurchasedStockDTO;
 import jakarta.annotation.Nullable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -41,6 +38,13 @@ public class KrStockTradingLog {
     private int combination;
     @NotNull
     private int tradingType;
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.krStockBuyTime == null) {
+            this.krStockBuyTime = LocalDateTime.now();
+        }
+    }
 
     public PurchasedStockDTO convertToPurchasedStockDTO() {
         return new PurchasedStockDTO(krStockBuyTime, combination,
