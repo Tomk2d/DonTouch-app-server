@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -181,7 +182,13 @@ public class HoldingRestController {
         return ApiUtils.success(result);
     }
 
-    // 구매했던 조합 get
+    @GetMapping("/api/combination")
+    public ApiResult<List<PurchasedStockDTO>> getCombinations(@RequestParam("userId") Long userId) {
+        List<PurchasedStockDTO> purchasedStockDTOList = new ArrayList<>();
+        purchasedStockDTOList.addAll(krStockTradingLogService.getPurchasedCombinationStocks(userId));
+        purchasedStockDTOList.addAll(usStockTradingLogService.getPurchasedCombinationStocks(userId));
+        return ApiUtils.success(purchasedStockDTOList);
+    }
 
     @PostMapping("/api/holding/sell/usStock")
     public ApiResult<Object> findByUserIdAndStockIdUs(@RequestBody @Valid HoldingUsStockFindForm holdingUsStockFindForm) {
@@ -196,35 +203,36 @@ public class HoldingRestController {
 
     @PostMapping("/api/holding/krStock/hold")
     public ApiResult<String> addMyHoldingKrStock(@RequestBody @Valid MyHoldingForm myHoldingForm) {
-        try{
+        try {
             Long userId = myHoldingForm.getUserId();
             String code = myHoldingForm.getStockCode();
             int price = myHoldingForm.getStockPrice();
             int amount = myHoldingForm.getStockAmount();
-            HoldingKrStock savedResult= holdingKrStockService.save(new HoldingKrStockDto(userId, code, amount));
+            HoldingKrStock savedResult = holdingKrStockService.save(new HoldingKrStockDto(userId, code, amount));
             if (savedResult != null) {
                 KrStockTradingLogDto entity = new KrStockTradingLogDto(userId, code, savedResult.getId(), price, amount, 0, 1);
                 krStockTradingLogService.save(entity);
             }
             return ApiUtils.success("ok");
-        }catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
     @PostMapping("/api/holding/usStock/hold")
-    public ApiResult<String> addMyHoldingUsStock(@RequestBody @Valid MyHoldingForm myHoldingForm){
-        try{
+    public ApiResult<String> addMyHoldingUsStock(@RequestBody @Valid MyHoldingForm myHoldingForm) {
+        try {
             Long userId = myHoldingForm.getUserId();
             String code = myHoldingForm.getStockCode();
             int price = myHoldingForm.getStockPrice();
             int amount = myHoldingForm.getStockAmount();
-            HoldingUsStock savedResult= holdingUsStockService.save(new HoldingUsStockDto(userId, code, amount));
+            HoldingUsStock savedResult = holdingUsStockService.save(new HoldingUsStockDto(userId, code, amount));
             if (savedResult != null) {
                 UsStockTradingLogDto entity = new UsStockTradingLogDto(userId, code, savedResult.getId(), price, amount, 0, 1);
                 usStockTradingLogService.save(entity);
             }
             return ApiUtils.success("ok");
-        }catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             return ApiUtils.error(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
