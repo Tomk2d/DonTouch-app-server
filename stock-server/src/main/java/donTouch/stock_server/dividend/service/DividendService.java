@@ -8,5 +8,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface DividendService {
-    List<DividendDTO> findCalendar(DividendForm dividendForm, Map<String, List<String>> holdingStockResponse, Map<String, List<PurchaseInfoDTO>> holdingPurchases);
+    List<DividendDTO> findCalendar(DividendForm dividendForm, Map<String, List<PurchaseInfoDTO>> holdingPurchases);
 }

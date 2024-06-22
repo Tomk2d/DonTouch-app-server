@@ -23,11 +23,9 @@ public class DividendRestController {
 
     @PostMapping("")
     public ApiUtils.ApiResult<List<DividendDTO>> findCalendar(@RequestBody @Valid DividendForm dividendForm) {
-        Map<String, List<String>> holdingStockResponse = Web.getHoldingSymbols(dividendForm.getUserId());
         Map<String, List<PurchaseInfoDTO>> holdingPurchases = Web.getHoldingStockPurchaseInfos(dividendForm.getUserId());
-
-
-        List<DividendDTO> result = dividendService.findCalendar(dividendForm, holdingStockResponse, holdingPurchases);
+        
+        List<DividendDTO> result = dividendService.findCalendar(dividendForm, holdingPurchases);
 
         if (result == null) {
             return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
