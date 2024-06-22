@@ -43,7 +43,7 @@ public class StockServiceImpl implements StockService {
 
         stockDTOList.sort(Comparator.comparingDouble(StockDTO::getPersonalizedScore).reversed());
 
-        return getPagedStockDTOList(stockDTOList, findStocksForm.getPage(), findStocksForm.getSize());
+        return getPagedList(stockDTOList, findStocksForm.getPage(), findStocksForm.getSize());
     }
 
     @Override
@@ -207,7 +207,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public List<Map<String, Object>> findCombinationInfos(List<PurchasedStockDTO> purchasedStockDTOList) {
+    public List<Map<String, Object>> findCombinationInfos(List<PurchasedStockDTO> purchasedStockDTOList, Integer page, Integer size) {
         Map<Integer, List<PurchasedStockDTO>> purchasedStockDTOMap = new HashMap<>();
         Set<String> krSymbols = new HashSet<>();
         Set<String> usSymbols = new HashSet<>();
@@ -234,11 +234,13 @@ public class StockServiceImpl implements StockService {
             stocks.putIfAbsent(usStock.getSymbol(), usStock);
         }
 
+        List<List<PurchasedStockDTO>> purchasedCombinations = new ArrayList<>(purchasedStockDTOMap.values());
+        purchasedCombinations.sort(Comparator.comparing((List<PurchasedStockDTO> list) -> list.get(0).getDate()).reversed());
+
         List<Map<String, Object>> response = new ArrayList<>();
-        for (List<PurchasedStockDTO> purchasedCombination : new ArrayList<>(purchasedStockDTOMap.values())) {
+        for (List<PurchasedStockDTO> purchasedCombination : getPagedList(purchasedCombinations, page, size)) {
             response.add(convertToCombinationMap(purchasedCombination, stocks));
         }
-
         return response;
     }
 
@@ -520,7 +522,7 @@ public class StockServiceImpl implements StockService {
         return combinedStockList;
     }
 
-    List<StockDTO> getPagedStockDTOList(List<StockDTO> stockDTOList, int page, int size) {
+    <T> List<T> getPagedList(List<T> stockDTOList, int page, int size) {
         int start = size * page;
         int end = start + size;
 

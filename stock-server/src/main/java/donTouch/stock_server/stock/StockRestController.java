@@ -136,10 +136,10 @@ public class StockRestController {
     }
 
     @GetMapping("/combination/purchased")
-    public ApiUtils.ApiResult<Object> findCombinationPurchased(@RequestParam("userId") Long userId) {
+    public ApiUtils.ApiResult<Object> findCombinationPurchased(@RequestParam("userId") Long userId, @RequestParam("page") Integer page, @RequestParam("size") Integer size) {
         List<PurchasedStockDTO> purchasedStockDTOList = Web.getCombinationPurchased(userId);
 
-        List<Map<String, Object>> response = stockService.findCombinationInfos(purchasedStockDTOList);
+        List<Map<String, Object>> response = stockService.findCombinationInfos(purchasedStockDTOList, page, size);
 
         if (response == null) {
             return ApiUtils.error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
