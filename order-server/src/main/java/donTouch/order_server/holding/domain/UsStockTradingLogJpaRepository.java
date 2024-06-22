@@ -8,4 +8,6 @@ import java.util.List;
 @Repository
 public interface UsStockTradingLogJpaRepository extends JpaRepository<UsStockTradingLog, Long> {
     List<UsStockTradingLog> findAllByUserIdAndUsStockIdIn(Long userId, List<String> stockIds);
+
+    List<UsStockTradingLog> findAllByUserIdAndTradingTypeAndCombinationGreaterThan(Long userId, Integer tradingId, Integer combination);
 }

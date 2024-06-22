@@ -13,4 +13,6 @@ public interface KrStockJpaRepository extends JpaRepository<KrStock, Integer> {
     Optional<KrStock> findBySymbol(String symbol);
 
     List<KrStock> findAllByNameContainingOrEnglishNameContaining(String name, String englishName);
+
+    List<KrStock> findAllBySymbolIn(List<String> symbols);
 }

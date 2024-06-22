@@ -8,4 +8,6 @@ import java.util.List;
 @Repository
 public interface KrStockTradingLogJpaRepository extends JpaRepository<KrStockTradingLog, Long> {
     List<KrStockTradingLog> findAllByUserIdAndKrStockIdIn(Long userId, List<String> krStockIds);
+
+    List<KrStockTradingLog> findAllByUserIdAndTradingTypeAndCombinationGreaterThan(Long userId, Integer tradingId, Integer combination);
 }
