@@ -121,7 +121,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public Map<String, Object> findCombination(FindCombinationForm findCombinationForm, ScoreDto scoreDto) {
-        List<List<StockDTO>> fixedStockList = getFixedCombinations(findCombinationForm, scoreDto);
+        List<List<StockDTO>> fixedStockList = getFixedCombinations(scoreDto);
 
         List<List<Combination>> distirbutedStockList = distributeStock(fixedStockList, findCombinationForm.getInvestmentAmount());
 
@@ -497,11 +497,11 @@ public class StockServiceImpl implements StockService {
         return response;
     }
 
-    List<List<StockDTO>> getFixedCombinations(FindCombinationForm findCombinationForm, ScoreDto scoreDto) {
+    List<List<StockDTO>> getFixedCombinations(ScoreDto scoreDto) {
         List<List<StockDTO>> fixedStockList = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
-            fixedStockList.add(findStocks(new FindStocksForm(null, null, null, 0, 2), scoreDto));
+            fixedStockList.add(findStocks(new FindStocksForm(null, null, i + 1, 0, 2), scoreDto));
         }
 
         double minScore = fixedStockList.get(0).get(0).getPersonalizedScore();
@@ -534,7 +534,6 @@ public class StockServiceImpl implements StockService {
         List<Stock> combinedStockList = new ArrayList<>();
 
         if (searchWord != null) {
-            System.out.println("searchWord: " + searchWord);
             combinedStockList.addAll(krStockJpaRepository.findAllByNameContainingOrEnglishNameContaining(searchWord, searchWord));
             combinedStockList.addAll(usStockJpaRepository.findAllByNameContainingOrEnglishNameContaining(searchWord, searchWord));
 
