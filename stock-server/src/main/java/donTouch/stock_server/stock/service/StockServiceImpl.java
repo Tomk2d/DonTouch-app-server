@@ -13,6 +13,7 @@ import donTouch.stock_server.usStock.domain.*;
 import donTouch.stock_server.web.dto.LikeStockDTO;
 import donTouch.stock_server.web.dto.PurchaseInfoDTO;
 import donTouch.stock_server.web.dto.PurchasedStockDTO;
+import donTouch.stock_server.web.dto.ScoreDto;
 import donTouch.utils.exchangeRate.ExchangeRate;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,10 +41,10 @@ public class StockServiceImpl implements StockService {
     private final UsLatestCloseJpaRepository usLatestCloseJpaRepository;
 
     @Override
-    public List<StockDTO> findStocks(FindStocksForm findStocksForm) {
+    public List<StockDTO> findStocks(FindStocksForm findStocksForm, ScoreDto scoreDto) {
         List<Stock> combinedStockList = getCombinedStockList(findStocksForm.getSearchWord(), findStocksForm.getDividendMonth());
 
-        List<StockDTO> stockDTOList = getStockDTOList(combinedStockList, findStocksForm);
+        List<StockDTO> stockDTOList = getStockDTOList(combinedStockList, scoreDto);
 
         stockDTOList.sort(Comparator.comparingDouble(StockDTO::getPersonalizedScore).reversed());
 
@@ -119,8 +120,8 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public Map<String, Object> findCombination(FindCombinationForm findCombinationForm) {
-        List<List<StockDTO>> fixedStockList = getFixedCombinations(findCombinationForm);
+    public Map<String, Object> findCombination(FindCombinationForm findCombinationForm, ScoreDto scoreDto) {
+        List<List<StockDTO>> fixedStockList = getFixedCombinations(findCombinationForm, scoreDto);
 
         List<List<Combination>> distirbutedStockList = distributeStock(fixedStockList, findCombinationForm.getInvestmentAmount());
 
@@ -496,11 +497,11 @@ public class StockServiceImpl implements StockService {
         return response;
     }
 
-    List<List<StockDTO>> getFixedCombinations(FindCombinationForm findCombinationForm) {
+    List<List<StockDTO>> getFixedCombinations(FindCombinationForm findCombinationForm, ScoreDto scoreDto) {
         List<List<StockDTO>> fixedStockList = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
-            fixedStockList.add(findStocks(new FindStocksForm(null, i + 1, findCombinationForm.getSafeScore(), findCombinationForm.getGrowthScore(), findCombinationForm.getDividendScore(), 0, 2)));
+            fixedStockList.add(findStocks(new FindStocksForm(null, null, null, 0, 2), scoreDto));
         }
 
         double minScore = fixedStockList.get(0).get(0).getPersonalizedScore();
@@ -566,10 +567,10 @@ public class StockServiceImpl implements StockService {
         return stockDTOList.subList(start, Math.min(end, stockDTOList.size()));
     }
 
-    List<StockDTO> getStockDTOList(List<Stock> stockList, FindStocksForm findStocksForm) {
+    List<StockDTO> getStockDTOList(List<Stock> stockList, ScoreDto scoreDto) {
         return stockList.stream()
                 .map(stock -> stock.convertToDTO(
-                        findStocksForm.getSafeScore(), findStocksForm.getGrowthScore(), findStocksForm.getDividendScore()))
+                        scoreDto.getSafeScore(), scoreDto.getGrowthScore(), scoreDto.getDividendScore()))
                 .collect(Collectors.toList());
     }
 }
