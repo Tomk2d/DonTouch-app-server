@@ -22,7 +22,7 @@ public class EnergyFundDto {
     @NotNull(message = "earningRate가 null입니다.")
     private Double earningRate;
     @NotNull(message = "investment_period가 null입니다.")
-    private int investment_period;
+    private int investmentPeriod;
     @NotNull(message = "fundingAmount가 null입니다.")
     private Double fundingAmount;
     @NotNull(message = "sumOfInvestmentAndReservation가 null 입니다.")
