@@ -35,17 +35,15 @@ public class HoldingKrStockServiceImpl implements HoldingKrStockService {
         int orderAmount = holdingKrStockDto.getKrStockAmount();
         HoldingKrStock entity = krStockMapper.toEntity(holdingKrStockDto);
 
-        // for kafka test. (always call kafka)
-        TradingStockInfoDto tradingStockInfoDto = holdingKrStockDto.convertToTradingStockInfoDTO();
-        kafkaProducerService.requestStockInfoToChangeUserScore(tradingStockInfoDto);
-
         Optional<HoldingKrStock> findHolding = holdingKrStockRepository.findByUserIdAndKrStockId(userId, krStockId);
-        if (findHolding.isPresent()) {  // 이미 산적 있을때.
+        if (findHolding.isPresent()) {
             HoldingKrStock findEntity = findHolding.get();
             findEntity.setKrStockAmount(findEntity.getKrStockAmount() + orderAmount);
             return holdingKrStockRepository.save(findEntity);
-        } else {    // 한번도 산적 없을때.
-            System.out.println("buy new stock!!!!!!!!!!!!!!!!!");
+        } else {
+            TradingStockInfoDto tradingStockInfoDto = holdingKrStockDto.convertToTradingStockInfoDTO();
+            kafkaProducerService.requestStockInfoToChangeUserScore(tradingStockInfoDto);
+
             return holdingKrStockRepository.save(entity);
         }
     }

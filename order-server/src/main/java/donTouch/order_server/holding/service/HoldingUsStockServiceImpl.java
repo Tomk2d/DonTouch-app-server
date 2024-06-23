@@ -7,6 +7,8 @@ import donTouch.order_server.holding.domain.UsStockTradingLogJpaRepository;
 import donTouch.order_server.holding.dto.HoldingUsStockDto;
 import donTouch.order_server.holding.dto.HoldingUsStockFindForm;
 import donTouch.order_server.holding.dto.PurchaseInfoDTO;
+import donTouch.order_server.kafka.dto.TradingStockInfoDto;
+import donTouch.order_server.kafka.service.KafkaProducerService;
 import donTouch.order_server.utils.UsStockMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ public class HoldingUsStockServiceImpl implements HoldingUsStockService {
     HoldingUsStockJpaRepository holdingUsStockJpaRepository;
     private final UsStockMapper usStockMapper = UsStockMapper.INSTANCE;
     UsStockTradingLogJpaRepository usStockTradingLogJpaRepository;
+    private final KafkaProducerService kafkaProducerService;
 
     @Override
     public List<String> findHoldingStockIds(Long userId) {
@@ -43,6 +46,9 @@ public class HoldingUsStockServiceImpl implements HoldingUsStockService {
             findEntity.setUsStockAmount(findEntity.getUsStockAmount() + orderAmount);
             return holdingUsStockJpaRepository.save(findEntity);
         } else {
+            TradingStockInfoDto tradingStockInfoDto = holdingUsStockDto.convertToTradingStockInfoDTO();
+            kafkaProducerService.requestStockInfoToChangeUserScore(tradingStockInfoDto);
+
             return holdingUsStockJpaRepository.save(entity);
         }
     }

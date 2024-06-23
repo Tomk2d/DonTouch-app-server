@@ -6,6 +6,7 @@ import donTouch.user_server.kafka.dto.UsersDto;
 import donTouch.user_server.user.dto.BankAccountDto;
 import donTouch.user_server.user.dto.BankCalculateForm;
 import donTouch.user_server.user.service.BankAccountService;
+import donTouch.user_server.user.service.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,14 +20,16 @@ import java.util.Date;
 @Service
 public class KafkaService {
 
+    private final UserServiceImpl userServiceImpl;
     private KafkaTemplate<String, Object> kafkaTemplate;
     private final BankAccountService bankAccountService;
 
     @Autowired
     public KafkaService(KafkaTemplate<String, Object> kafkaTemplate,
-                        BankAccountService bankAccountService) {
+                        BankAccountService bankAccountService, UserServiceImpl userServiceImpl) {
         this.kafkaTemplate = kafkaTemplate;
         this.bankAccountService = bankAccountService;
+        this.userServiceImpl = userServiceImpl;
     }
 
     public void sendResponse() {
@@ -48,7 +51,7 @@ public class KafkaService {
 
     @KafkaListener(topics = "request_to_change_user_score", groupId = "user_group")
     public void responseToChangeUserScore(ChangeScoreDto changeScoreDto) {
-        System.out.println("get response: " + changeScoreDto.getUserId().toString() + ", " + changeScoreDto.getHighestScoreOfPurchasedStock() + ", " + changeScoreDto.getLowestScoreOfPurchasedStock());
+        userServiceImpl.changeScore(changeScoreDto);
     }
 
     public void sendCalBankResponse(Boolean isSuccess) {
