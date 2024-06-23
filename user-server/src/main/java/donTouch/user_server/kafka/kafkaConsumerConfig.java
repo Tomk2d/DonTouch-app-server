@@ -1,8 +1,5 @@
 package donTouch.user_server.kafka;
 
-import donTouch.user_server.kafka.dto.UsersDto;
-import java.util.HashMap;
-import java.util.Map;
 import jdk.jfr.Enabled;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -17,6 +14,9 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.messaging.converter.StringMessageConverter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Enabled
 @Configuration
@@ -35,22 +35,23 @@ public class kafkaConsumerConfig {
         Map<String, Object> props = new HashMap<>();
 
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-            env.getProperty("bootstrap.servers"));
+                env.getProperty("bootstrap.servers"));
         props.put(ConsumerConfig.GROUP_ID_CONFIG,
-            "stock_group");
+                "stock_group");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-            ErrorHandlingDeserializer.class);
+                ErrorHandlingDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-            ErrorHandlingDeserializer.class);
+                ErrorHandlingDeserializer.class);
         props.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS,
-            StringDeserializer.class);
+                StringDeserializer.class);
         props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS,
-            JsonDeserializer.class);
+                JsonDeserializer.class);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         props.put(JsonDeserializer.TYPE_MAPPINGS,
-            "UsersDto:donTouch.user_server.kafka.dto.UsersDto,"
-                + "BankCalculateForm:donTouch.user_server.user.dto.BankCalculateForm,"
-                + "IsSuccessDto:donTouch.user_server.kafka.dto.IsSuccessDto");
+                "UsersDto:donTouch.user_server.kafka.dto.UsersDto,"
+                        + "BankCalculateForm:donTouch.user_server.user.dto.BankCalculateForm,"
+                        + "IsSuccessDto:donTouch.user_server.kafka.dto.IsSuccessDto," +
+                        "ChangeScoreDto:donTouch.user_server.kafka.dto.ChangeScoreDto");
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
@@ -63,8 +64,9 @@ public class kafkaConsumerConfig {
         factory.setReplyTemplate(kafkaTemplate);
         return factory;
     }
+
     @Bean
-    public StringMessageConverter jsonConverter(){
+    public StringMessageConverter jsonConverter() {
         return new StringMessageConverter();
     }
 }

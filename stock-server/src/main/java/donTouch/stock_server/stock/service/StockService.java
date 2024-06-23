@@ -1,5 +1,7 @@
 package donTouch.stock_server.stock.service;
 
+import donTouch.stock_server.kafka.dto.ChangeScoreDto;
+import donTouch.stock_server.kafka.dto.TradingStockInfoDto;
 import donTouch.stock_server.stock.dto.*;
 import donTouch.stock_server.web.dto.LikeStockDTO;
 import donTouch.stock_server.web.dto.PurchaseInfoDTO;
@@ -25,4 +27,6 @@ public interface StockService {
     Map<String, Object> findHoldingStocks(Map<String, List<PurchaseInfoDTO>> likeStockDTOList);
 
     List<Map<String, Object>> findCombinationInfos(List<PurchasedStockDTO> purchasedStockDTOList, Integer page, Integer size);
+
+    ChangeScoreDto requestToChangeUserScore(TradingStockInfoDto tradingStockInfoDto);
 }

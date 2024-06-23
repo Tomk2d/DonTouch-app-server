@@ -1,5 +1,7 @@
 package donTouch.stock_server.stock.service;
 
+import donTouch.stock_server.kafka.dto.ChangeScoreDto;
+import donTouch.stock_server.kafka.dto.TradingStockInfoDto;
 import donTouch.stock_server.krStock.domain.*;
 import donTouch.stock_server.krStock.dto.PurchasedCombinationDTO;
 import donTouch.stock_server.stock.domain.Combination;
@@ -13,6 +15,7 @@ import donTouch.stock_server.web.dto.PurchaseInfoDTO;
 import donTouch.stock_server.web.dto.PurchasedStockDTO;
 import donTouch.utils.exchangeRate.ExchangeRate;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.management.InstanceNotFoundException;
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class StockServiceImpl implements StockService {
     private final KrStockJpaRepository krStockJpaRepository;
     private final UsStockJpaRepository usStockJpaRepository;
@@ -242,6 +246,35 @@ public class StockServiceImpl implements StockService {
             response.add(convertToCombinationMap(purchasedCombination, stocks));
         }
         return response;
+    }
+
+    @Override
+    public ChangeScoreDto requestToChangeUserScore(TradingStockInfoDto tradingStockInfoDto) {
+        Stock stock = null;
+        if (tradingStockInfoDto.getIsKr()) {
+            Optional<KrStock> krStock = krStockJpaRepository.findBySymbol(tradingStockInfoDto.getSymbol());
+            if (krStock.isPresent()) {
+                stock = krStock.get();
+            }
+        } else {
+            Optional<UsStock> usStock = usStockJpaRepository.findBySymbol(tradingStockInfoDto.getSymbol());
+            if (usStock.isPresent()) {
+                stock = usStock.get();
+            }
+        }
+
+        if (stock == null) {
+            log.error("Stock not found");
+            return null;
+        }
+
+        List<Map.Entry<String, Double>> list = new ArrayList<>();
+        list.add(new AbstractMap.SimpleEntry<>("safeScore", stock.getSafeScore() * 4));
+        list.add(new AbstractMap.SimpleEntry<>("growthScore", stock.getGrowthScore()));
+        list.add(new AbstractMap.SimpleEntry<>("dividendScore", stock.getDividendScore() * 3));
+        list.sort(Map.Entry.comparingByValue());
+
+        return new ChangeScoreDto(tradingStockInfoDto.getUserId(), list.get(2).getKey(), list.get(0).getKey());
     }
 
     Map<String, Object> convertToCombinationMap(List<PurchasedStockDTO> purchasedStockDTOList, Map<String, Stock> stocks) {
