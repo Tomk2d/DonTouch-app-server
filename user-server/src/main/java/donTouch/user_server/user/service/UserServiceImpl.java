@@ -4,6 +4,7 @@ import donTouch.user_server.kafka.dto.ChangeScoreDto;
 import donTouch.user_server.user.domain.JpaUserRepository;
 import donTouch.user_server.user.domain.Users;
 import donTouch.user_server.user.dto.InvestmentTypeForm;
+import donTouch.user_server.user.dto.ScoreDto;
 import donTouch.user_server.user.dto.UsersDto;
 import donTouch.user_server.user.utils.UsersMapper;
 import lombok.AllArgsConstructor;
@@ -101,5 +102,16 @@ public class UserServiceImpl implements UserService {
         userToChange.setScores(score.get("safeScore"), score.get("growthScore"), score.get("dividendScore"));
 
         jpaUserRepository.save(userToChange);
+    }
+
+    @Override
+    public ScoreDto findUserScore(Long userId) {
+        Optional<Users> user = jpaUserRepository.findById(userId);
+        if (user.isEmpty()) {
+            throw new NullPointerException();
+        }
+
+        Users foundUser = user.get();
+        return foundUser.convertToScoreDto();
     }
 }

@@ -2,6 +2,7 @@ package donTouch.user_server.user.domain;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import donTouch.user_server.user.dto.ScoreDto;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
@@ -44,5 +45,9 @@ public class Users {
         this.safeScore = safeScore;
         this.growthScore = growthScore;
         this.dividendScore = dividendScore;
+    }
+
+    public ScoreDto convertToScoreDto() {
+        return new ScoreDto(safeScore, growthScore, dividendScore);
     }
 }
