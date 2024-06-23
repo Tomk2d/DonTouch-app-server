@@ -7,6 +7,7 @@ import donTouch.stock_server.web.Web;
 import donTouch.stock_server.web.dto.LikeStockDTO;
 import donTouch.stock_server.web.dto.PurchaseInfoDTO;
 import donTouch.stock_server.web.dto.PurchasedStockDTO;
+import donTouch.stock_server.web.dto.ScoreDto;
 import donTouch.utils.exchangeRate.ExchangeRate;
 import donTouch.utils.utils.ApiUtils;
 import jakarta.validation.Valid;
@@ -28,7 +29,9 @@ public class StockRestController {
 
     @PostMapping("")
     public ApiUtils.ApiResult<List<StockDTO>> findStocks(@RequestBody @Valid FindStocksForm findStocksForm) {
-        List<StockDTO> stockDTOList = stockService.findStocks(findStocksForm);
+        ScoreDto scoreDto = Web.getUserScore(findStocksForm.getUserId());
+
+        List<StockDTO> stockDTOList = stockService.findStocks(findStocksForm, scoreDto);
 
         if (stockDTOList == null) {
             return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -69,7 +72,9 @@ public class StockRestController {
     @PostMapping("/combination/create")
     public ApiUtils.ApiResult<Map<String, Object>> findCombination(@Valid @RequestBody FindCombinationForm findCombinationForm) {
         try {
-            Map<String, Object> combination = stockService.findCombination(findCombinationForm);
+            ScoreDto scoreDto = Web.getUserScore(findCombinationForm.getUserId());
+
+            Map<String, Object> combination = stockService.findCombination(findCombinationForm, scoreDto);
 
             if (combination == null) {
                 return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);

@@ -3,6 +3,7 @@ package donTouch.stock_server.web;
 import donTouch.stock_server.web.dto.LikeStockDTO;
 import donTouch.stock_server.web.dto.PurchaseInfoDTO;
 import donTouch.stock_server.web.dto.PurchasedStockDTO;
+import donTouch.stock_server.web.dto.ScoreDto;
 import donTouch.utils.utils.ApiUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
@@ -78,6 +79,25 @@ public class Web {
                     .uri(getLikeStockIdsUrl)
                     .retrieve()
                     .toEntity(new ParameterizedTypeReference<ApiUtils.ApiResult<Map<String, List<PurchaseInfoDTO>>>>() {
+                    })
+                    .block();
+
+            return responseEntity.getBody().getResponse();
+        } catch (Exception e) {
+            throw new IllegalStateException();
+        }
+    }
+
+    public static ScoreDto getUserScore(Long userId) {
+        try {
+            WebClient webClient = WebClient.create();
+
+            String getLikeStockIdsUrl = "http://localhost:8081/api/user/score?userId=" + userId;
+
+            ResponseEntity<ApiUtils.ApiResult<ScoreDto>> responseEntity = webClient.get()
+                    .uri(getLikeStockIdsUrl)
+                    .retrieve()
+                    .toEntity(new ParameterizedTypeReference<ApiUtils.ApiResult<ScoreDto>>() {
                     })
                     .block();
 
