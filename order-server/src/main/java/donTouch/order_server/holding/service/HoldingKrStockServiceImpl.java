@@ -7,6 +7,8 @@ import donTouch.order_server.holding.domain.KrStockTradingLogJpaRepository;
 import donTouch.order_server.holding.dto.HoldingKrStockDto;
 import donTouch.order_server.holding.dto.HoldingKrStockFindForm;
 import donTouch.order_server.holding.dto.PurchaseInfoDTO;
+import donTouch.order_server.kafka.dto.TradingStockInfoDto;
+import donTouch.order_server.kafka.service.KafkaProducerService;
 import donTouch.order_server.utils.KrStockMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,7 @@ public class HoldingKrStockServiceImpl implements HoldingKrStockService {
     private final HoldingKrStockJpaRepository holdingKrStockRepository;
     private final KrStockMapper krStockMapper = KrStockMapper.INSTANCE;
     private final KrStockTradingLogJpaRepository krStockTradingLogJpaRepository;
+    private final KafkaProducerService kafkaProducerService;
 
     @Override
     public HoldingKrStock save(HoldingKrStockDto holdingKrStockDto) {
@@ -32,12 +35,17 @@ public class HoldingKrStockServiceImpl implements HoldingKrStockService {
         int orderAmount = holdingKrStockDto.getKrStockAmount();
         HoldingKrStock entity = krStockMapper.toEntity(holdingKrStockDto);
 
+        // for kafka test. (always call kafka)
+        TradingStockInfoDto tradingStockInfoDto = holdingKrStockDto.convertToTradingStockInfoDTO();
+        kafkaProducerService.requestStockInfoToChangeUserScore(tradingStockInfoDto);
+
         Optional<HoldingKrStock> findHolding = holdingKrStockRepository.findByUserIdAndKrStockId(userId, krStockId);
         if (findHolding.isPresent()) {  // 이미 산적 있을때.
             HoldingKrStock findEntity = findHolding.get();
             findEntity.setKrStockAmount(findEntity.getKrStockAmount() + orderAmount);
             return holdingKrStockRepository.save(findEntity);
         } else {    // 한번도 산적 없을때.
+            System.out.println("buy new stock!!!!!!!!!!!!!!!!!");
             return holdingKrStockRepository.save(entity);
         }
     }

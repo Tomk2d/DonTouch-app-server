@@ -1,7 +1,5 @@
 package donTouch.order_server.kafka;
 
-import java.util.HashMap;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -15,6 +13,9 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @EnableKafka
 @Configuration
@@ -27,41 +28,42 @@ public class KafkaConfig {
         this.env = env;
     }
 
-    public Map<String,Object> producerConfig() {
+    public Map<String, Object> producerConfig() {
         Map<String, Object> props = new HashMap<>();
         // server host 지정
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-            env.getProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG));
+                env.getProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG));
         // retries 횟수 지정
         props.put(ProducerConfig.RETRIES_CONFIG,
-            env.getProperty(ProducerConfig.RETRIES_CONFIG));
+                env.getProperty(ProducerConfig.RETRIES_CONFIG));
         // batch size 지정
         props.put(ProducerConfig.BATCH_SIZE_CONFIG,
-            env.getProperty(ProducerConfig.BATCH_SIZE_CONFIG));
+                env.getProperty(ProducerConfig.BATCH_SIZE_CONFIG));
         // linger.ms
         props.put(ProducerConfig.LINGER_MS_CONFIG,
-            env.getProperty(ProducerConfig.LINGER_MS_CONFIG));
+                env.getProperty(ProducerConfig.LINGER_MS_CONFIG));
         // buffer memory size 지정
         props.put(ProducerConfig.BUFFER_MEMORY_CONFIG,
-            env.getProperty(ProducerConfig.BUFFER_MEMORY_CONFIG));
+                env.getProperty(ProducerConfig.BUFFER_MEMORY_CONFIG));
         // key serialize 지정
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG
-            , StringSerializer.class);
+                , StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG
-            , JsonSerializer.class);
+                , JsonSerializer.class);
         props.put(JsonSerializer.TYPE_MAPPINGS,
-            "UsersDto:donTouch.order_server.kafka.dto.UsersDto,"
-                + "BankCalculateForm:donTouch.order_server.holding.dto.BankCalculateForm,"
-                + "IsSuccessDto:donTouch.order_server.kafka.dto.IsSuccessDto,"
-                + "KrHoldingStocksDto:donTouch.order_server.kafka.dto.KrHoldingStocksDto,"
-                + "KrStockTradingLogDto:donTouch.order_server.kafka.dto.KrStockTradingLogDto"
+                "UsersDto:donTouch.order_server.kafka.dto.UsersDto,"
+                        + "BankCalculateForm:donTouch.order_server.holding.dto.BankCalculateForm,"
+                        + "IsSuccessDto:donTouch.order_server.kafka.dto.IsSuccessDto,"
+                        + "TradingStockInfoDto:donTouch.order_server.kafka.dto.TradingStockInfoDto"
         );
         return props;
     }
+
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfig());
     }
+
     @Bean
     public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
