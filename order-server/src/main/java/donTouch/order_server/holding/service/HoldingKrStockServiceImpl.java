@@ -33,11 +33,11 @@ public class HoldingKrStockServiceImpl implements HoldingKrStockService {
         HoldingKrStock entity = krStockMapper.toEntity(holdingKrStockDto);
 
         Optional<HoldingKrStock> findHolding = holdingKrStockRepository.findByUserIdAndKrStockId(userId, krStockId);
-        if (findHolding.isPresent()) {
+        if (findHolding.isPresent()) {  // 이미 산적 있을때.
             HoldingKrStock findEntity = findHolding.get();
             findEntity.setKrStockAmount(findEntity.getKrStockAmount() + orderAmount);
             return holdingKrStockRepository.save(findEntity);
-        } else {
+        } else {    // 한번도 산적 없을때.
             return holdingKrStockRepository.save(entity);
         }
     }
