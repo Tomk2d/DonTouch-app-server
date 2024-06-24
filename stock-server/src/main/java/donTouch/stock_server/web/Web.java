@@ -31,30 +31,11 @@ public class Web {
         }
     }
 
-    public static Map<String, List<String>> getHoldingSymbols(Long userId) {
-        try {
-            WebClient webClient = WebClient.create();
-
-            String getLikeStockIdsUrl = "http://localhost:8085/api/holding/stocks?&userId=" + userId + "&getPrice=false";
-
-            ResponseEntity<ApiUtils.ApiResult<Map<String, List<String>>>> responseEntity = webClient.get()
-                    .uri(getLikeStockIdsUrl)
-                    .retrieve()
-                    .toEntity(new ParameterizedTypeReference<ApiUtils.ApiResult<Map<String, List<String>>>>() {
-                    })
-                    .block();
-
-            return responseEntity.getBody().getResponse();
-        } catch (Exception e) {
-            throw new IllegalStateException();
-        }
-    }
-
     public static List<PurchasedStockDTO> getCombinationPurchased(Long userId) {
         try {
             WebClient webClient = WebClient.create();
 
-            String getCombinationPurchasedUrl = "http://localhost:8085/api/combination?userId=" + userId;
+            String getCombinationPurchasedUrl = "http://localhost:8085/api/holding/combination?userId=" + userId;
 
             ResponseEntity<ApiUtils.ApiResult<List<PurchasedStockDTO>>> responseEntity = webClient.get()
                     .uri(getCombinationPurchasedUrl)
