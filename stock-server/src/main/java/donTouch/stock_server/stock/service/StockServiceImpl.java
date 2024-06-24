@@ -372,11 +372,6 @@ public class StockServiceImpl implements StockService {
             List<Combination> combinationListToBuy = combinationDTOList.get(lowestDividendMonth.getMonth() - 1);
             Combination combinationToBuy = combinationListToBuy.get(0);
 
-            if (combinationListToBuy.size() == 1 && boughtStockPrice + combinationToBuy.getPrice() > investmentAmount) {
-                queueSortedByDividend.add(lowestDividendMonth);
-                break;
-            }
-
             if (combinationListToBuy.size() >= 2) {
                 long amount0 = combinationListToBuy.get(0).getAmount();
                 long amount1 = combinationListToBuy.get(1).getAmount();
@@ -384,6 +379,11 @@ public class StockServiceImpl implements StockService {
                 if (amount0 > amount1) {
                     combinationToBuy = combinationListToBuy.get(1);
                 }
+            }
+
+            if (boughtStockPrice + combinationToBuy.getPrice() > investmentAmount) {
+                queueSortedByDividend.add(lowestDividendMonth);
+                break;
             }
 
             boughtStockPrice += combinationToBuy.getPrice();
