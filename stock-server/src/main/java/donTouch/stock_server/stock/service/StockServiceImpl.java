@@ -37,9 +37,6 @@ public class StockServiceImpl implements StockService {
     private final KrStockPriceJpaRepository krStockPriceJpaRepository;
     private final UsStockPriceJpaRepository usStockPriceJpaRepository;
 
-    private final KrLatestCloseJpaRepository krLatestCloseJpaRepository;
-    private final UsLatestCloseJpaRepository usLatestCloseJpaRepository;
-
     @Override
     public List<StockDTO> findStocks(FindStocksForm findStocksForm, ScoreDto scoreDto) {
         List<Stock> combinedStockList = getCombinedStockList(findStocksForm.getSearchWord(), findStocksForm.getDividendMonth());
