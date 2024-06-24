@@ -444,32 +444,21 @@ public class StockServiceImpl implements StockService {
             List<Combination> combination = new ArrayList<>();
 
             for (StockDTO stockDTO : stockDTOList) {
-                combination.add(new Combination(stockDTO, getLatestClosePrice(stockDTO.getExchange(), stockDTO.getId()), 0));
+                combination.add(new Combination(stockDTO, getLatestClosePrice(stockDTO), 0));
             }
             combinationDTOList.add(combination);
         }
         return combinationDTOList;
     }
 
-    int getLatestClosePrice(String exchange, Integer stockId) {
-        if (exchange.equals("KSC")) {
-            Optional<KrLatestClose> price = krLatestCloseJpaRepository.findByKrStockId(stockId);
-            if (price.isPresent()) {
-                double closePrice = price.get().getClose();
-                return (int) closePrice;
-            }
-
-            throw new NullPointerException();
+    int getLatestClosePrice(StockDTO stockDto) {
+        if (stockDto.getExchange().equals("KSC")) {
+            double price = stockDto.getClosePrice();
+            return (int) price;
         }
 
-        Optional<UsLatestClose> price = usLatestCloseJpaRepository.findByUsStockId(stockId);
-        if (price.isPresent()) {
-            double closePrice = price.get().getClose();
-            double krwPrice = ExchangeRate.USD.getBuying() * closePrice;
-            return (int) krwPrice;
-        }
-
-        throw new NullPointerException();
+        double price = ExchangeRate.USD.getBuying() * stockDto.getClosePrice();
+        return (int) price;
     }
 
     Map<String, Object> convertToMap(List<List<Combination>> distirbutedStockList) {

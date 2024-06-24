@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -22,6 +21,7 @@ public class Stock {
     private String englishName;
     private String type;
     private String exchange;
+    private Double closePrice;
 
     private Integer dividendMonth;
     private Double dividendYieldTtm;
@@ -37,15 +37,10 @@ public class Stock {
                 + growthScore * (double) userGrowthScore
                 + dividendScore * (double) userDividendScore * 3;
 
-        return new StockDTO(id, symbol, name, type, exchange, dividendMonth, dividendYieldTtm, personalizedScore);
+        return new StockDTO(id, symbol, name, type, exchange, closePrice, dividendMonth, dividendYieldTtm, personalizedScore);
     }
 
     public StockDTO convertToDTO() {
-        return new StockDTO(id, symbol, name, type, exchange, dividendMonth, dividendYieldTtm, null);
+        return new StockDTO(id, symbol, name, type, exchange, closePrice, dividendMonth, dividendYieldTtm, null);
     }
-
-    public Map<String, Double> getDividedScore() {
-        return null;
-    }
-
 }
