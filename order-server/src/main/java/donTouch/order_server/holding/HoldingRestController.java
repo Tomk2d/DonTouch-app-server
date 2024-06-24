@@ -182,7 +182,7 @@ public class HoldingRestController {
         return ApiUtils.success(result);
     }
 
-    @GetMapping("/api/combination")
+    @GetMapping("/api/holding/combination")
     public ApiResult<List<PurchasedStockDTO>> getCombinations(@RequestParam("userId") Long userId) {
         List<PurchasedStockDTO> purchasedStockDTOList = new ArrayList<>();
         purchasedStockDTOList.addAll(krStockTradingLogService.getPurchasedCombinationStocks(userId));

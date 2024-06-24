@@ -54,21 +54,6 @@ public class StockRestController {
         }
     }
 
-    @PostMapping("/chart")
-    public ApiUtils.ApiResult<Map<String, Object>> findStockPrices(@Valid @RequestBody FindStockPricesForm findStockPricesForm) {
-        try {
-            Map<String, Object> stockPrices = stockService.findStockPrices(findStockPricesForm);
-
-            if (stockPrices == null) {
-                return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-            return ApiUtils.success(stockPrices);
-
-        } catch (InstanceNotFoundException e) {
-            return ApiUtils.error("stock prices not found", HttpStatus.NOT_FOUND);
-        }
-    }
-
     @PostMapping("/combination/create")
     public ApiUtils.ApiResult<Map<String, Object>> findCombination(@Valid @RequestBody FindCombinationForm findCombinationForm) {
         try {
