@@ -45,16 +45,16 @@ public class DividendServiceImpl implements DividendService {
             holdingUsStockSymbols.add(purchaseInfoDTO.getSymbol());
         }
 
-        List<Dividend> dividendList = new ArrayList<>(krStockDividendFixedJpaRepository.findAllByDividendDateBetweenAndSymbolIn(dividendForm.getStartDate(), dividendForm.getEndDate(), holdingKrStockSymbols));
+        List<Dividend> dividendList = new ArrayList<>(krStockDividendFixedJpaRepository.findAllBySymbolInAndDividendDateBetween(dividendForm.getStartDate(), dividendForm.getEndDate(), holdingKrStockSymbols));
         List<DividendDTO> dividendDTOList = new ArrayList<>(convertToDividendDTOList(dividendList, true, krHoldingStocks, true));
 
-        dividendList = new ArrayList<>(usStockDividendFixedJpaRepository.findAllByDividendDateBetweenAndSymbolIn(dividendForm.getStartDate(), dividendForm.getEndDate(), holdingUsStockSymbols));
+        dividendList = new ArrayList<>(usStockDividendFixedJpaRepository.findAllBySymbolInAndDividendDateBetween(dividendForm.getStartDate(), dividendForm.getEndDate(), holdingUsStockSymbols));
         dividendDTOList.addAll(convertToDividendDTOList(dividendList, true, usHoldingStocks, false));
 
-        dividendList = new ArrayList<>(krStockDividendExpectedJpaRepository.findAllByDividendDateBetweenAndSymbolIn(dividendForm.getStartDate(), dividendForm.getEndDate(), holdingKrStockSymbols));
+        dividendList = new ArrayList<>(krStockDividendExpectedJpaRepository.findAllBySymbolInAndDividendDateBetween(dividendForm.getStartDate(), dividendForm.getEndDate(), holdingKrStockSymbols));
         dividendDTOList.addAll(convertToDividendDTOList(dividendList, false, krHoldingStocks, true));
 
-        dividendList = new ArrayList<>(usStockDividendExpectedJpaRepository.findAllByDividendDateBetweenAndSymbolIn(dividendForm.getStartDate(), dividendForm.getEndDate(), holdingUsStockSymbols));
+        dividendList = new ArrayList<>(usStockDividendExpectedJpaRepository.findAllBySymbolInAndDividendDateBetween(dividendForm.getStartDate(), dividendForm.getEndDate(), holdingUsStockSymbols));
         dividendDTOList.addAll(convertToDividendDTOList(dividendList, false, usHoldingStocks, false));
 
         return dividendDTOList;
