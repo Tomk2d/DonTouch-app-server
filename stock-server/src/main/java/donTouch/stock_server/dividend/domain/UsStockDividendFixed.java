@@ -9,9 +9,4 @@ import jakarta.persistence.Table;
 @Table(name = "us_stock_dividend_fixed")
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UsStockDividendFixed extends Dividend {
-    private Integer usStockId;
-
-    public Integer getStockId() {
-        return usStockId;
-    }
 }

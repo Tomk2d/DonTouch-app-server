@@ -26,8 +26,4 @@ public class Dividend {
     public DividendDTO convertToDividendDTO(Boolean isFixed, Long quantity) {
         return new DividendDTO(id, dividendDate, isFixed, symbol, name, dividend * quantity, paymentDate);
     }
-
-    public Integer getStockId() {
-        return null;
-    }
 }
