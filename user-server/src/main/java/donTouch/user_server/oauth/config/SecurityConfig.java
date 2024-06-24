@@ -1,21 +1,27 @@
-//package donTouch.user_server.oauth.config;
-//
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
-//import org.springframework.security.web.SecurityFilterChain;
-//import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-//import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-//import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-//import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
-//
-//@Configuration
-//@EnableWebSecurity
-//public class SecurityConfig{
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http, ClientRegistrationRepository clientRegistrationRepository) throws Exception {
+package donTouch.user_server.oauth.config;
+
+import donTouch.user_server.oauth.service.OauthService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig{
+
+    public JwtTokenProvider jwtTokenProvider() {
+        return new JwtTokenProvider();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, ClientRegistrationRepository clientRegistrationRepository) throws Exception {
 //        DefaultOAuth2AuthorizationRequestResolver authorizationRequestResolver =
 //                new DefaultOAuth2AuthorizationRequestResolver(
 //                        clientRegistrationRepository,
@@ -26,16 +32,23 @@
 //
 //        http
 //                .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers("/", "/login/**", "/error/**", "/api/user/oauth/**").permitAll()
+//                        .requestMatchers("/api/user/**", "/login/**", "/error/**").permitAll()
 //                        .anyRequest().authenticated()
 //                )
+//                .formLogin((formLogin) -> formLogin.disable()) // formLogin.disable()
 //              //  .oauth2Login(oauth2 -> oauth2.disable());
-//                .oauth2Login(oauth2 -> oauth2
-//                        .authorizationEndpoint(authorizationEndpoint ->
-//                                authorizationEndpoint.authorizationRequestResolver(authorizationRequestResolver))
-////                        .successHandler(new SimpleUrlAuthenticationSuccessHandler("/"))
-////                        .failureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error=true"))
-//                );
-//        return http.build();
-//    }
-//}
+//                .logout((logoutConfig) -> logoutConfig.permitAll()) //  .logout().permitAll()// 로그아웃 아무나 못하게
+//                // 사용할 필터와 시기 지정해주기
+//                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider()),
+//                        UsernamePasswordAuthenticationFilter.class);
+
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/user/**").permitAll()
+                        .anyRequest().authenticated()
+                );
+
+        return http.build();
+    }
+}

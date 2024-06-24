@@ -18,7 +18,6 @@ import lombok.Setter;
 public class EnergyFund {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String energyId;
 
     private String title;

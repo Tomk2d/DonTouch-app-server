@@ -1,4 +1,4 @@
-package donTouch.energy_server;
+package donTouch.order_server;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,16 +8,16 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig{
+public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/energy/**").permitAll()
+                        .requestMatchers("/api/holding/**").permitAll()
                         .anyRequest().authenticated()
                 );
-        //  .oauth2Login(oauth2 -> oauth2.disable());
+                //  .oauth2Login(oauth2 -> oauth2.disable());
 //                .oauth2Login(oauth2 -> oauth2
 //                        .successHandler(new SimpleUrlAuthenticationSuccessHandler("/"))
 //                        .failureHandler(new SimpleUrlAuthenticationFailureHandler("/login?error=true"))

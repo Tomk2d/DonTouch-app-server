@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import donTouch.user_server.user.dto.ScoreDto;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+
 import lombok.*;
+
 
 import java.util.Date;
 
@@ -17,6 +19,7 @@ import java.util.Date;
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Builder
+@Table(name = "users")
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,14 +2,7 @@ package donTouch.user_server.user.domain;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +22,7 @@ import org.hibernate.annotations.ColumnDefault;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Builder
 @Valid
+@Table(name = "bank_account")
 public class BankAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

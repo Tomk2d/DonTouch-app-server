@@ -89,12 +89,15 @@ public class UserRestController {
         }
     }
 
+
     @GetMapping("/api/user/oauth/login/{oauthServerType}")
-    public ApiResult<LoginResponse> login(
+    public ApiResult<LoginDto> login(
             @PathVariable OauthServerType oauthServerType,
             @RequestParam("code") String code
     ) {
-        LoginResponse loginUser = oauthService.login(oauthServerType, code);
+        //LoginResponse loginUser = oauthService.login(oauthServerType, code);
+        LoginDto loginUser = oauthService.login(oauthServerType, code);
+        log.info(loginUser.toString());
         return ApiUtils.success(loginUser);
     }
 
@@ -122,7 +125,18 @@ public class UserRestController {
         } catch (NullPointerException e) {
             return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
 
+    @GetMapping("/api/user/token")
+    public ApiResult<UsersDto> makeMyToken(
+            @RequestBody @Valid InvestmentTypeForm investmentTypeForm
+    ){
+        try{
+            UsersDto result = userService.updateInvestmentType(investmentTypeForm);
+            return ApiUtils.success(result);
+        }catch(NullPointerException e){
+            return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/api/user/score")

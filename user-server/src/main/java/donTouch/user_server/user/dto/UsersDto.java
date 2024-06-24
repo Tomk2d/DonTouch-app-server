@@ -29,6 +29,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @JsonDeserialize
 @AllArgsConstructor
 public class UsersDto {
+    private Long id;
     @Email
     @NotBlank(message = "이메일이 없습니다.")
     private String email;
@@ -63,6 +64,7 @@ public class UsersDto {
     }
     public static UsersDto toDto(Users users){
         return new UsersDto(
+                users.getId(),
             users.getEmail(),
             users.getSnsType(),
             users.getBirthday(),
