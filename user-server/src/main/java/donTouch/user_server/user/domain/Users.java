@@ -2,17 +2,14 @@ package donTouch.user_server.user.domain;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import donTouch.user_server.user.dto.ScoreDto;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 
+import lombok.*;
+
+
 import java.util.Date;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Getter
@@ -46,4 +43,14 @@ public class Users {
     private Integer growthScore;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private BankAccount bankAccount;
+
+    public void setScores(Integer safeScore, Integer growthScore, Integer dividendScore) {
+        this.safeScore = safeScore;
+        this.growthScore = growthScore;
+        this.dividendScore = dividendScore;
+    }
+
+    public ScoreDto convertToScoreDto() {
+        return new ScoreDto(safeScore, growthScore, dividendScore);
+    }
 }
