@@ -36,6 +36,6 @@ public class Combination {
     }
 
     public CombinationDTO convertToDTO() {
-        return new CombinationDTO(stock.getId(), stock.getName(), stock.getSymbol(), price, quantity, getTotalDividendPerQuarter());
+        return new CombinationDTO(stock.getId(), stock.getName(), stock.getSymbol(), stock.getExchange(), price, quantity, getTotalDividendPerQuarter());
     }
 }

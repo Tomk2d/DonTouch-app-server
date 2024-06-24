@@ -7,8 +7,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CombinationDTO {
     Integer stockId;
+
     String name;
     String symbol;
+    String exchange;
+
     Integer price;
     Integer quantity;
     Long dividend;
