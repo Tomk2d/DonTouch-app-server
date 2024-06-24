@@ -92,12 +92,13 @@ public class UserRestController {
 
 
     @GetMapping("/api/user/oauth/login/{oauthServerType}")
-    public ApiResult<UsersDto> login(
+    public ApiResult<LoginDto> login(
             @PathVariable OauthServerType oauthServerType,
             @RequestParam("code") String code
     ) {
         //LoginResponse loginUser = oauthService.login(oauthServerType, code);
-        UsersDto loginUser = oauthService.login(oauthServerType, code);
+        LoginDto loginUser = oauthService.login(oauthServerType, code);
+        log.info(loginUser.toString());
         return ApiUtils.success(loginUser);
     }
 

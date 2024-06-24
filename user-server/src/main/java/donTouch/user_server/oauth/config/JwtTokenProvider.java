@@ -9,19 +9,15 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Base64;
-import java.util.Collection;
 import java.util.Date;
 
 @Slf4j
@@ -35,7 +31,6 @@ public class JwtTokenProvider {
     private Key key;
     private long tokenValidTime = 5 * 60 * 1000L; // 5min
 
-    @Autowired
     private UserDetailsService userDetailsService;
 
     // 시크릿 키 초기화

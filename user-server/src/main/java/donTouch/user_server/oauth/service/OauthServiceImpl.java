@@ -1,6 +1,7 @@
 package donTouch.user_server.oauth.service;
 
 import donTouch.user_server.oauth.OauthMemberClientComposite;
+import donTouch.user_server.oauth.config.JwtTokenProvider;
 import donTouch.user_server.oauth.domain.AuthCodeRequestUrlProviderComposite;
 import donTouch.user_server.oauth.domain.OauthMember;
 import donTouch.user_server.oauth.domain.OauthMemberRepository;
@@ -8,10 +9,13 @@ import donTouch.user_server.oauth.domain.OauthServerType;
 import donTouch.user_server.oauth.dto.LoginResponse;
 import donTouch.user_server.user.domain.JpaUserRepository;
 import donTouch.user_server.user.domain.Users;
+import donTouch.user_server.user.dto.LoginDto;
 import donTouch.user_server.user.dto.UsersDto;
 import donTouch.user_server.user.utils.UsersMapper;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,7 +32,10 @@ public class OauthServiceImpl implements OauthService, UserDetailsService {
     private final OauthMemberClientComposite oauthMemberClientComposite;
     private final OauthMemberRepository oauthMemberRepository;
     private final JpaUserRepository jpaUserRepository;
+    @Lazy
+    private final JwtTokenProvider jwtTokenProvider;
     private final UsersMapper usersMapper = UsersMapper.INSTANCE;
+
 
     @Override
     public String getAuthCodeRequestUrl(OauthServerType oauthServerType) {
@@ -36,7 +43,7 @@ public class OauthServiceImpl implements OauthService, UserDetailsService {
     }
 
     @Override
-    public UsersDto login(OauthServerType oauthServerType, String authCode) {
+    public LoginDto login(OauthServerType oauthServerType, String authCode) {
         OauthMember oauthMember = oauthMemberClientComposite.fetch(oauthServerType, authCode);
         Users isExist = jpaUserRepository.findByEmail(oauthMember.email())
                 .orElseGet(()->{
@@ -45,15 +52,20 @@ public class OauthServiceImpl implements OauthService, UserDetailsService {
                             .nickname(oauthMember.nickname())
                             .snsType(oauthMember.snsType())
                             .investmentType(1)
-                            .safeScore(65)
-                            .dividendScore(30)
-                            .growthScore(5)
+                            .safeScore(0)
+                            .dividendScore(0)
+                            .growthScore(0)
                             .birthday(new Date())
                             .build();
                     jpaUserRepository.save(newUser);
                     return newUser;
                 });
-        return usersMapper.toDto(isExist);
+
+        UsersDto loginedUser = usersMapper.toDto(isExist);
+        log.info(loginedUser.toString());
+        //String token = jwtTokenProvider.createToken(isExist);
+        String token = "test";
+        return new LoginDto(loginedUser,token);
     }
 
     @Override

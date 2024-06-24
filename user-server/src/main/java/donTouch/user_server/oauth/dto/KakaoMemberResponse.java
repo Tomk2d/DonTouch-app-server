@@ -20,7 +20,7 @@ public record KakaoMemberResponse(
         return OauthMember.builder()
                 //.oauthId(new OauthId(String.valueOf(id), KAKAO))
                 .nickname(kakaoAccount.profile.nickname)
-               // .profileImageUrl(kakaoAccount.profile.profileImageUrl)
+                // .profileImageUrl(kakaoAccount.profile.profileImageUrl)
                 .email(kakaoAccount.email)
                 .snsType(1)
                 .build();

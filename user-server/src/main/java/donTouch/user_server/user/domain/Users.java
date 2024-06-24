@@ -3,13 +3,8 @@ package donTouch.user_server.user.domain;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.annotation.Nullable;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
+
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +22,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Builder
+@Table(name = "users")
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
