@@ -9,8 +9,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class Combination {
-    StockDTO stock;
-    Integer price;
+    StockDTO stockDTO;
     Integer quantity;
 
     public void addQuantity() {
@@ -18,9 +17,9 @@ public class Combination {
     }
 
     public int getDividendPerShareAndQuarter() {
-        double dividendPerShare = price * stock.getDividendYieldTtm();
+        double dividendPerShare = stockDTO.getClosePrice() * stockDTO.getDividendYieldTtm();
 
-        if (stock.getExchange().equals("KSC")) {
+        if (stockDTO.getExchange().equals("KSC")) {
             return (int) dividendPerShare / 4;
         }
         double exchangedDividendPerShare = ExchangeRate.USD.getSelling();
@@ -32,10 +31,10 @@ public class Combination {
     }
 
     public long getAmount() {
-        return (long) price * quantity;
+        return (long) stockDTO.getClosePrice() * quantity;
     }
 
     public CombinationDTO convertToDTO() {
-        return new CombinationDTO(stock.getId(), stock.getName(), stock.getSymbol(), stock.getExchange(), price, quantity, getTotalDividendPerQuarter());
+        return new CombinationDTO(stockDTO.getId(), stockDTO.getName(), stockDTO.getSymbol(), stockDTO.getExchange(), stockDTO.getClosePrice(), quantity, getTotalDividendPerQuarter());
     }
 }

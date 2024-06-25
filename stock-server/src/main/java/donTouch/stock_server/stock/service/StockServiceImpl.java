@@ -19,7 +19,6 @@ import donTouch.stock_server.web.dto.LikeStockDTO;
 import donTouch.stock_server.web.dto.PurchaseInfoDTO;
 import donTouch.stock_server.web.dto.PurchasedStockDTO;
 import donTouch.stock_server.web.dto.ScoreDto;
-import donTouch.utils.exchangeRate.ExchangeRate;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -340,18 +339,18 @@ public class StockServiceImpl implements StockService {
         while (!queueSortedByPrice.isEmpty()) {
             Combination combination = queueSortedByPrice.poll();
 
-            if (dividend[combination.getStock().getDividendMonth()] > 0) {
+            if (dividend[combination.getStockDTO().getDividendMonth()] > 0) {
                 continue;
             }
 
-            if (boughtStockPrice + combination.getPrice() > investmentAmount) {
+            if (boughtStockPrice + combination.getStockDTO().getClosePrice() > investmentAmount) {
                 break;
             }
 
             combination.addQuantity();
-            dividend[combination.getStock().getDividendMonth()] += combination.getDividendPerShareAndQuarter();
+            dividend[combination.getStockDTO().getDividendMonth()] += combination.getDividendPerShareAndQuarter();
 
-            boughtStockPrice += combination.getPrice();
+            boughtStockPrice += combination.getStockDTO().getClosePrice();
         }
 
         PriorityQueue<MonthDividend> queueSortedByDividend = new PriorityQueue<>(new Comparator<MonthDividend>() {
@@ -381,12 +380,12 @@ public class StockServiceImpl implements StockService {
                 }
             }
 
-            if (boughtStockPrice + combinationToBuy.getPrice() > investmentAmount) {
+            if (boughtStockPrice + combinationToBuy.getStockDTO().getClosePrice() > investmentAmount) {
                 queueSortedByDividend.add(lowestDividendMonth);
                 break;
             }
 
-            boughtStockPrice += combinationToBuy.getPrice();
+            boughtStockPrice += combinationToBuy.getStockDTO().getClosePrice();
             combinationToBuy.addQuantity();
 
             lowestDividendMonth.addDividend(combinationToBuy.getDividendPerShareAndQuarter());
@@ -397,7 +396,7 @@ public class StockServiceImpl implements StockService {
     }
 
     PriorityQueue<Combination> getQueueSortedByPrice(List<List<Combination>> combinationDTOList) {
-        PriorityQueue<Combination> pq = new PriorityQueue<>((o1, o2) -> Integer.compare(o1.getPrice(), o2.getPrice()));
+        PriorityQueue<Combination> pq = new PriorityQueue<>((o1, o2) -> Integer.compare(o1.getStockDTO().getClosePrice(), o2.getStockDTO().getClosePrice()));
 
         for (List<Combination> combinations : combinationDTOList) {
             pq.addAll(combinations);
@@ -413,26 +412,17 @@ public class StockServiceImpl implements StockService {
             List<Combination> combination = new ArrayList<>();
 
             for (StockDTO stockDTO : stockDTOList) {
-                combination.add(new Combination(stockDTO, getLatestClosePrice(stockDTO), 0));
+                combination.add(new Combination(stockDTO, 0));
             }
             combinationDTOList.add(combination);
         }
         return combinationDTOList;
     }
 
-    int getLatestClosePrice(StockDTO stockDto) {
-        if (stockDto.getExchange().equals("KSC")) {
-            double price = stockDto.getClosePrice();
-            return (int) price;
-        }
-
-        double price = ExchangeRate.USD.getBuying() * stockDto.getClosePrice();
-        return (int) price;
-    }
-
     Map<String, Object> convertToMap(List<List<Combination>> distirbutedStockList) {
         Map<String, Object> response = new LinkedHashMap<>();
         int group = 1;
+        long[] totalPrice = new long[4];
 
         for (List<Combination> combinationList : distirbutedStockList) {
             Map<String, Object> combinationInfo = new LinkedHashMap<>();
@@ -443,14 +433,18 @@ public class StockServiceImpl implements StockService {
                 if (combination.getQuantity() > 0) {
                     combinationDTOList.add(combination.convertToDTO());
                     totalDividend += combination.getTotalDividendPerQuarter();
+                    totalPrice[group] += combination.getAmount();
                 }
             }
 
             combinationInfo.put("stocks", combinationDTOList);
             combinationInfo.put("totalDividend", totalDividend);
+            combinationInfo.put("totalPrice", totalPrice[group]);
 
             response.put("combination" + group++, combinationInfo);
         }
+
+        response.put("sumOfTotalPrice", totalPrice[1] + totalPrice[2] + totalPrice[3]);
 
         return response;
     }

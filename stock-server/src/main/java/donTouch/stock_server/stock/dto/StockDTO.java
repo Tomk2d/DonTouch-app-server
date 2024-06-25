@@ -11,7 +11,7 @@ public class StockDTO {
     private String name;
     private String type;
     private String exchange;
-    private Double closePrice;
+    private Integer ClosePrice;
 
     private Integer dividendMonth;
     private Double dividendYieldTtm;
