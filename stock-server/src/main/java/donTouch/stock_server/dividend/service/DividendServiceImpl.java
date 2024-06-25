@@ -69,7 +69,7 @@ public class DividendServiceImpl implements DividendService {
                     .findFirst();
 
             if (foundPurchase.isPresent()) {
-                DividendDTO dividendDTO = dividend.convertToDividendDTO(isFixed, foundPurchase.get().getQuantity());
+                DividendDTO dividendDTO = dividend.convertToDividendDTO(isKr, isFixed, foundPurchase.get().getQuantity());
                 dividendDTOList.add(dividendDTO);
             }
         }

@@ -1,6 +1,7 @@
 package donTouch.stock_server.stock.domain;
 
 import donTouch.stock_server.stock.dto.StockDTO;
+import donTouch.utils.exchangeRate.ExchangeRate;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
@@ -37,10 +38,20 @@ public class Stock {
                 + growthScore * (double) userGrowthScore
                 + dividendScore * (double) userDividendScore * 3;
 
-        return new StockDTO(id, symbol, name, type, exchange, closePrice, dividendMonth, dividendYieldTtm, personalizedScore);
+        double krwClosePrice = closePrice;
+        if (!exchange.equals("KSC")) {
+            krwClosePrice *= ExchangeRate.USD.getBuying();
+        }
+
+        return new StockDTO(id, symbol, name, type, exchange, (int) krwClosePrice, dividendMonth, dividendYieldTtm, personalizedScore);
     }
 
     public StockDTO convertToDTO() {
-        return new StockDTO(id, symbol, name, type, exchange, closePrice, dividendMonth, dividendYieldTtm, null);
+        double krwClosePrice = closePrice;
+        if (!exchange.equals("KSC")) {
+            krwClosePrice *= ExchangeRate.USD.getBuying();
+        }
+
+        return new StockDTO(id, symbol, name, type, exchange, (int) krwClosePrice, dividendMonth, dividendYieldTtm, null);
     }
 }

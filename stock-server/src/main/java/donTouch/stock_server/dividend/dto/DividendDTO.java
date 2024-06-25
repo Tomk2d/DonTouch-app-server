@@ -17,11 +17,8 @@ public class DividendDTO {
 
     private String symbol;
     private String name;
-    private Double dividend;
+    private Long quantity;
+    private Long dividend;
 
     private LocalDate paymentDate;
-
-    public void setQuantity(long quantity) {
-        dividend *= quantity;
-    }
 }

@@ -1,6 +1,7 @@
 package donTouch.stock_server.dividend.domain;
 
 import donTouch.stock_server.dividend.dto.DividendDTO;
+import donTouch.utils.exchangeRate.ExchangeRate;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -23,7 +24,13 @@ public class Dividend {
 
     private LocalDate paymentDate;
 
-    public DividendDTO convertToDividendDTO(Boolean isFixed, Long quantity) {
-        return new DividendDTO(id, dividendDate, isFixed, symbol, name, dividend * quantity, paymentDate);
+    public DividendDTO convertToDividendDTO(Boolean isKr, Boolean isFixed, Long quantity) {
+        double exchangedDividend = dividend;
+        if (!isKr) {
+            exchangedDividend *= ExchangeRate.USD.getSelling();
+        }
+        long totalDividend = (long) exchangedDividend * quantity;
+
+        return new DividendDTO(id, dividendDate, isFixed, symbol, name, quantity, totalDividend, paymentDate);
     }
 }
