@@ -33,11 +33,12 @@ public class UserRestController {
     }
 
     @GetMapping("/api/user/{email}")
-    public UsersDto getUser(@PathVariable String email) {
+    public ApiResult<UsersDto> getUser(@PathVariable String email) {
         try {
-            return userService.findUserByEmail(email);
+            UsersDto user = userService.findUserByEmail(email);
+            return ApiUtils.success(user);
         } catch (NullPointerException e) {
-            return null;
+            return ApiUtils.error(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
