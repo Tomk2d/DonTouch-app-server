@@ -1,15 +1,12 @@
 # 한 발 앞선 생각 - Don Touch
 
-<img src="https://github.com/PDA-Dontouch/.github/assets/102455571/1f7ab842-5df8-4596-902d-6e378c64b536" style="height: 100px">
-<img src="https://github.com/PDA-Dontouch/.github/assets/102455571/989bbaf4-15d7-4e5f-b937-fcde50714a2d" style="height: 100px">
-
 <br/>
 
 > 신한투자증권 프로 디지털 아카데미 3기 최종 프로젝트
 > <br/><br/>
 > 주제: 개인화된 금융 서비스를 제공하기 위한 클라우드 MSA 환경 구축 및 서비스 개발
 > <br/><br/>
-> 2024.05.29 ~ 2024.06.26 (6명)
+> 최우수 프로젝트 수상
 
 <br/>
 <br/>
@@ -47,7 +44,7 @@
 
 # ERD
 
-MSA 환경 구축을 위해 서비스의 단위별로 DB를 분리하였습니다.
+MSA 환경 구축을 위해 도메인 별로 DB를 나누어 구축하였습니다.
 
 <img width="595" alt="user" src="https://github.com/PDA-Dontouch/.github/assets/128025654/78e08049-a483-4b75-8fb5-ae8fc40e2beb">
 <img width="821" alt="stock" src="https://github.com/PDA-Dontouch/.github/assets/128025654/d3378834-aabb-45d2-93ef-d5ef7c8f067c">
@@ -98,46 +95,6 @@ MSA 환경 구축을 위해 서비스의 단위별로 DB를 분리하였습니�
 
 # Project Structure
 
-Frontend:
-```
-├─api
-├─assets
-│  ├─chart
-│  └─footer
-├─components
-│  ├─Calendar
-│  ├─Chatbot
-│  ├─common
-│  │  ├─Modal
-│  │  ├─Product
-│  │  │  └─Detail
-│  │  └─Stock
-│  ├─Energy
-│  ├─Estates
-│  ├─Login
-│  ├─Main
-│  ├─Skeleton
-│  ├─Stock
-│  │  ├─individual
-│  │  └─trading
-│  └─StockTest
-├─hooks
-├─pages
-│  ├─Energy
-│  ├─Estates
-│  ├─Login
-│  ├─Main
-│  └─Stock
-├─store
-│  ├─reducers
-│  │  ├─auth
-│  │  ├─energy
-│  │  ├─estates
-│  │  └─stocks
-│  └─webSocket
-├─types
-└─utils
-```
 
 Backend:
 ```
