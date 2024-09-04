@@ -17,7 +17,7 @@
 | 신의진 | 박유진 | 이한슬 |
 |:----:|:----:|:-----:|
 |<img src = "https://avatars.githubusercontent.com/Tomk2d" width=150px>|<img src = "https://avatars.githubusercontent.com/yjp8842" width=150px>|<img src = "https://avatars.githubusercontent.com/eehanseul" width=150px>|
-| 백엔드 테크리더 | 프론트엔드 테크리더 | PM |
+| 백엔드 테크리더 | 프론트엔드 테크리더 | PM |
 
 
 | 허상진 | 박진언 | 이승택 |
@@ -25,11 +25,21 @@
 |<img src = "https://avatars.githubusercontent.com/bookeers" width=150px>|<img src = "https://avatars.githubusercontent.com/parkjineon" width=150px>|<img src = "https://avatars.githubusercontent.com/seungtoctoc" width=150px>|
 | 서기 | 팀원 | 팀원 |
 
+<br/>
+<br/>
+
+## My Role (신의진)
+* 백엔드 테크리더 및 프로젝트 리딩
+* 배당주, 개별주식, 부동산, 에너지 거래체결
+* 실시간 소켓 통신
+* 비동기 객체 통신
+* MSA 설계 및 AWS 인프라 설계
+* 배포
 
 <br/>
 <br/>
 
-# 목차
+## Contents
 ### 1. [About](#About)
 ### 2. [Tech Stacks](#Tech-Stacks)
 ### 3. [Project Architecture](#Project-Architecture)
@@ -39,7 +49,7 @@
 
 <br/>
 
-# About
+## About
 
 
 donTouch 는 투자 상품 추천 및 모의투자, 배당 일정 관리 등의 __통합형 자산관리 서비스__ 입니다. <br /> <br />
@@ -59,7 +69,7 @@ donTouch 는 투자 상품 추천 및 모의투자, 배당 일정 관리 등의 
 <br />
 <br />
 
-# Tech Stacks
+## Tech Stacks
 ![Spring Boot](https://img.shields.io/badge/Java/SpringBoot-6DB33F?style=flat&logo=SpringBoot&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js/Express-339933?style=flat&logo=Node.js&logoColor=white)
 
@@ -78,7 +88,7 @@ donTouch 는 투자 상품 추천 및 모의투자, 배당 일정 관리 등의 
 <br />
 <br />
 
-# Project Architecture 
+## Project Architecture 
 ![image](https://github.com/PDA-Dontouch/.github/assets/128025654/4f1d5e14-5bc1-40e8-ad3a-2c17bbd851b0)
 ![image](https://github.com/user-attachments/assets/eef48b20-8ef8-4d14-9e4b-6c4b2f760095)
 <br />
@@ -106,7 +116,7 @@ donTouch 는 투자 상품 추천 및 모의투자, 배당 일정 관리 등의 
 <br />
 <br />
 
-# ERD
+## ERD
 
 MSA 환경 구축을 위해 도메인 별로 DB를 나누어 구축하였습니다.
 
@@ -119,7 +129,7 @@ MSA 환경 구축을 위해 도메인 별로 DB를 나누어 구축하였습니�
 <br />
 <br />
 
-# Algorithm
+## Algorithm
 기업의 가치를 평가하기 위해 여러개의 재무제표를 활용하였습니다.
 '안정', '성장', '배당' 3개의 영역으로 나누어, 아래와 같은 지표를 통해 종목 평가를 진행하였습니다.
 ![image](https://github.com/PDA-Dontouch/.github/assets/128025654/d1952695-39ef-4b44-b2ac-0dc1e92f66ae)
@@ -132,7 +142,7 @@ MSA 환경 구축을 위해 도메인 별로 DB를 나누어 구축하였습니�
 <br />
 <br />
 
-# Main Features
+## Main Features
 
 ### 배당주 조합 추천 및 구매
 
@@ -162,7 +172,7 @@ MSA 환경 구축을 위해 도메인 별로 DB를 나누어 구축하였습니�
 <br />
 
 
-# Project Structure
+## Project Structure
 
 
 Backend:
