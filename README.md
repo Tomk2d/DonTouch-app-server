@@ -129,45 +129,24 @@ MSA 환경 구축을 위해 도메인 별로 DB를 나누어 구축하였습니�
 <br />
 <br />
 
-## Algorithm
-기업의 가치를 평가하기 위해 여러개의 재무제표를 활용하였습니다.
-'안정', '성장', '배당' 3개의 영역으로 나누어, 아래와 같은 지표를 통해 종목 평가를 진행하였습니다.
-![image](https://github.com/PDA-Dontouch/.github/assets/128025654/d1952695-39ef-4b44-b2ac-0dc1e92f66ae)
-<br />
-각각의 영역에 대한 점수를 매긴 후, Z점수 [(자료 값-평균)/표준편차] 를 활용하여 표준화하였습니다.
-
-이렇게 계산된 종목의 평가 점수를 사용자의 투자 성향 및 보유한 주식에 따라 개인화 점수로 다시 계산합니다.
-이후 사용자에게 최적이며, 매달 정기적인 배당을 받을 수 있는 조합을 추천해 줍니다. 
-
-<br />
-<br />
-
 ## Main Features
 
-### 배당주 조합 추천 및 구매
+### 배당주 조합 추천 및 매매
 
-사용자의 투자성향 및 투자 금액을 수집 후, 개인화된 배당주 조합을 추천해줍니다.
-조합에 더 추가하고 싶은 종목이 있다거나 마음에 들지 않는 종목이 있다면 자유롭게 커스터마이징이 가능합니다. 
-매 달의 배당주 조합을 고르고 나면 최종 조합 결과가 출력되며, 최대한 균등하게 배당을 수령할 수 있도록 배당금의 금액 맞춰 종목 수를 자동적으로 조절해줍니다.
+<img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/b818a9f5-79d1-41da-b9d1-286b4c61f1a4"><img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/ffd2365c-efb5-42b7-8d0f-12ab4dd7f55b"><img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/3675ab2a-4d85-409a-8928-60ebc7fafa4b">
 
-### 개별 종목 추가 구매
+### 개별 주식 조회 및 매매
 
-조합 추천 이외에 추가적으로 개별 구매하고자 하는 종목이 있다면 검색을 통해 구매할 수 있습니다.
-개별 종목의 상세 페이지에서는 실시간 가격과 원하는 기간(장/단기) 차트 및 재무제표를 보여주며, 사용자가 종목의 구매 여부를 판단하기 위한 많은 근거를 제공합니다.
+<img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/7add7cff-093c-4441-8733-d8d07eac080d"><img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/50bf325c-5066-41e9-83fd-cc4f7fbcbaff"><img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/8ffb7b04-ff4d-4406-be3d-7429b73aaf32">
 
-### P2P 금융 상품 구매
 
-소액 투자자 및 배당주보다 높은 수익을 원하는 투자자들을 위한 투자 상품 또한 구매할 수 있습니다.
-사용자의 성향에 따라 수익률 혹은 안정성 순서대로 정렬하여 종목을 보여주며, 실제 규제에 따라 한 종목은 500만원 / 모든 P2P 상품은 합쳐서 4000만원까지 투자할 수 있도록 하였습니다.
+### P2P 조회 및 매매
 
-### 메인 페이지 및 캘린더를 통한 배당 일정 확인
+<img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/7d597cd5-404b-4758-8f98-08826568d445"><img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/46eeb282-d5e8-40e3-ac26-c3fc4b746f47"><img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/ddf1c300-5de8-490d-ad4b-d679ac841b03">
 
-메인 페이지에서는 사용자의 투자성향, 이번달의 배당금과 배당 일정 및 총 자산을 볼 수 있습니다.
+### P2P 조회 및 매매
+<img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/0d46444f-e3c2-412b-9c8b-c22fb6587878"><img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/b216a35e-e5f6-4ff8-8822-5fbb5dc36610"><img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/1f3aef7e-bf7f-4efe-9c45-4ba1c265369b">
 
-캘린더 페이지에서는 한달간의 배당 일정을 모두 볼 수 있으며 메인 페이지에서는 이번주의 일정으로 간소화하여 나타내었습니다.
-배당금이 지급될 예정인 날짜와 종목명, 배당금을 한눈에 확인할 수 있도록 하여 사용자가 다양한 상품을 투자할 때 느꼈던 배당 일정 관리의 불편함을 해소시켰습니다.
-
-관심종목 보기와 투자성향 다시 테스트하기 기능도 포함하여 최적의 개인화를 제공할 수 있도록 하였습니다.
 
 <br />
 
