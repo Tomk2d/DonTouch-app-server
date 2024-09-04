@@ -90,8 +90,9 @@ donTouch 는 투자 상품 추천 및 모의투자, 배당 일정 관리 등의 
 <br />
 
 ## Project Architecture 
-![image](https://github.com/PDA-Dontouch/.github/assets/128025654/4f1d5e14-5bc1-40e8-ad3a-2c17bbd851b0)
-![image](https://github.com/user-attachments/assets/eef48b20-8ef8-4d14-9e4b-6c4b2f760095)
+<img width="800" alt="user" src="https://github.com/PDA-Dontouch/.github/assets/128025654/4f1d5e14-5bc1-40e8-ad3a-2c17bbd851b0">
+<img width="400" alt="user" src="https://github.com/user-attachments/assets/eef48b20-8ef8-4d14-9e4b-6c4b2f760095">
+
 <br />
 <br />
 
