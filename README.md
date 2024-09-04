@@ -121,11 +121,11 @@ donTouch 는 투자 상품 추천 및 모의투자, 배당 일정 관리 등의 
 
 MSA 환경 구축을 위해 도메인 별로 DB를 나누어 구축하였습니다.
 
-<img width="595" alt="user" src="https://github.com/PDA-Dontouch/.github/assets/128025654/78e08049-a483-4b75-8fb5-ae8fc40e2beb">
-<img width="821" alt="stock" src="https://github.com/PDA-Dontouch/.github/assets/128025654/d3378834-aabb-45d2-93ef-d5ef7c8f067c">
-<img width="526" alt="order" src="https://github.com/PDA-Dontouch/.github/assets/128025654/942bcd2f-8e37-4711-9dc3-c20b39dc8e5f">
-<img width="553" alt="estate" src="https://github.com/PDA-Dontouch/.github/assets/128025654/f603ca4a-3aec-49be-a028-b57d5419f646">
-<img width="457" alt="energy" src="https://github.com/PDA-Dontouch/.github/assets/128025654/90de9cd7-3e52-436b-aaf7-3d2df4ffab4f">
+<img width="800" alt="user" src="https://github.com/PDA-Dontouch/.github/assets/128025654/78e08049-a483-4b75-8fb5-ae8fc40e2beb">
+<img width="800" alt="stock" src="https://github.com/PDA-Dontouch/.github/assets/128025654/d3378834-aabb-45d2-93ef-d5ef7c8f067c">
+<img width="800" alt="order" src="https://github.com/PDA-Dontouch/.github/assets/128025654/942bcd2f-8e37-4711-9dc3-c20b39dc8e5f">
+<img width="800" alt="estate" src="https://github.com/PDA-Dontouch/.github/assets/128025654/f603ca4a-3aec-49be-a028-b57d5419f646">
+<img width="800" alt="energy" src="https://github.com/PDA-Dontouch/.github/assets/128025654/90de9cd7-3e52-436b-aaf7-3d2df4ffab4f">
 
 <br />
 <br />
