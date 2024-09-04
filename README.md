@@ -45,6 +45,7 @@
 ### 3. [Project Architecture](#Project-Architecture)
 ### 4. [ERD](#ERD)
 ### 5. [Main Features](#Main-Features)
+### 6. [Project Structure](#Project-Structure)
 
 
 <br/>
@@ -144,7 +145,7 @@ MSA 환경 구축을 위해 도메인 별로 DB를 나누어 구축하였습니�
 
 <img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/7d597cd5-404b-4758-8f98-08826568d445"><img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/46eeb282-d5e8-40e3-ac26-c3fc4b746f47"><img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/ddf1c300-5de8-490d-ad4b-d679ac841b03">
 
-### P2P 조회 및 매매
+### 캘린더 및 메인 페이지
 <img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/0d46444f-e3c2-412b-9c8b-c22fb6587878"><img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/b216a35e-e5f6-4ff8-8822-5fbb5dc36610"><img width="300" height="650" alt="image" src="https://github.com/user-attachments/assets/1f3aef7e-bf7f-4efe-9c45-4ba1c265369b">
 
 
