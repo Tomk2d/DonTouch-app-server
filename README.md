@@ -12,9 +12,10 @@
 <br/>
 
 # 목차
-[1. About](#About)
-[2. 개발 기간](#Project-Architecture)
-[3. 팀원 소개](#3-팀원-소개)
+### 1. [About](#About)
+### 2. [Tech Stacks](#Tech-Stacks)
+### 3. [Project Architecture](#Project-Architecture)
+
 
 
 <br/>
@@ -45,6 +46,25 @@
 <br />
 <br />
 
+# Tech Stacks
+![Spring Boot](https://img.shields.io/badge/Java/SpringBoot-6DB33F?style=flat&logo=SpringBoot&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js/Express-339933?style=flat&logo=Node.js&logoColor=white)
+
+![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=flat&logo=MariaDB&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=MongoDB&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-FF4438?style=flat&logo=Redis&logoColor=white)
+
+![Apache Kafka](https://img.shields.io/badge/Kafka-231F20?style=flat-square&logo=ApacheKafka&logoColor=white)
+![socket](https://img.shields.io/badge/WebSocket/Socket.io-010101?style=flat&logo=socket.io&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white)
+
+![AWS EC2](https://img.shields.io/badge/EC2-F24E1E?style=flat-square&logo=AmazonEC2&logoColor=white)
+![AWS RDS](https://img.shields.io/badge/RDS-527FFF?style=flat-square&logo=AmazonRDS&logoColor=white)
+![AWS S3](https://img.shields.io/badge/S3Bucket-569A31?style=flat-square&logo=AmazonS3&logoColor=white)
+
+<br />
+<br />
+
 # Project Architecture 
 ![image](https://github.com/PDA-Dontouch/.github/assets/128025654/4f1d5e14-5bc1-40e8-ad3a-2c17bbd851b0)
 ![image](https://github.com/user-attachments/assets/eef48b20-8ef8-4d14-9e4b-6c4b2f760095)
@@ -69,25 +89,6 @@
 * __동기적 통신(HTTP)__ : 신뢰성이 보장되어야 하는 로직 및 인증/검사 등의 선순위 로직
 * __비동기 통신(Kafka 메세지 큐잉)__ : 인증/검사 등의 순서가 완료된 단방향 로직
 * __socket 통신(webSocket, Socket.io)__ : 실시간 렌더링, 실시간 호가 매매, 미체결 주문에 대한 체결
-
-<br />
-<br />
-
-# Tech Stacks
-![Spring Boot](https://img.shields.io/badge/Java/SpringBoot-6DB33F?style=flat&logo=SpringBoot&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js/Express-339933?style=flat&logo=Node.js&logoColor=white)
-
-![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=flat&logo=MariaDB&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=MongoDB&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-FF4438?style=flat&logo=Redis&logoColor=white)
-
-![Apache Kafka](https://img.shields.io/badge/Kafka-231F20?style=flat-square&logo=ApacheKafka&logoColor=white)
-![socket](https://img.shields.io/badge/WebSocket/Socket.io-010101?style=flat&logo=socket.io&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white)
-
-![AWS EC2](https://img.shields.io/badge/EC2-F24E1E?style=flat-square&logo=AmazonEC2&logoColor=white)
-![AWS RDS](https://img.shields.io/badge/RDS-527FFF?style=flat-square&logo=AmazonRDS&logoColor=white)
-![AWS S3](https://img.shields.io/badge/S3Bucket-569A31?style=flat-square&logo=AmazonS3&logoColor=white)
 
 <br />
 <br />
