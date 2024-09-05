@@ -159,7 +159,8 @@ MSA 환경 구축을 위해 도메인 별로 DB를 나누어 구축하였습니�
 ## Project Structure
 
 
-Backend:
+각각의 Spring 서버는 multi-module 을 사용하여, 한 프로젝트에서 관리하였습니다.
+root-module 에는 공통적으로 사용되는(utils, kafka 공통 dto 등) 모듈을 분리하여 개발 효율을 높였습니다.
 ```
 
 ├─energy-server
