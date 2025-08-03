@@ -84,7 +84,6 @@ public class KafkaConsumerService {
             CompleteStockForm data = objectMapper.convertValue(value, CompleteStockForm.class);
             HoldingKrStock savedHolding = holdingKrStockService.save(new HoldingKrStockDto(data.getUserId(), data.getKrHoldingStockId(), data.getKrStockAmount()));
             krStockTradingLogService.save(new KrStockTradingLogDto(data.getUserId(), data.getKrHoldingStockId(), savedHolding.getId(), data.getKrStockPrice(), data.getKrStockAmount(), 0, 1));
-            System.out.println("주식수량 들어와 ?????????? "+data.getKrStockAmount());
             bankAccountService.saveBankAccountLog(new BankAccountLogDto(data.getUserId(),data.getInOutCash(), data.getInOutType(), data.getStockName(), LocalDateTime.now()));
 
         }
@@ -97,7 +96,6 @@ public class KafkaConsumerService {
             CompleteStockForm data = objectMapper.convertValue(value, CompleteStockForm.class);
             HoldingKrStock savedHolding = holdingKrStockService.findHolding(data.getUserId(), data.getKrHoldingStockId());
             krStockTradingLogService.save(new KrStockTradingLogDto(data.getUserId(), data.getKrHoldingStockId(), savedHolding.getId(), data.getKrStockPrice(), data.getKrStockAmount(), 0, 0));
-            System.out.println("주식수량 들어와 ?????????? "+data.getKrStockAmount());
             bankAccountService.saveBankAccountLog(new BankAccountLogDto(data.getUserId(),data.getInOutCash(), data.getInOutType(), data.getStockName(), LocalDateTime.now()));
 
         }
@@ -110,7 +108,6 @@ public class KafkaConsumerService {
             CompleteStockForm data = objectMapper.convertValue(value, CompleteStockForm.class);
             HoldingUsStock savedHolding = holdingUsStockService.save(new HoldingUsStockDto(data.getUserId(), data.getKrHoldingStockId(), data.getKrStockAmount()));
             usStockTradingLogService.save(new UsStockTradingLogDto(data.getUserId(), data.getKrHoldingStockId(), savedHolding.getId(), data.getKrStockPrice(), data.getKrStockAmount(), 0, 1));
-            System.out.println("주식수량 들어와 ?????????? "+data.getKrStockAmount());
             bankAccountService.saveBankAccountLog(new BankAccountLogDto(data.getUserId(),data.getInOutCash(), data.getInOutType(), data.getStockName(), LocalDateTime.now()));
         }
     }
@@ -121,7 +118,6 @@ public class KafkaConsumerService {
             CompleteStockForm data = objectMapper.convertValue(value, CompleteStockForm.class);
             HoldingUsStock savedHolding = holdingUsStockService.findHolding(data.getUserId(), data.getKrHoldingStockId());
             usStockTradingLogService.save(new UsStockTradingLogDto(data.getUserId(), data.getKrHoldingStockId(), savedHolding.getId(), data.getKrStockPrice(), data.getKrStockAmount(), 0, 0));
-            System.out.println("주식수량 들어와 ?????????? "+data.getKrStockAmount());
             bankAccountService.saveBankAccountLog(new BankAccountLogDto(data.getUserId(),data.getInOutCash(), data.getInOutType(), data.getStockName(), LocalDateTime.now()));
 
         }
@@ -134,7 +130,6 @@ public class KafkaConsumerService {
             HoldingKrStock savedHolding = holdingKrStockService.save(new HoldingKrStockDto(data.getUserId(), data.getKrHoldingStockId(), data.getKrStockAmount()));
             KrStockDividendLog result = krStockDividendService.save(new KrStockDividendLogDto(data.getCombinationId(), data.getUserId(), LocalDateTime.now()));
             krStockTradingLogService.save(new KrStockTradingLogDto(data.getUserId(), data.getKrHoldingStockId(), savedHolding.getId(), data.getKrStockPrice(), data.getKrStockAmount(), result.getId(), 1));
-            System.out.println("주식수량 들어와 ?????????? "+data.getKrStockAmount());
             bankAccountService.saveBankAccountLog(new BankAccountLogDto(data.getUserId(),data.getInOutCash(), data.getInOutType(), data.getStockName(), LocalDateTime.now()));
         }
     }
@@ -146,7 +141,6 @@ public class KafkaConsumerService {
             HoldingUsStock savedHolding = holdingUsStockService.save(new HoldingUsStockDto(data.getUserId(), data.getKrHoldingStockId(), data.getKrStockAmount()));
             UsStockDividendLog result = usStockDividendLogService.save(new UsStockDividendLogDto(data.getCombinationId(), data.getUserId(), LocalDateTime.now()));
             usStockTradingLogService.save(new UsStockTradingLogDto(data.getUserId(), data.getKrHoldingStockId(), savedHolding.getId(), data.getKrStockPrice(), data.getKrStockAmount(), result.getId(), 1));
-            System.out.println("주식수량 들어와 ?????????? "+data.getKrStockAmount());
             bankAccountService.saveBankAccountLog(new BankAccountLogDto(data.getUserId(),data.getInOutCash(), data.getInOutType(), data.getStockName(), LocalDateTime.now()));
         }
     }
