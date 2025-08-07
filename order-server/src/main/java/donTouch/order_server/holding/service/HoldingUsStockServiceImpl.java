@@ -10,18 +10,22 @@ import donTouch.order_server.holding.dto.PurchaseInfoDTO;
 import donTouch.order_server.kafka.dto.TradingStockInfoDto;
 import donTouch.order_server.kafka.service.KafkaProducerService;
 import donTouch.order_server.utils.UsStockMapper;
+import jakarta.persistence.OptimisticLockException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @AllArgsConstructor
 @Service
 public class HoldingUsStockServiceImpl implements HoldingUsStockService {
-    HoldingUsStockJpaRepository holdingUsStockJpaRepository;
+    private final HoldingUsStockJpaRepository holdingUsStockJpaRepository;
     private final UsStockMapper usStockMapper = UsStockMapper.INSTANCE;
-    UsStockTradingLogJpaRepository usStockTradingLogJpaRepository;
+    private final UsStockTradingLogJpaRepository usStockTradingLogJpaRepository;
     private final KafkaProducerService kafkaProducerService;
 
     @Override
@@ -34,13 +38,14 @@ public class HoldingUsStockServiceImpl implements HoldingUsStockService {
     }
 
     @Override
+    @Transactional
     public HoldingUsStock save(HoldingUsStockDto holdingUsStockDto) {
         Long userId = holdingUsStockDto.getUserId();
         String usStockId = holdingUsStockDto.getUsStockId();
         int orderAmount = holdingUsStockDto.getUsStockAmount();
         HoldingUsStock entity = usStockMapper.toEntity(holdingUsStockDto);
 
-        Optional<HoldingUsStock> findHolding = holdingUsStockJpaRepository.findByUserIdAndUsStockId(userId, usStockId);
+        Optional<HoldingUsStock> findHolding = holdingUsStockJpaRepository.findByUserIdAndUsStockIdWithLock(userId, usStockId);
         if (findHolding.isPresent()) {
             HoldingUsStock findEntity = findHolding.get();
             findEntity.setUsStockAmount(findEntity.getUsStockAmount() + orderAmount);
@@ -48,7 +53,6 @@ public class HoldingUsStockServiceImpl implements HoldingUsStockService {
         } else {
             TradingStockInfoDto tradingStockInfoDto = holdingUsStockDto.convertToTradingStockInfoDTO();
             kafkaProducerService.requestStockInfoToChangeUserScore(tradingStockInfoDto);
-
             return holdingUsStockJpaRepository.save(entity);
         }
     }
@@ -60,7 +64,35 @@ public class HoldingUsStockServiceImpl implements HoldingUsStockService {
     }
 
     @Override
+    @Transactional
     public HoldingUsStock sellStockUpdate(HoldingUsStockFindForm holdingUsStockFindForm) {
+        return sellStockUpdateWithRetry(holdingUsStockFindForm, 5); 
+    }
+
+    private HoldingUsStock sellStockUpdateWithRetry(HoldingUsStockFindForm holdingUsStockFindForm, int maxRetries) {
+        int retryCount = 0;
+        
+        while (retryCount < maxRetries) {
+            try {
+                return performSellUpdate(holdingUsStockFindForm);
+            } catch (OptimisticLockException e) {
+                retryCount++;
+                if (retryCount >= maxRetries) {
+                    throw new RuntimeException("주식 거래가 혼잡합니다. 잠시 후 다시 시도해주세요.");
+                }
+                try {
+                    Thread.sleep(100 * (1 << retryCount));
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("재시도 중 인터럽트 발생");
+                }
+            }
+        }
+        
+        throw new RuntimeException("예상치 못한 오류가 발생했습니다.");
+    }
+
+    private HoldingUsStock performSellUpdate(HoldingUsStockFindForm holdingUsStockFindForm) {
         Long userId = holdingUsStockFindForm.getUserId();
         String usStockId = holdingUsStockFindForm.getUsStockId();
         HoldingUsStock result = findHolding(userId, usStockId);
