@@ -10,6 +10,7 @@ import donTouch.order_server.holding.dto.PurchaseInfoDTO;
 import donTouch.order_server.kafka.dto.TradingStockInfoDto;
 import donTouch.order_server.kafka.service.KafkaProducerService;
 import donTouch.order_server.utils.KrStockMapper;
+import jakarta.persistence.OptimisticLockException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Transactional
 @Slf4j
 @AllArgsConstructor
 @Service
@@ -29,13 +29,14 @@ public class HoldingKrStockServiceImpl implements HoldingKrStockService {
     private final KafkaProducerService kafkaProducerService;
 
     @Override
+    @Transactional
     public HoldingKrStock save(HoldingKrStockDto holdingKrStockDto) {
         Long userId = holdingKrStockDto.getUserId();
         String krStockId = holdingKrStockDto.getKrStockId();
         int orderAmount = holdingKrStockDto.getKrStockAmount();
         HoldingKrStock entity = krStockMapper.toEntity(holdingKrStockDto);
 
-        Optional<HoldingKrStock> findHolding = holdingKrStockRepository.findByUserIdAndKrStockId(userId, krStockId);
+        Optional<HoldingKrStock> findHolding = holdingKrStockRepository.findByUserIdAndKrStockIdWithLock(userId, krStockId);
         if (findHolding.isPresent()) {
             HoldingKrStock findEntity = findHolding.get();
             findEntity.setKrStockAmount(findEntity.getKrStockAmount() + orderAmount);
@@ -43,13 +44,12 @@ public class HoldingKrStockServiceImpl implements HoldingKrStockService {
         } else {
             TradingStockInfoDto tradingStockInfoDto = holdingKrStockDto.convertToTradingStockInfoDTO();
             kafkaProducerService.requestStockInfoToChangeUserScore(tradingStockInfoDto);
-
             return holdingKrStockRepository.save(entity);
         }
     }
 
-    @Transactional
     @Override
+    @Transactional
     public HoldingKrStock sellStockUpdate(HoldingKrStockFindForm holdingKrStockFindForm) {
         Long userId = holdingKrStockFindForm.getUserId();
         String krStockId = holdingKrStockFindForm.getKrStockId();
@@ -61,7 +61,6 @@ public class HoldingKrStockServiceImpl implements HoldingKrStockService {
         if (myAmount > orderAmount) {
             result.setKrStockAmount(myAmount - orderAmount);
             HoldingKrStock updateHolding = holdingKrStockRepository.save(result);
-            System.out.println("이렇게 변했어요 : " + updateHolding);
             return updateHolding;
         } else if (myAmount == orderAmount) {
             holdingKrStockRepository.delete(result);
@@ -106,5 +105,4 @@ public class HoldingKrStockServiceImpl implements HoldingKrStockService {
 
         return new ArrayList<>(tradedKrStocks.values());
     }
-
 }
