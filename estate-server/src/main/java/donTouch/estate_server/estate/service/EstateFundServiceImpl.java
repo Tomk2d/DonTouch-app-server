@@ -15,6 +15,7 @@ import donTouch.estate_server.kafka.service.KafkaProducerService;
 import donTouch.utils.utils.ApiUtils.ApiResult;
 import donTouch.utils.utils.Sort;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -22,11 +23,12 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
+import jakarta.persistence.OptimisticLockException;
 
 @Service
 @AllArgsConstructor
+@PropertySource(value = {"application.properties"})
 public class EstateFundServiceImpl implements EstateFundService {
 
     private final EstateFundJpaRepository estateFundRepository;
@@ -34,7 +36,6 @@ public class EstateFundServiceImpl implements EstateFundService {
     private final EstateFundMapper estateFundMapper = EstateFundMapper.INSTANCE;
     private final RestTemplate restTemplate = new RestTemplate();
     private final KafkaProducerService kafkaProducerService;
-
 
     @Override
     public List<EstateFundDto> getAllEstateFund() {
@@ -56,96 +57,114 @@ public class EstateFundServiceImpl implements EstateFundService {
 
     @Override
     public Boolean buyEstateFund(BuyEstateFundForm buyEstateFundForm) {
-        Long userId = buyEstateFundForm.getUserId();
-        int estateFundId = buyEstateFundForm.getEstateFundId();
-        int inputCash = buyEstateFundForm.getInputCash();
-        String estateName = buyEstateFundForm.getEstateName();
-        double estateEarningRate = buyEstateFundForm.getEstateEarningRate();
+        for (int i = 0; i < 5; i++) {
+            try {
+                Long userId = buyEstateFundForm.getUserId();
+                int estateFundId = buyEstateFundForm.getEstateFundId();
+                int inputCash = buyEstateFundForm.getInputCash();
+                String estateName = buyEstateFundForm.getEstateName();
+                double estateEarningRate = buyEstateFundForm.getEstateEarningRate();
 
-        EstateFund findedEstateFund = estateFundRepository.findById(estateFundId)
-                .orElseThrow(() -> new NullPointerException("부동산 id 가 잘못되었습니다."));
-        Long possibleInvest = findedEstateFund.getTotalAmountInvestments() - findedEstateFund.getCurrentInvest();
+                EstateFund findedEstateFund = estateFundRepository.findById(estateFundId)
+                        .orElseThrow(() -> new NullPointerException("부동산 id 가 잘못되었습니다."));
+                Long possibleInvest = findedEstateFund.getTotalAmountInvestments() - findedEstateFund.getCurrentInvest();
 
-        if (possibleInvest < inputCash) {
-            throw new NullPointerException("투자 가능한 금액이 아닙니다.");
+                if (possibleInvest < inputCash) {
+                    throw new NullPointerException("투자 가능한 금액이 아닙니다.");
+                }
+
+                BankCalculateForm requestBody = new BankCalculateForm(buyEstateFundForm.getUserId(), (long) inputCash * -1);
+                ApiResult result = restTemplate.postForEntity("http://15.165.74.129:8081" + "/api/user/bank/cal", requestBody, ApiResult.class).getBody();
+                System.out.println("result ======================== :" + result.getResponse());
+                if (result.getResponse().equals("잔고가 부족합니다.")) {
+                    throw new NullPointerException("잔고가 부족합니다.");
+                }
+                if (result.getResponse().equals("계좌를 찾을 수 없습니다.")) {
+                    throw new NullPointerException("계좌를 찾을 수 없습니다.");
+                }
+
+                findedEstateFund.setCurrentInvest(findedEstateFund.getCurrentInvest() + (long) buyEstateFundForm.getInputCash());
+                EstateFund savedEstateFund = estateFundRepository.save(findedEstateFund);
+                System.out.println("현재 투자 금액 =================== " + savedEstateFund.getCurrentInvest());
+
+                EstateFundDetail estateFundDetail = estateFundDetailRepository.findByEstateId(estateFundId);
+                String titleImageUrl = savedEstateFund.getTitleMainImageUrl();
+                int investmentPeriod = savedEstateFund.getLength();
+                LocalDateTime startPeriod = estateFundDetail.getStartDatetime();
+
+                kafkaProducerService.requestAddEstate(new HoldingEstateFundForm(userId, estateFundId, titleImageUrl, estateName, estateEarningRate, investmentPeriod, inputCash, startPeriod));
+                kafkaProducerService.requestAddBankLog(new BankAccountLogDto(userId, (long) inputCash, 0, estateName, LocalDateTime.now()));
+                return true;
+            } catch (OptimisticLockException e) {
+                if (i == 4) {
+                    throw new RuntimeException("서비스가 혼잡합니다. 잠시 후 다시 시도해주세요.");
+                }
+            }
         }
-
-        BankCalculateForm requestBody = new BankCalculateForm(buyEstateFundForm.getUserId(), (long) inputCash * -1);
-        ApiResult result = restTemplate.postForEntity("http://localhost:8081/api/user/bank/cal", requestBody, ApiResult.class).getBody();
-        System.out.println("result ======================== :" + result.getResponse());
-        if (result.getResponse().equals("잔고가 부족합니다.")) {
-            throw new NullPointerException("잔고가 부족합니다.");
-        }
-        if (result.getResponse().equals("계좌를 찾을 수 없습니다.")) {
-            throw new NullPointerException("계좌를 찾을 수 없습니다.");
-        }
-
-        findedEstateFund.setCurrentInvest(findedEstateFund.getCurrentInvest() + (long) buyEstateFundForm.getInputCash());
-        EstateFund savedEstateFund = estateFundRepository.save(findedEstateFund);
-        System.out.println("현재 투자 금액 =================== " + savedEstateFund.getCurrentInvest());
-
-        EstateFundDetail estateFundDetail = estateFundDetailRepository.findByEstateId(estateFundId);
-        String titleImageUrl = savedEstateFund.getTitleMainImageUrl();
-        int investmentPeriod = savedEstateFund.getLength();
-        LocalDateTime startPeriod = estateFundDetail.getStartDatetime();
-
-        kafkaProducerService.requestAddEstate(new HoldingEstateFundForm(userId, estateFundId, titleImageUrl, estateName, estateEarningRate, investmentPeriod, inputCash, startPeriod));
-        kafkaProducerService.requestAddBankLog(new BankAccountLogDto(userId, (long) inputCash, 0, estateName, LocalDateTime.now()));
-        return true;
+        throw new RuntimeException("서비스가 혼잡합니다. 잠시 후 다시 시도해주세요.");
     }
 
     @Override
     public Boolean sellEstateFund(BuyEstateFundForm buyEstateFundForm) {
-        Long userId = buyEstateFundForm.getUserId();
-        int estateFundId = buyEstateFundForm.getEstateFundId();
-        int inputCash = buyEstateFundForm.getInputCash();
-        String estateName = buyEstateFundForm.getEstateName();
-        double estateEarningRate = buyEstateFundForm.getEstateEarningRate();
+        for (int i = 0; i < 5; i++) {
+            try {
+                Long userId = buyEstateFundForm.getUserId();
+                int estateFundId = buyEstateFundForm.getEstateFundId();
+                int inputCash = buyEstateFundForm.getInputCash();
+                String estateName = buyEstateFundForm.getEstateName();
+                double estateEarningRate = buyEstateFundForm.getEstateEarningRate();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        EstateFund findedEstateFund = estateFundRepository.findById(estateFundId)
-                .orElseThrow(() -> new NullPointerException("부동산 id 가 잘못되었습니다."));
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                EstateFund findedEstateFund = estateFundRepository.findById(estateFundId)
+                        .orElseThrow(() -> new NullPointerException("부동산 id 가 잘못되었습니다."));
 
-        EstateFundDetail estateFundDetail = estateFundDetailRepository.findByEstateId(estateFundId);
-        findedEstateFund.setCurrentInvest(findedEstateFund.getCurrentInvest() - (long) buyEstateFundForm.getInputCash());
-        EstateFund savedEstateFund = estateFundRepository.save(findedEstateFund);
-        System.out.println("현재 투자 금액 =================== " + savedEstateFund.getCurrentInvest());
+                EstateFundDetail estateFundDetail = estateFundDetailRepository.findByEstateId(estateFundId);
+                findedEstateFund.setCurrentInvest(findedEstateFund.getCurrentInvest() - (long) buyEstateFundForm.getInputCash());
+                EstateFund savedEstateFund = estateFundRepository.save(findedEstateFund);
+                System.out.println("현재 투자 금액 =================== " + savedEstateFund.getCurrentInvest());
 
-        String titleImageUrl = findedEstateFund.getTitleMainImageUrl();
-        int investmentPeriod = findedEstateFund.getLength();
-        LocalDateTime startPeriod = estateFundDetail.getStartDatetime();
-        HoldingEstateFundForm requestBody = new HoldingEstateFundForm(userId, estateFundId, titleImageUrl, estateName, estateEarningRate, investmentPeriod, inputCash, startPeriod);
-        HttpEntity<HoldingEstateFundForm> requestEntity = new HttpEntity<>(requestBody, headers);
+                String titleImageUrl = findedEstateFund.getTitleMainImageUrl();
+                int investmentPeriod = findedEstateFund.getLength();
+                LocalDateTime startPeriod = estateFundDetail.getStartDatetime();
+                HoldingEstateFundForm requestBody = new HoldingEstateFundForm(userId, estateFundId, titleImageUrl, estateName, estateEarningRate, investmentPeriod, inputCash, startPeriod);
+                HttpEntity<HoldingEstateFundForm> requestEntity = new HttpEntity<>(requestBody, headers);
 
-        ResponseEntity<HoldingEstateFundDto> responseEntity = restTemplate.postForEntity(
-                "http://localhost:8085/api/holding/estate/sell",
-                requestEntity,
-                HoldingEstateFundDto.class
-        );
+                ResponseEntity<HoldingEstateFundDto> responseEntity = restTemplate.postForEntity(
+                        "http://13.125.214.60:8085" + "/api/holding/estate/sell",
+                        requestEntity,
+                        HoldingEstateFundDto.class
+                );
 
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            HoldingEstateFundDto responseBody = responseEntity.getBody();
+                if (responseEntity.getStatusCode() == HttpStatus.OK) {
+                    HoldingEstateFundDto responseBody = responseEntity.getBody();
 
-            BankCalculateForm requestBodyBank = new BankCalculateForm(responseBody.getUserId(), (long) responseBody.getInputCash());
-            ApiResult result = restTemplate.postForEntity("http://localhost:8081/api/user/bank/cal", requestBodyBank, ApiResult.class).getBody();
-            if (result.getResponse().equals("잔고가 부족합니다.")) {
-                throw new NullPointerException("입금이 되지 않았습니다.");
+                    BankCalculateForm requestBodyBank = new BankCalculateForm(responseBody.getUserId(), (long) responseBody.getInputCash());
+                    ApiResult result = restTemplate.postForEntity("http://15.165.74.129:8081" + "/api/user/bank/cal", requestBodyBank, ApiResult.class).getBody();
+                    if (result.getResponse().equals("잔고가 부족합니다.")) {
+                        throw new NullPointerException("입금이 되지 않았습니다.");
+                    }
+                    if (result.getResponse().equals("계좌를 찾을 수 없습니다.")) {
+                        throw new NullPointerException("계좌를 찾을 수 없습니다.");
+                    }
+
+                    kafkaProducerService.requestAddBankLog(new BankAccountLogDto(
+                            responseBody.getUserId(),
+                            (long) responseBody.getInputCash(), 1,
+                            responseBody.getTitle(), LocalDateTime.now())
+                    );
+                } else {
+                    throw new NullPointerException("판매할 상품이 없습니다.");
+                }
+
+                return true;
+            } catch (OptimisticLockException e) {
+                if (i == 4) {
+                    throw new RuntimeException("서비스가 혼잡합니다. 잠시 후 다시 시도해주세요.");
+                }
             }
-            if (result.getResponse().equals("계좌를 찾을 수 없습니다.")) {
-                throw new NullPointerException("계좌를 찾을 수 없습니다.");
-            }
-
-            kafkaProducerService.requestAddBankLog(new BankAccountLogDto(
-                    responseBody.getUserId(),
-                    (long) responseBody.getInputCash(), 1,
-                    responseBody.getTitle(), LocalDateTime.now())
-            );
-        } else {
-            throw new NullPointerException("판매할 상품이 없습니다.");
         }
-
-        return true;
+        throw new RuntimeException("서비스가 혼잡합니다. 잠시 후 다시 시도해주세요.");
     }
 
     @Override
