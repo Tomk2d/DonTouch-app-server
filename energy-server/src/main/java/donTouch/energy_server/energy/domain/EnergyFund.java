@@ -29,4 +29,7 @@ public class EnergyFund {
 
     private Integer sumOfInvestmentAndReservation;
     private String creditRating;
+    
+    @Version
+    private Long version;
 }
